@@ -11,7 +11,7 @@ class Controller(yuzu.Controller):
         self._hold_buttons = []
 
     def act(self, action: Action, sec=None):
-        button_list = action.value
+        button_list = action
         self.multi_press(button_list)
 
     def to_mode(self, mode):
