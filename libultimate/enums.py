@@ -38,6 +38,7 @@ class Action:
     ACTION_LEFT_STICK = [Button.BUTTON_C_LEFT]
     ACTION_UP_STICK = [Button.BUTTON_C_UP]
     ACTION_DOWN_STICK = [Button.BUTTON_C_DOWN]
+    ACTION_NO_OPERATION = []
     
 class Stage(Enum):
     STAGE_BATTLE_FIELD="1"
