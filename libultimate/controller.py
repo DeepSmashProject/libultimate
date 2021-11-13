@@ -10,9 +10,9 @@ class Controller(yuzu.Controller):
         super(Controller, self).__init__()
         self._hold_buttons = []
 
-    def act(self, action: Action, sec=None):
+    def act(self, action: Action, hold=True, sec=None):
         button_list = action
-        self.multi_press(button_list)
+        self.multi_press(button_list, sec=0.02)
 
     def to_mode(self, mode):
         mode.setup(self)
