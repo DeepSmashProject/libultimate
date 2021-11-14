@@ -1,7 +1,7 @@
 from enum import Enum
 from yuzulib import Button
 from .enums import Action, Stage, Fighter
-
+import time
 class Mode:
     def __init__(self):
         pass
@@ -16,23 +16,36 @@ class TrainingMode(Mode):
 
     def setup(self, controller):
         # To Games & More from Home
-        controller.press(Button.BUTTON_C_RIGHT)
-        controller.press(Button.BUTTON_C_UP)
-        controller.press(Button.BUTTON_A)
-        '''# To Training from Games & More
-        controller.press(Button.BUTTON_C_DOWN)
-        controller.press(Button.BUTTON_C_LEFT)
-        controller.press(Button.BUTTON_A)
+        controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.02)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_UP], sec=0.02)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_A], sec=0.02)
+        time.sleep(1)
+
+        # To Training from Games & More
+        controller.multi_press([Button.BUTTON_S_DOWN], sec=0.02)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_LEFT], sec=0.02)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_A], sec=0.02)
+        time.sleep(1)
+        
         # Stage Select
+        print("STAGE: {}".format(self._stage.name))
         stage_num = self._stage.value
         stage_row = stage_num%11
         stage_line = int(stage_num/11)
+        print(stage_line, stage_row)
         for i in range(stage_line):
-            controller.press(Button.BUTTON_C_DOWN, sec=0.5)
+            controller.multi_press([Button.BUTTON_S_DOWN], sec=0.21)
+            time.sleep(0.1)
         for k in range(stage_row):
-            controller.press(Button.BUTTON_C_RIGHT, sec=0.5)
-        controller.press(Button.BUTTON_A)
-        # Fighter Select
+            controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.23)
+            time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_A], sec=0.02)
+        time.sleep(1.5)
+        '''# Fighter Select
         ## Player Select
         player_num = self._player.value
         player_row = player_num%7
