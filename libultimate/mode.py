@@ -45,47 +45,130 @@ class TrainingMode(Mode):
             time.sleep(0.1)
         controller.multi_press([Button.BUTTON_A], sec=0.02)
         time.sleep(1.5)
-        '''# Fighter Select
+        # Fighter Select
         ## Player Select
+        ### to left top corner
+        controller.multi_press([Button.BUTTON_S_UP], sec=2)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_LEFT], sec=1)
+        time.sleep(0.1)
+        ### to mario
+        controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.25)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_DOWN], sec=0.30)
+        time.sleep(0.1)
+        ### to fighter
         player_num = self._player.value
         player_row = player_num%7
         player_line = int(player_num/7)
         for i in range(player_line):
-            controller.press(Button.BUTTON_C_DOWN, sec=1)
+            controller.multi_press([Button.BUTTON_S_DOWN], sec=0.30)
+            time.sleep(0.1)
         for k in range(player_row):
-            controller.press(Button.BUTTON_C_RIGHT, sec=1)
-        controller.press(Button.BUTTON_A)
+            controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.37)
+            time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_A], sec=0.02)
+
         ## CPU Select
-        ### CPU Pick
-        controller.press(Button.BUTTON_C_RIGHT, sec=1.5)
-        controller.press(Button.BUTTON_C_DOWN, sec=1)
-        controller.press(Button.BUTTON_B)
-        ### Move
+        ## Move CPU
+        ### to right top corner
+        controller.multi_press([Button.BUTTON_S_UP], sec=2)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_RIGHT], sec=3)
+        time.sleep(0.1)
+        ### to random
+        controller.multi_press([Button.BUTTON_S_LEFT], sec=0.25)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_DOWN], sec=0.60)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_A], sec=0.02)
+        ## Select CPU
+        ### to left top corner
+        controller.multi_press([Button.BUTTON_S_UP], sec=3)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_LEFT], sec=3)
+        time.sleep(0.1)
+        ### to mario
+        controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.25)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_DOWN], sec=0.30)
+        time.sleep(0.1)
+        ### to fighter
         cpu_num = self._cpu.value
         cpu_row = cpu_num%7
         cpu_line = int(cpu_num/7)
-        for i in range(7-cpu_line):
-            controller.press(Button.BUTTON_C_UP, sec=1)
-        for k in range(7-cpu_row):
-            controller.press(Button.BUTTON_C_LEFT, sec=1)
-        controller.press(Button.BUTTON_A)
-        ## CPU Level Select
-        ### Top CPU Level
-        controller.press(Button.BUTTON_C_RIGHT, sec=3)
-        controller.press(Button.BUTTON_C_DOWN, sec=3)
-        controller.press(Button.BUTTON_C_UP, sec=1)
-        controller.press(Button.BUTTON_C_LEFT, sec=1)
-        controller.press(Button.BUTTON_A)
+        for i in range(cpu_line):
+            controller.multi_press([Button.BUTTON_S_DOWN], sec=0.30)
+            time.sleep(0.1)
+        for k in range(cpu_row):
+            controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.37)
+            time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_A], sec=0.02)
+
+        # CPU LEVEL
+        ### to right bottom corner
+        controller.multi_press([Button.BUTTON_S_DOWN], sec=3)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_RIGHT], sec=3)
+        time.sleep(0.1)
+        ### to level
+        controller.multi_press([Button.BUTTON_S_UP], sec=0.2)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_LEFT], sec=0.5)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_A], sec=0.02)
         ### Change Level
         if self._cpu_level >= 3:
             for i in range(self._cpu_level - 3):
-                controller.press(Button.BUTTON_C_UP)
+                controller.multi_press([Button.BUTTON_S_UP], sec=0.2)
+                time.sleep(0.1)
         else:
             for i in range(3 - self._cpu_level):
-                controller.press(Button.BUTTON_C_DOWN)
-        controller.press(Button.BUTTON_A)
-        # Start
-        controller.press(Button.BUTTON_PLUS)'''
+                controller.multi_press([Button.BUTTON_S_DOWN], sec=0.2)
+                time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_A], sec=0.02)
+        time.sleep(0.1)
+
+        ### Start Training Mode
+        controller.multi_press([Button.BUTTON_PLUS], sec=0.02)
+        
+        time.sleep(5)
+        # Change Settings
+        controller.multi_press([Button.BUTTON_PLUS], sec=0.02)
+        time.sleep(0.5)
+        ## Change CPU Behavior
+        for i in range(4):
+            controller.multi_press([Button.BUTTON_S_DOWN], sec=0.2)
+            time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.2)
+        time.sleep(0.1)
+
+        ## Other Settings
+        controller.multi_press([Button.BUTTON_S_DOWN], sec=0.2)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_A], sec=0.02)
+        time.sleep(0.5)
+        ## Speed Quick Mode
+        for i in range(5):
+            controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.2)
+            time.sleep(0.1)
+        ## Not Display Combo
+        controller.multi_press([Button.BUTTON_S_DOWN], sec=0.2)
+        time.sleep(0.1)
+        controller.multi_press([Button.BUTTON_S_LEFT], sec=0.2)
+        time.sleep(0.1)
+        # Finish Settings
+        controller.multi_press([Button.BUTTON_PLUS], sec=0.02)
+        time.sleep(0.1)
+
+        # Reset Position
+        controller.multi_press([Button.BUTTON_L, Button.BUTTON_R, Button.BUTTON_A], sec=0.02)
+        time.sleep(0.1)
+
+
+        
+
+
 
 
 
