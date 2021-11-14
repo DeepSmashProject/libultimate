@@ -2,6 +2,7 @@ from contextlib import ExitStack
 from typing import List
 import pyautogui
 from .enums import Action
+from .mode import Mode
 import time
 import yuzulib as yuzu
 
@@ -14,7 +15,8 @@ class Controller(yuzu.Controller):
         button_list = action
         self.multi_press(button_list, sec=0.02)
 
-    def to_mode(self, mode):
+    def mode(self, mode: Mode):
+        # mode: "training" only
         mode.setup(self)
 
 if __name__ == '__main__':
