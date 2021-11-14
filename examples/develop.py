@@ -49,5 +49,5 @@ def callback(frame, fps):
     controller.act(random.choice(list))
     elapsed_time = time.time() - start
     print(elapsed_time)
-screen = Screen(callback, fps=60)
+screen = Screen(callback, fps=2)
 screen.capture()

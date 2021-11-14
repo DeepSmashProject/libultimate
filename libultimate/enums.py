@@ -18,7 +18,7 @@ class Action:
     ACTION_DOWN_SPECIAL = [Button.BUTTON_S_DOWN, Button.BUTTON_B]
     ACTION_GRAB = [Button.BUTTON_R]
     ACTION_SHIELD = [Button.BUTTON_ZR]
-    ACTION_JAMP = [Button.BUTTON_Y]
+    ACTION_JUMP = [Button.BUTTON_Y]
     ACTION_SHORT_HOP = [Button.BUTTON_Y, Button.BUTTON_X]
     ACTION_UP_TAUNT = [Button.BUTTON_D_UP]
     ACTION_DOWN_TAUNT = [Button.BUTTON_D_DOWN]
