@@ -98,7 +98,7 @@ time.sleep(1)
 m.position = (711, 416) # Install Button
 m.press(mouse.Button.left)
 m.release(mouse.Button.left)
-time.sleep(10) # Waiting Load App
+time.sleep(30) # Waiting Load App
 ########### Restart Once ###########
 
 # Set pointer position

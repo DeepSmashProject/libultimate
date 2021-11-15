@@ -6,13 +6,15 @@ runner = Runner("", "", "")
 runner.run()
 
 controller = Controller()
+controller.move_to_home()
 
 training_mode = TrainingMode(
+    controller=controller,
     stage=Stage.STAGE_FINAL_DESTINATION, 
     player=Fighter.FIGHTER_MARIO,
     cpu=Fighter.FIGHTER_DONKEY_KONG,
     cpu_level=7,
 )
 print("Training Mode")
-controller.mode(training_mode)
+training_mode.start()
 time.sleep(1)
