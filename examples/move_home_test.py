@@ -7,8 +7,9 @@ k = keyboard.Controller()
 import os
 from pathlib import Path
 
-data_path = Path(os.path.dirname(__file__)).joinpath('data/').resolve()
-path = str(data_path) + '/screenshot.png'
+data_path = Path(os.path.dirname(__file__)).joinpath('../libultimate/data/').resolve()
+path = str(data_path) + '/home.png'
+print(path)
 
 while True:
     time.sleep(1)
