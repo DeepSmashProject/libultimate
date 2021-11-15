@@ -29,7 +29,7 @@ class TrainingMode(Mode):
         controller.multi_press([Button.BUTTON_S_LEFT], sec=0.02)
         time.sleep(0.1)
         controller.multi_press([Button.BUTTON_A], sec=0.02)
-        time.sleep(1)
+        time.sleep(10) # Loading
         
         # Stage Select
         print("STAGE: {}".format(self._stage.name))
@@ -44,7 +44,7 @@ class TrainingMode(Mode):
             controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.23)
             time.sleep(0.1)
         controller.multi_press([Button.BUTTON_A], sec=0.02)
-        time.sleep(1.5)
+        time.sleep(10) # Loading
         # Fighter Select
         ## Player Select
         ### to left top corner
@@ -132,7 +132,7 @@ class TrainingMode(Mode):
         ### Start Training Mode
         controller.multi_press([Button.BUTTON_PLUS], sec=0.02)
         
-        time.sleep(5)
+        time.sleep(10) # Loading
         # Change Settings
         controller.multi_press([Button.BUTTON_PLUS], sec=0.02)
         time.sleep(0.5)
