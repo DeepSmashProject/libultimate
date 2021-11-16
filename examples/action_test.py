@@ -2,8 +2,8 @@ from yuzulib import Runner, Screen
 from libultimate import Controller, Action
 import time
 import random
-runner = Runner("", "", "")
-runner.run()
+#runner = Runner("", "", "")
+#runner.run()
 
 controller = Controller()
 
