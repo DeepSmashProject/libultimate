@@ -51,13 +51,17 @@ class TrainingMode(Mode):
         stage_num = self._stage.value
         stage_row = stage_num%11
         stage_line = int(stage_num/11)
-        print(stage_line, stage_row)
         for i in range(stage_line):
-            self._controller.multi_press([Button.BUTTON_S_DOWN], sec=0.21)
-            time.sleep(0.1)
+            self._controller.multi_press([Button.BUTTON_S_DOWN], sec=0.20)
+            time.sleep(0.3)
         for k in range(stage_row):
             self._controller.multi_press([Button.BUTTON_S_RIGHT], sec=0.23)
-            time.sleep(0.1)
+            time.sleep(0.3)
+        # to Final Destination
+        self._controller.multi_press([Button.BUTTON_X], sec=0.02)
+        time.sleep(0.1)
+        self._controller.multi_press([Button.BUTTON_X], sec=0.02)
+        time.sleep(0.1)
         self._controller.multi_press([Button.BUTTON_A], sec=0.02)
         time.sleep(10) # Loading
 
@@ -154,7 +158,7 @@ class TrainingMode(Mode):
     def _start_training(self):
         ### Start Training Mode
         self._controller.multi_press([Button.BUTTON_PLUS], sec=0.02)
-        time.sleep(10) # Loading
+        time.sleep(15) # Loading
         print("Start Training")
 
 
