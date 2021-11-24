@@ -6,5 +6,4 @@ controller = Controller()
 
 for i in range(100):
     #print("Action JAB")
-    controller.act(Button.BUTTON_ZL)
-    time.sleep(1)
+    controller.multi_press([Button.BUTTON_ZL], sec=0.2)
