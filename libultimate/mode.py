@@ -193,7 +193,7 @@ class TrainingMode(Mode):
         time.sleep(1)
 
     def reset(self):
-        print("Reset Training")
+        #print("Reset Training")
         self._controller.multi_press([Button.BUTTON_L, Button.BUTTON_R, Button.BUTTON_A], sec=0.02)
         time.sleep(0.1)
 
