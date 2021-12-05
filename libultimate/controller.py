@@ -13,9 +13,12 @@ class Controller(yuzu.Controller):
         super(Controller, self).__init__()
         self._hold_buttons = []
 
-    def act(self, action: Action, hold=True, sec=None):
-        button_list = action
-        self.multi_press(button_list, sec=0.02)
+    def act(self, action: Action):
+        button_list = action["command"]
+        hold = action["hold"]
+        sec = action["sec"]
+        wait = action["wait"]
+        self.multi_press(button_list, hold=hold, sec=sec, wait=wait)
 
     def move_to_home(self):
         data_path = Path(os.path.dirname(__file__)).joinpath('data/').resolve()
