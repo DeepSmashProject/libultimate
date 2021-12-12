@@ -14,11 +14,11 @@ class Controller(yuzu.Controller):
         self._hold_buttons = []
 
     def act(self, action: Action):
-        button_list = action["command"]
+        buttons = action["buttons"]
         hold = action["hold"]
         sec = action["sec"]
         wait = action["wait"]
-        self.multi_press(button_list, hold=hold, sec=sec, wait=wait)
+        self.press(buttons, hold=hold, sec=sec, wait=wait)
 
     def move_to_home(self):
         data_path = Path(os.path.dirname(__file__)).joinpath('data/').resolve()
@@ -32,9 +32,9 @@ class Controller(yuzu.Controller):
                 print("Reached Home!")
                 break
             else:
-                self.multi_press([yuzu.Button.BUTTON_X], sec=0.02)
+                self.press([yuzu.Button.BUTTON_X], sec=0.02)
                 time.sleep(0.1)
-                self.multi_press([yuzu.Button.BUTTON_B], sec=0.02)
+                self.press([yuzu.Button.BUTTON_B], sec=0.02)
 
 if __name__ == '__main__':
     controller = Controller()
