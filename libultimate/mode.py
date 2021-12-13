@@ -104,7 +104,8 @@ class TrainingMode(Mode):
         time.sleep(0.1)
         self._controller.press([Button.BUTTON_S_DOWN], sec=0.60, wait=1)
         time.sleep(0.1)
-        self._controller.press([Button.BUTTON_A], sec=0.02)
+        self._controller.press([Button.BUTTON_A], sec=0.02) # TODO
+        time.sleep(0.1)
         ## Select CPU
         ### to left top corner
         self._controller.press([Button.BUTTON_S_UP], sec=3, wait=3)
@@ -142,7 +143,8 @@ class TrainingMode(Mode):
         time.sleep(0.1)
         self._controller.press([Button.BUTTON_S_LEFT], sec=0.5, wait=1)
         time.sleep(0.1)
-        self._controller.press([Button.BUTTON_A], sec=0.02, wait=0.02)
+        self._controller.press([Button.BUTTON_A], sec=0.02, wait=0.02) #TODO
+        time.sleep(0.1)
         ### Change Level
         if self._cpu_level >= 3:
             for i in range(self._cpu_level - 3):

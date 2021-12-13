@@ -9,7 +9,7 @@ from .mode import Action, TrainingMode, Stage, Fighter
 class UltimateController(Controller):
     def __init__(self):
         super(UltimateController, self).__init__()
-        self._hold_buttons = []
+        self.training_mode = None
 
     def act(self, action: Action):
         buttons = action["buttons"]
@@ -36,14 +36,19 @@ class UltimateController(Controller):
                 time.sleep(0.1)
 
     def move_to_training(self, config):
-        training_mode = TrainingMode(
+        self.training_mode = TrainingMode(
             controller=self,
             stage=Stage[config["stage"]], 
             player=Fighter[config["player"]["fighter"]],
             cpu=Fighter[config["cpu"]["fighter"]],
             cpu_level=config["cpu"]["level"],
         )
-        training_mode.start()
+        self.training_mode.start()
+
+    def reset_training(self):
+        if self.training_mode:
+            self.training_mode.reset()
+
 
 if __name__ == '__main__':
     controller = UltimateController()

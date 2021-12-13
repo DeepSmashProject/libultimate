@@ -36,13 +36,19 @@ class UltimateControllerView(FlaskView):
 
     @route('/move/training',methods=["POST"])
     def move_to_training(self):
-        # curl -X POST -d '{"buttons": ["BUTTON_A"]}' 'localhost:6000/ultimate-controller/press?hold=True&sec=0&wait=0'
+        # curl -X POST -d '{"stage": ,}' 'localhost:6000/ultimate-controller/move/training'
         req_data = json.loads(request.get_data())
         for key in ["stage", "player", "cpu", "setting"]:
             if key not in req_data.keys():
                 return Response("ERROR: {} argument is not exist".format(key)), 400
         config = req_data
         self.controller.move_to_training(config)
+        return Response("OK"), 200
+
+    @route('/reset/training',methods=["POST"])
+    def reset_training(self):
+        # curl -X POST 'localhost:6000/ultimate-controller/reset/training'
+        self.controller.reset_training()
         return Response("OK"), 200
 
 class UltimateServer(Server):
