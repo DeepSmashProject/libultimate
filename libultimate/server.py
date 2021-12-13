@@ -46,7 +46,7 @@ class UltimateControllerView(FlaskView):
 
 class UltimateServer(Server):
     def __init__(self, host, port) -> None:
-        super().__init__(host, port)
+        super(UltimateServer, self).__init__(host, port)
         UltimateControllerView.register(self.app)
 
     def run(self):

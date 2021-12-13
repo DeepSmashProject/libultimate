@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 class UltimateClient(Client):
     def __init__(self, address="http://localhost:6000", disable_warning=False) -> None:
-        super.__init__(self, address, disable_warning)
+        super(UltimateClient, self).__init__(address, disable_warning)
 
     def move_to_home(self):
         self.reset_game()
