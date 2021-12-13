@@ -36,11 +36,11 @@ class UltimateController(Controller):
 
     def move_to_training(self, config):
         training_mode = TrainingMode(
-            controller=controller,
-            stage=Stage.STAGE_FINAL_DESTINATION, 
-            player=Fighter.FIGHTER_MARIO,
-            cpu=Fighter.FIGHTER_DONKEY_KONG,
-            cpu_level=7,
+            controller=self,
+            stage=Stage(config["stage"]), 
+            player=Fighter[config["player"]["fighter"]],
+            cpu=Fighter[config["cpu"]["fighter"]],
+            cpu_level=config["cpu"]["level"],
         )
         training_mode.start()
 

@@ -30,12 +30,13 @@ class UltimateControllerView(FlaskView):
 
     @route('/move/home',methods=["POST"])
     def move_to_home(self):
+        # curl -X POST 'localhost:6000/ultimate-controller/move/home'
         self.controller.move_to_home()
         return Response("OK"), 200
 
     @route('/move/training',methods=["POST"])
     def move_to_training(self):
-        # curl -X POST -d '{"buttons": ["BUTTON_A"]}' 'localhost:6000/ultimatecontroller/press?hold=True&sec=0&wait=0'
+        # curl -X POST -d '{"buttons": ["BUTTON_A"]}' 'localhost:6000/ultimate-controller/press?hold=True&sec=0&wait=0'
         req_data = json.loads(request.get_data())
         for key in ["stage", "player", "cpu", "setting"]:
             if key not in req_data.keys():
