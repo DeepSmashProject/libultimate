@@ -9,6 +9,7 @@ class UltimateClient(Client):
 
     def act(self, action: Action):
         url = '{}/ultimate-controller/act'.format(self.address)
+        print("action: ", action)
         action["buttons"] = [bt.name for bt in action["buttons"]]
         payload = {"action": action}
         res = requests.post(url, json=payload)
