@@ -52,10 +52,10 @@ class TrainingMode(Mode):
         stage_row = stage_num%11
         stage_line = int(stage_num/11)
         for i in range(stage_line):
-            self._controller.press([Button.BUTTON_S_DOWN], sec=0.20)
+            self._controller.press([Button.BUTTON_S_DOWN], sec=0.20, wait=0.30)
             time.sleep(0.3)
         for k in range(stage_row):
-            self._controller.press([Button.BUTTON_S_RIGHT], sec=0.23)
+            self._controller.press([Button.BUTTON_S_RIGHT], sec=0.23, wait=0.30)
             time.sleep(0.3)
         # to Final Destination
         self._controller.press([Button.BUTTON_X], sec=0.02)
@@ -86,7 +86,7 @@ class TrainingMode(Mode):
             self._controller.press([Button.BUTTON_S_DOWN], sec=0.30, wait=0.30)
             time.sleep(0.1)
         for k in range(player_row):
-            self._controller.press([Button.BUTTON_S_RIGHT], sec=0.37, wait=0.37)
+            self._controller.press([Button.BUTTON_S_RIGHT], sec=0.37, wait=1)
             time.sleep(0.1)
         self._controller.press([Button.BUTTON_A], sec=0.02)
         time.sleep(1)
