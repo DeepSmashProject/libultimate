@@ -36,8 +36,8 @@ def run_game_test():
 
 if __name__ == "__main__":
     #show_screen()
+    run_game_test()
     move_training_test()
-    #run_game_test()
     #move_home_test()
     # TODO: async callback
     # TODO: RunnerView
