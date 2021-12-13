@@ -33,6 +33,7 @@ class UltimateController(Controller):
                 self.press([Button.BUTTON_X], sec=0.02)
                 time.sleep(0.1)
                 self.press([Button.BUTTON_B], sec=0.02)
+                time.sleep(0.1)
 
     def move_to_training(self, config):
         training_mode = TrainingMode(
