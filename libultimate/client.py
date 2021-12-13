@@ -9,7 +9,8 @@ class UltimateClient(Client):
 
     def act(self, action: Action):
         url = '{}/ultimate-controller/act'.format(self.address)
-        payload = {"action": action.name}
+        action["buttons"] = [bt.name for bt in action["buttons"]]
+        payload = {"action": action}
         res = requests.post(url, json=payload)
 
     def move_to_home(self):

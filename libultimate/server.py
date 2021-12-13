@@ -5,12 +5,8 @@ from flask import Flask, Response,stream_with_context, request
 from flask_cors import CORS
 from .controller import UltimateController
 import json
-from yuzulib import Server
+from yuzulib import Server, Button
 from libultimate import Action
-import time
-import numpy as np
-import requests
-import cv2
 from flask_classful import FlaskView, route
 
 
@@ -24,7 +20,8 @@ class UltimateControllerView(FlaskView):
         req_data = json.loads(request.get_data())
         if "action" not in req_data.keys():
             return Response("ERROR: {} argument is not exist".format("action")), 400
-        action = Action[req_data["action"]]
+        action = req_data["action"]
+        action["buttons"] = [Button[bt] for bt in action["buttons"]]
         self.controller.act(action)
         return Response("OK"), 200
 
