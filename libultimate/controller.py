@@ -1,16 +1,14 @@
-from contextlib import ExitStack
-from typing import List
 import pyautogui
 from .enums import Action
 import time
-import yuzulib as yuzu
+from yuzulib import Button, Controller
 import os
 from pathlib import Path
-from .util import click_mouse, press_key, move_mouse
+from .mode import Action, TrainingMode, Stage, Fighter
 
-class Controller(yuzu.Controller):
+class UltimateController(Controller):
     def __init__(self):
-        super(Controller, self).__init__()
+        super(UltimateController, self).__init__()
         self._hold_buttons = []
 
     def act(self, action: Action):
@@ -32,10 +30,20 @@ class Controller(yuzu.Controller):
                 print("Reached Home!")
                 break
             else:
-                self.press([yuzu.Button.BUTTON_X], sec=0.02)
+                self.press([Button.BUTTON_X], sec=0.02)
                 time.sleep(0.1)
-                self.press([yuzu.Button.BUTTON_B], sec=0.02)
+                self.press([Button.BUTTON_B], sec=0.02)
+
+    def move_to_training(self, config):
+        training_mode = TrainingMode(
+            controller=controller,
+            stage=Stage.STAGE_FINAL_DESTINATION, 
+            player=Fighter.FIGHTER_MARIO,
+            cpu=Fighter.FIGHTER_DONKEY_KONG,
+            cpu_level=7,
+        )
+        training_mode.start()
 
 if __name__ == '__main__':
-    controller = Controller()
+    controller = UltimateController()
     controller.act(Action.ACTION_JAB)
