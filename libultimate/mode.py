@@ -102,7 +102,7 @@ class TrainingMode(Mode):
         ### to random
         self._controller.press([Button.BUTTON_S_LEFT], sec=0.25, wait=0.25)
         time.sleep(0.1)
-        self._controller.press([Button.BUTTON_S_DOWN], sec=0.60, wait=0.6)
+        self._controller.press([Button.BUTTON_S_DOWN], sec=0.60, wait=1)
         time.sleep(0.1)
         self._controller.press([Button.BUTTON_A], sec=0.02)
         ## Select CPU
@@ -124,7 +124,7 @@ class TrainingMode(Mode):
             self._controller.press([Button.BUTTON_S_DOWN], sec=0.30, wait=0.30)
             time.sleep(0.1)
         for k in range(cpu_row):
-            self._controller.press([Button.BUTTON_S_RIGHT], sec=0.37, wait=0.37)
+            self._controller.press([Button.BUTTON_S_RIGHT], sec=0.37, wait=1)
             time.sleep(0.1)
         self._controller.press([Button.BUTTON_A], sec=0.02)
         time.sleep(1)
@@ -140,9 +140,9 @@ class TrainingMode(Mode):
         ### to level
         self._controller.press([Button.BUTTON_S_UP], sec=0.2, wait=0.2)
         time.sleep(0.1)
-        self._controller.press([Button.BUTTON_S_LEFT], sec=0.5, wait=0.5)
+        self._controller.press([Button.BUTTON_S_LEFT], sec=0.5, wait=1)
         time.sleep(0.1)
-        self._controller.press([Button.BUTTON_A], sec=0.02)
+        self._controller.press([Button.BUTTON_A], sec=0.02, wait=0.02)
         ### Change Level
         if self._cpu_level >= 3:
             for i in range(self._cpu_level - 3):
@@ -152,12 +152,12 @@ class TrainingMode(Mode):
             for i in range(3 - self._cpu_level):
                 self._controller.press([Button.BUTTON_S_DOWN], sec=0.2, wait=0.2)
                 time.sleep(0.1)
-        self._controller.press([Button.BUTTON_A], sec=0.02)
+        self._controller.press([Button.BUTTON_A], sec=0.02, wait=0.02)
         time.sleep(1)
 
     def _start_training(self):
         ### Start Training Mode
-        self._controller.press([Button.BUTTON_PLUS], sec=0.02)
+        self._controller.press([Button.BUTTON_PLUS], sec=0.02, wait=0.02)
         time.sleep(15) # Loading
         print("Start Training")
 
