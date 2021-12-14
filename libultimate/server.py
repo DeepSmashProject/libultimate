@@ -8,20 +8,19 @@ import json
 from yuzulib import Server, Button
 from libultimate import Action
 from flask_classful import FlaskView, route
-
+import copy
 
 class UltimateControllerView(FlaskView):
     controller = UltimateController()
-    controller.run()
 
     @route('/act',methods=["POST"])
     def act(self):
-        # curl -X POST -d '{"action": ACTION_JAB}' 'localhost:6000/ultimatecontroller/act'
+        # curl -X POST -d '{"action": "ACTION_JAB"}' 'localhost:6000/ultimate-controller/act'
         req_data = json.loads(request.get_data())
         if "action" not in req_data.keys():
             return Response("ERROR: {} argument is not exist".format("action")), 400
-        action = req_data["action"]
-        action["buttons"] = [Button[bt] for bt in action["buttons"]]
+        action = copy.deepcopy(req_data["action"])
+        action = getattr(Action, action)
         self.controller.act(action)
         return Response("OK"), 200
 
@@ -52,10 +51,6 @@ class UltimateServer(Server):
     def __init__(self, host, port) -> None:
         super(UltimateServer, self).__init__(host, port)
         UltimateControllerView.register(self.app)
-
-    def run(self):
-        self.app.debug = False
-        self.app.run(host=self.host, port=self.port)
 
 if __name__ == '__main__':
     server = UltimateServer(host='0.0.0.0', port=6000)

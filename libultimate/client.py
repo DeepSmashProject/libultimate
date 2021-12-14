@@ -2,6 +2,7 @@ from matplotlib.pyplot import pause
 import requests
 from yuzulib import Client
 from .enums import Action
+import copy
 
 class UltimateClient(Client):
     def __init__(self, address="http://localhost:6000", disable_warning=False) -> None:
@@ -9,9 +10,9 @@ class UltimateClient(Client):
 
     def act(self, action: Action):
         url = '{}/ultimate-controller/act'.format(self.address)
-        print("action: ", action)
-        action["buttons"] = [bt.name for bt in action["buttons"]]
-        payload = {"action": action}
+        action = copy.deepcopy(action)
+        print(action["name"])
+        payload = {"action": action["name"]}
         res = requests.post(url, json=payload)
 
     def move_to_home(self):

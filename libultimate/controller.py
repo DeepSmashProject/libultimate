@@ -46,8 +46,8 @@ class UltimateController(Controller):
         self.training_mode.start()
 
     def reset_training(self):
-        if self.training_mode:
-            self.training_mode.reset()
+        self.press([Button.BUTTON_L, Button.BUTTON_R, Button.BUTTON_A], sec=0.02)
+        time.sleep(0.1)
 
 
 if __name__ == '__main__':
