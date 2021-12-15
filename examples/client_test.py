@@ -5,7 +5,7 @@ def show_screen():
     def callback(frame, fps, info):
         print("get", fps, frame.shape, info)
         client.act(Action.ACTION_JAB)
-    client.run_screen(callback, fps=15, render=True, width=500, height=300)
+    client.run_screen(callback, fps=15, render=False, width=500, height=300, grayscale=False)
 
 def move_training_test():
     print("move training")
