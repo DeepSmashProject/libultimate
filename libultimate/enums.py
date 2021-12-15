@@ -1,5 +1,5 @@
 from enum import Enum
-from yuzulib import Button
+from yuzulib.enums import Button
 class Action:
     """A single button on a PRO controller"""
     ACTION_JAB = {"name": "ACTION_JAB", "buttons": [Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05,}

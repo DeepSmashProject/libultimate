@@ -1,6 +1,6 @@
 from matplotlib.pyplot import pause
 import requests
-from yuzulib import Client
+from yuzulib.client import Client
 from .enums import Action
 import copy
 

@@ -1,7 +1,8 @@
 import pyautogui
 from .enums import Action
 import time
-from yuzulib import Button, Controller
+from yuzulib.controller import Controller
+from yuzulib.enums import Button
 import os
 from pathlib import Path
 from .mode import Action, TrainingMode, Stage, Fighter

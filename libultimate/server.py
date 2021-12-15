@@ -5,7 +5,7 @@ from flask import Flask, Response,stream_with_context, request
 from flask_cors import CORS
 from .controller import UltimateController
 import json
-from yuzulib import Server, Button
+from yuzulib.server import Server
 from libultimate import Action
 from flask_classful import FlaskView, route
 import copy

@@ -1,5 +1,5 @@
 from enum import Enum
-from yuzulib import Button
+from yuzulib.enums import Button
 from .enums import Action, Stage, Fighter
 from .controller import Controller
 import time
