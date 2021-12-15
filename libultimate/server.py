@@ -5,8 +5,8 @@ from flask import Flask, Response,stream_with_context, request
 from flask_cors import CORS
 from .controller import UltimateController
 import json
-from yuzulib.server import Server
-from libultimate import Action
+from yuzulib.server import Server, ControllerView, RunnerView, ScreenView as YuzuScreenView
+from libultimate.enums import Action
 from flask_classful import FlaskView, route
 import copy
 
@@ -47,11 +47,10 @@ class UltimateControllerView(FlaskView):
         self.controller.reset_training()
         return Response("OK"), 200
 
-class UltimateServer(Server):
-    def __init__(self, host, port) -> None:
-        super(UltimateServer, self).__init__(host, port)
-        UltimateControllerView.register(self.app)
+class ScreenView(YuzuScreenView):
+    def _process(self, screen_data):
+        return screen_data
 
 if __name__ == '__main__':
-    server = UltimateServer(host='0.0.0.0', port=6000)
+    server = Server(host='0.0.0.0', port=7000, views=[ControllerView, RunnerView, ScreenView, UltimateControllerView])
     server.run()
