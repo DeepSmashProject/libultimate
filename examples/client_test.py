@@ -2,8 +2,8 @@ from libultimate.client import UltimateClient
 from libultimate.enums import Action, Stage, Fighter
 def show_screen():
     client = UltimateClient(address="http://localhost:6000", disable_warning=True)
-    def callback(frame, fps):
-        print("get", fps, frame.shape)
+    def callback(frame, fps, info):
+        print("get", fps, frame.shape, info)
         client.act(Action.ACTION_JAB)
     client.run_screen(callback, fps=15, render=True, width=500, height=300)
 
