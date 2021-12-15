@@ -19,7 +19,11 @@ class Action:
     ACTION_GRAB = {"name": "ACTION_GRAB", "buttons": [Button.BUTTON_R], "hold": False, "sec": 0.02, "wait": 0.05,}
     ACTION_SHIELD = {"name": "ACTION_SHIELD", "buttons": [Button.BUTTON_ZR], "hold": True, "sec": 0.02, "wait": 0.05,}
     ACTION_JUMP = {"name": "ACTION_JUMP", "buttons": [Button.BUTTON_Y], "hold": True, "sec": 0.02, "wait": 0.05,}
+    ACTION_RIGHT_JUMP = {"name": "ACTION_RIGHT_JUMP", "buttons": [Button.BUTTON_S_RIGHT, Button.BUTTON_Y], "hold": True, "sec": 0.02, "wait": 0.05,}
+    ACTION_LEFT_JUMP = {"name": "ACTION_LEFT_JUMP", "buttons": [Button.BUTTON_S_LEFT, Button.BUTTON_Y], "hold": True, "sec": 0.02, "wait": 0.05,}
     ACTION_SHORT_HOP = {"name": "ACTION_SHORT_HOP", "buttons": [Button.BUTTON_Y, Button.BUTTON_X], "hold": False, "sec": 0.02, "wait": 0.05,}
+    ACTION_RIGHT_SHORT_HOP = {"name": "ACTION_RIGHT_SHORT_HOP", "buttons": [Button.BUTTON_S_RIGHT, Button.BUTTON_Y, Button.BUTTON_X], "hold": False, "sec": 0.02, "wait": 0.05,}
+    ACTION_LEFT_SHORT_HOP = {"name": "ACTION_LEFT_SHORT_HOP", "buttons": [Button.BUTTON_S_LEFT, Button.BUTTON_Y, Button.BUTTON_X], "hold": False, "sec": 0.02, "wait": 0.05,}
     ACTION_UP_TAUNT = {"name": "ACTION_UP_TAUNT", "buttons": [Button.BUTTON_D_UP], "hold": False, "sec": 0.02, "wait": 0.05,}
     ACTION_DOWN_TAUNT = {"name": "ACTION_DOWN_TAUNT", "buttons": [Button.BUTTON_D_DOWN], "hold": False, "sec": 0.02, "wait": 0.05,}
     ACTION_LEFT_TAUNT = {"name": "ACTION_LEFT_TAUNT", "buttons": [Button.BUTTON_D_LEFT], "hold": False, "sec": 0.02, "wait": 0.05,}
