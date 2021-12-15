@@ -17,7 +17,8 @@ class UltimateController(Controller):
         hold = action["hold"]
         sec = action["sec"]
         wait = action["wait"]
-        self.press(buttons, hold=hold, sec=sec, wait=wait)
+        refresh = action["refresh"]
+        self.press(buttons, hold=hold, sec=sec, wait=wait, refresh=refresh)
 
     def move_to_home(self):
         data_path = Path(os.path.dirname(__file__)).joinpath('data/').resolve()
