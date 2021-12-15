@@ -1,5 +1,5 @@
 import argparse
-from libultimate import UltimateServer
+from libultimate.server import UltimateServer
 
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--host')

@@ -1,5 +1,5 @@
-from libultimate import UltimateClient, Action, Stage, Fighter
-
+from libultimate.client import UltimateClient
+from libultimate.enums import Action, Stage, Fighter
 def show_screen():
     client = UltimateClient(address="http://localhost:6000", disable_warning=True)
     def callback(frame, fps):
