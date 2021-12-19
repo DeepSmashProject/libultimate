@@ -11,7 +11,7 @@ class UltimateClient(Client):
     def act(self, action: Action):
         url = '{}/ultimate-controller/act'.format(self.address)
         action = copy.deepcopy(action)
-        print(action["name"])
+        #print(action["name"])
         payload = {"action": action["name"]}
         res = requests.post(url, json=payload)
 
