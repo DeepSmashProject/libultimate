@@ -8,7 +8,7 @@ from .utils import create_namedtuple_from_dict
 
 class API():
     def __init__(self, ryujinx_path: str):
-        self.game_state_path = os.path.join(ryujinx_path, 'sdcard/game_state.json')
+        self.game_state_path = os.path.join(ryujinx_path, 'sdcard/libultimate/game_state.json')
 
     def read_state(self):
         with open(self.game_state_path, 'r') as f:

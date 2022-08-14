@@ -22,20 +22,33 @@ pub unsafe fn handle_get_command_flag_cat(
 ) -> i32 {
     // once per frame
     if category == FIGHTER_PAD_COMMAND_CATEGORY1 {
+        let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
+        let entry_id = app::FighterEntryID(entry_id_int);
         let x = PostureModule::pos_x(module_accessor);
         let y = PostureModule::pos_y(module_accessor);
         let lr = PostureModule::lr(module_accessor); //left or right
-        let guard = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD);
-        let catch = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH);
-        let jump = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP);
+        let button_attack = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
+        let button_special = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL);
+        let button_smash = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SMASH);
+        let button_guard = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD);
+        let button_guard_hold = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD_HOLD);
+        let button_catch = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH);
+        let button_jump = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP);
+        let button_jump_mini = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP_MINI);
+        let button_invalid = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_INVALID);
+        let stick_x = ControlModule::get_stick_x(module_accessor);
+        let stick_y = ControlModule::get_stick_y(module_accessor);
         let percent = DamageModule::damage(module_accessor, 0);
         let situation_kind = StatusModule::situation_kind(module_accessor);
         let fighter_kind = app::utility::get_kind(module_accessor);
         let fighter_status_kind = StatusModule::status_kind(module_accessor);
         let fighter_status_catch = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CATCH;
         let _charge = charge::get_charge(module_accessor, fighter_kind);
+        let is_cpu = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == gamestate::FighterId::CPU as i32;
         let player_state = gamestate::PlayerState {
+            id: entry_id_int,
             fighter_kind: fighter_kind,
+            fighter_status_kind: fighter_status_kind,
             situation_kind: situation_kind,
             lr: lr,
             percent: percent,
@@ -43,6 +56,20 @@ pub unsafe fn handle_get_command_flag_cat(
                 x: x,
                 y: y,
             },
+            control_state: gamestate::ControlState{
+                stick_x: stick_x,
+                stick_y: stick_y,
+                button_attack: button_attack,
+                button_special: button_special,
+                button_smash: button_smash,
+                button_guard: button_guard,
+                button_guard_hold: button_guard_hold,
+                button_catch: button_catch,
+                button_jump: button_jump,
+                button_jump_mini: button_jump_mini,
+                button_invalid: button_invalid,
+            },
+            is_cpu: is_cpu,
             //charge: _charge,
         };
         let game_state = gamestate::GameState {
@@ -50,51 +77,9 @@ pub unsafe fn handle_get_command_flag_cat(
             projectiles: Box::new([]),
         };
         gamestate::save_game_state(game_state);
-        println!("[libultimate] fighter change status. category: {}, x {}, y {}, lr {}, guard {}, jump {}, catch {}, catch2 {},", category, x, y, lr, guard, jump, catch, fighter_status_catch);
+        println!("[libultimate] fighter change status. id {} category: {}, x {}, y {}, lr {}", entry_id_int, category, x, y, lr);
     }
     return original!()(module_accessor, category);
-}
-
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterBase_change_status)]
-pub unsafe fn handle_change_status(
-    _fighter: &mut L2CFighterBase,
-    _status_kind: L2CValue,
-    _unk: L2CValue,
-){
-    let module_accessor = sv_system::battle_object_module_accessor(_fighter.lua_state_agent);
-    let fighter_kind = app::utility::get_kind(module_accessor);
-    let status_kind_int = _status_kind
-        .try_get_int()
-        .unwrap_or(*FIGHTER_STATUS_KIND_WAIT as u64) as i32;
-
-    let attack = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
-    let stick_x = ControlModule::get_stick_x(module_accessor);
-    let stick_y = ControlModule::get_stick_y(module_accessor);
-    let x = PostureModule::pos_x(module_accessor);
-    let y = PostureModule::pos_y(module_accessor);
-    let lr = PostureModule::lr(module_accessor); //left or right
-    let percent = DamageModule::damage(module_accessor, 0);
-    let situation_kind = StatusModule::situation_kind(module_accessor);
-    let _charge = charge::get_charge(module_accessor, fighter_kind);
-    //println!("[libultimate] fighter change status. {}, status {}, percent {}, xy {} {}, lr {}, attack {}", fighter_kind, status_kind_int, percent, x, y, lr, attack);
-    //let stick_x = ControlModule::set_main_stick_x(module_accessor, 1.0);
-    let player_state = gamestate::PlayerState {
-        fighter_kind: fighter_kind,
-        situation_kind: status_kind_int,
-        lr: lr,
-        percent: percent,
-        position: gamestate::Position{
-            x: x,
-            y: y,
-        },
-        //charge: _charge,
-    };
-    let game_state = gamestate::GameState {
-        players: Box::new([player_state]),
-        projectiles: Box::new([]),
-    };
-    gamestate::save_game_state(game_state);
-    original!()(_fighter, _status_kind, _unk);
 }
 
 fn nro_main(nro: &NroInfo<'_>) {

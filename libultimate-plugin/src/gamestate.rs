@@ -22,12 +22,37 @@ impl Default for GameState {
 
 #[derive(Serialize, Clone, Copy)]
 pub struct PlayerState{
+    pub id: i32,
     pub fighter_kind: i32,
+    pub fighter_status_kind: i32,
     pub situation_kind: i32,
     pub lr: f32,
     pub percent: f32,
     pub position: Position,
+    pub control_state: ControlState,
+    pub is_cpu: bool,
     //pub charge: ChargeState,
+}
+
+#[derive(Serialize, Debug, Clone, Copy)]
+pub enum FighterId {
+    Player = 0,
+    CPU = 1,
+}
+
+#[derive(Serialize, Clone, Copy)]
+pub struct ControlState{
+    pub stick_x: f32,
+    pub stick_y: f32,
+    pub button_attack: bool,
+    pub button_special: bool,
+    pub button_smash: bool,
+    pub button_guard: bool,
+    pub button_guard_hold: bool,
+    pub button_catch: bool,
+    pub button_jump: bool,
+    pub button_jump_mini: bool,
+    pub button_invalid: bool,
 }
 
 #[derive(Serialize, Clone, Copy)]
