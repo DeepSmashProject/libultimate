@@ -73,20 +73,12 @@ pub unsafe fn handle_get_command_flag_cat(
             is_cpu: is_cpu,
             //charge: _charge,
         };
-        /*let game_state = gamestate::GameState {
-            players: Vec::new(),
-            projectiles: Vec::new(),
-        };
-        gamestate::save_game_state(game_state);*/
         let mut game_state = GAMESTATE
             .get_or_init(|| Mutex::new(gamestate::GameState::default()))
             .lock()
             .unwrap();
-        //GAMESTATE.update(t);
         *game_state = gamestate::GameState::update_player_state(&game_state, player_state);
         gamestate::GameState::save(&game_state);
-        //let test = GAMESTATE.into_inner().unwrap().into_inner().unwrap();
-        //gamestate::save_game_state(game_state);
         //println!("[libultimate] fighter change status. id {} category: {}, x {}, y {}, lr {}", entry_id_int, category, x, y, lr);
     }
     return original!()(module_accessor, category);
