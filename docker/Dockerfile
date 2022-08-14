@@ -8,7 +8,7 @@ ENV USER root
 
 # (1-1) Install prerequisites
 RUN dpkg --add-architecture i386 && \
-    apt-get update && apt-get install -y --no-install-recommends \
+    apt update && apt install -y --no-install-recommends \
     apt-utils \
     build-essential \
     ca-certificates \
@@ -29,7 +29,7 @@ RUN dpkg --add-architecture i386 && \
 # After this installation, command Xorg and xinit can be used in the container
 # if you need full ubuntu desktop environment, the line below should be added.
 # ubuntu-desktop \
-RUN apt-get install -y xinit
+RUN apt install -y xinit
 
 # (1-3) Install NVIDIA drivers, including X graphic drivers
 # Same command as nvidia/driver, except --x-{prefix,module-path,library-path,sysconfig-path} are omitted in order to make use default path and enable X drivers.
@@ -64,13 +64,13 @@ RUN cd /tmp && \
 # x11-apps: xeyes can be used to make sure that X11 server is running.
 #
 # Note: x11vnc in ubuntu18.04 is useless beacuse of stack smashing bug. See below to manual compilation.
-RUN apt-get install -y --no-install-recommends \
+RUN apt install -y --no-install-recommends \
     mesa-utils \
     x11-apps
 
 # solution for the `stack smashing detected` issue
 # https://github.com/LibVNC/x11vnc/issues/61
-RUN apt-get install -y --no-install-recommends \
+RUN apt install -y --no-install-recommends \
     automake autoconf libssl-dev xorg-dev libvncserver-dev && \
     rm -rf /var/lib/apt/lists/* && \
     git clone https://github.com/LibVNC/x11vnc.git && \
@@ -89,7 +89,7 @@ RUN wget https://github.com/novnc/noVNC/archive/v1.1.0.zip && \
 # Xorg segfault error
 # dbus-core: error connecting to system bus: org.freedesktop.DBus.Error.FileNotFound (Failed to connect to socket /var/run/dbus/system_bus_socket: No such file or directory)
 # related? https://github.com/Microsoft/WSL/issues/2016
-RUN apt-get install -y --no-install-recommends \
+RUN apt install -y --no-install-recommends \
     dbus-x11
 #libdbus-c++-1-0v5
 
@@ -97,7 +97,7 @@ RUN apt-get install -y --no-install-recommends \
 
 ######### Install and Build ryujinx #############
 COPY ./docker/install_ryujinx.sh /install_ryujinx.sh
-RUN apt-get update && apt-get install -y shared-mime-info desktop-file-utils sudo \
+RUN apt update && apt install -y shared-mime-info desktop-file-utils sudo \
     python3 python3-pip && \
     sudo bash /install_ryujinx.sh
 
