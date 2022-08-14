@@ -3,7 +3,7 @@ import sys
 import time
 import json
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from .gamestate import GameState
+from .gamestate import GameState, toGameState
 from .utils import create_namedtuple_from_dict
 
 class API():
@@ -14,7 +14,7 @@ class API():
         with open(self.game_state_path, 'r') as f:
             text = f.read()
             gs_json = json.loads(text)
-            game_state: GameState = create_namedtuple_from_dict("GameState", gs_json)
+            game_state: GameState = toGameState(gs_json)
             return game_state
 
     def send_command(self, command):
