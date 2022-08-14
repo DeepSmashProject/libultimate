@@ -24,6 +24,9 @@ pub unsafe fn handle_get_command_flag_cat(
     let y = PostureModule::pos_y(module_accessor);
     let lr = PostureModule::lr(module_accessor); //left or right
     println!("[libultimate] fighter change status. category: {}, x {}, y {}, lr {}", category, x, y, lr);
+    if (category & *FIGHTER_PAD_CMD_CAT1_DASH) != 0 {
+        println!("[libultimate] dashed!");
+    }
     //once_per_frame_per_fighter(module_accessor, category);
     return original!()(module_accessor, category);
 }
