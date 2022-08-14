@@ -7,16 +7,45 @@ use std::cell::Cell;
 
 #[derive(Serialize, Clone)]
 pub struct GameState {
-    pub players: Box<[PlayerState]>,
-    pub projectiles: Box<[Projectile]>,
+    pub players: Vec<PlayerState>,
+    pub projectiles: Vec<Projectile>,
 }
 
 impl Default for GameState {
     fn default() -> Self {
         Self {
-            players: Box::new([]),
-            projectiles: Box::new([]),
+            players: Vec::new(),
+            projectiles: Vec::new(),
         }
+    }
+}
+
+impl GameState {
+    pub fn update_player_state(&self, player_state: PlayerState) -> GameState {
+        let mut index: i32 = -1;
+        let mut players = self.players.clone();
+        for (i, ps) in self.players.iter().enumerate(){
+            if ps.id == player_state.id{
+                index = i as i32;
+            }
+        }
+        if index < 0 {
+            // not exist
+            players.push(player_state);
+        }else{
+            // exist
+            players[index as usize] = player_state;
+        }
+        GameState {
+            players: players,
+            projectiles: Vec::new(),
+        }
+    }
+
+    pub fn save(&self){
+        let gs_text = serde_json::to_string(&self).expect("game_state serialize error.");
+        let mut file = OpenOptions::new().write(true).truncate(true).open("sd:/libultimate/game_state.json").expect("game_state.json file not found");
+        write!(&file, "{}", gs_text).expect("something went wrong reading the file");
     }
 }
 
@@ -75,8 +104,8 @@ impl Default for GameStateModule {
     fn default() -> Self {
         Self {
             game_state: GameState {
-                players: Box::new([]),
-                projectiles: Box::new([]),
+                players: Vec::new(),
+                projectiles: Vec::new(),
             },
         }
     }
@@ -91,15 +120,19 @@ impl GameStateModule {
 
     fn update_player_state(&mut self, player_state: PlayerState) {
         println!("update_player_state");
-        /*for (i, ps) in self.game_state.players.iter().enumerate(){
+        let mut index: i32 = -1;
+        for (i, ps) in self.game_state.players.iter().enumerate(){
             if ps.fighter_kind == player_state.fighter_kind{
-                &self.game_state.set(GameState {
-                    players: Box::new([]),
-                    projectiles: Box::new([]),
-                });
+                index = i as i32;
             }
         }
-        self.save();*/
+        if index < 0 {
+            // not exist
+        }else{
+            // exist
+
+        }
+        self.save();
     }
 }
 

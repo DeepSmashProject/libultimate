@@ -10,10 +10,11 @@ use std::fs::{File, OpenOptions};
 use std::io::Write;
 use std::io;
 use std::path::Path;
+use std::sync::Mutex;
 mod gamestate;
 use once_cell::sync::OnceCell;
 
-static globalGameState: OnceCell<gamestate::GameState> = OnceCell::new();
+static GAMESTATE: OnceCell<Mutex<gamestate::GameState>> = OnceCell::new();
 
 #[skyline::hook(replace = ControlModule::get_command_flag_cat)]
 pub unsafe fn handle_get_command_flag_cat(
@@ -72,12 +73,21 @@ pub unsafe fn handle_get_command_flag_cat(
             is_cpu: is_cpu,
             //charge: _charge,
         };
-        let game_state = gamestate::GameState {
-            players: Box::new([player_state]),
-            projectiles: Box::new([]),
+        /*let game_state = gamestate::GameState {
+            players: Vec::new(),
+            projectiles: Vec::new(),
         };
-        gamestate::save_game_state(game_state);
-        println!("[libultimate] fighter change status. id {} category: {}, x {}, y {}, lr {}", entry_id_int, category, x, y, lr);
+        gamestate::save_game_state(game_state);*/
+        let mut game_state = GAMESTATE
+            .get_or_init(|| Mutex::new(gamestate::GameState::default()))
+            .lock()
+            .unwrap();
+        //GAMESTATE.update(t);
+        *game_state = gamestate::GameState::update_player_state(&game_state, player_state);
+        gamestate::GameState::save(&game_state);
+        //let test = GAMESTATE.into_inner().unwrap().into_inner().unwrap();
+        //gamestate::save_game_state(game_state);
+        //println!("[libultimate] fighter change status. id {} category: {}, x {}, y {}, lr {}", entry_id_int, category, x, y, lr);
     }
     return original!()(module_accessor, category);
 }
@@ -115,7 +125,7 @@ fn create_data() {
 #[skyline::main(name = "libultimate-plugin")]
 pub fn main() {
     println!("[libultimate] Initializing...");
-    globalGameState.set(gamestate::GameState::default());
+    //globalGameState.set(gamestate::GameState::default());
     create_data();
     nro::add_hook(nro_main).unwrap();
     println!("[libultimate] Finished Initializing.");
