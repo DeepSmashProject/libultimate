@@ -1,11 +1,13 @@
-from libultimate import Controller, Console
+import os
+import sys
+from libultimate import Console, Controller
 
-console = Console(address="0.0.0.0:10000")
-controller = Controller(console=console, port=1)
+if __name__ == "__main__":
+    RYUJINX_PATH = os.path.join(os.path.dirname(__file__), "../libultimate/test")
+    console = Console(ryujinx_path=RYUJINX_PATH)
+    controller = Controller(console=console, port=1)
 
-console.run()
-with console.connect():
-    for gamestate in console.stream():
-        print("gamestate: ", gamestate.message)
-        result = controller.press()
-        print("controled: ", result.message)
+    for gamestate in console.stream(hz=5):
+        print("gamestate: ", gamestate)
+        #result = controller.press()
+        #print("controled: ", result.message)

@@ -1,5 +1,5 @@
-from typing import NamedTuple, Tuple, List
-from enums import Fighter
+from typing import NamedTuple, List
+from .enums import Fighter
 
 class Position(NamedTuple):
     x: float = 0

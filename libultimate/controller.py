@@ -1,5 +1,5 @@
 from .console import Console
-from typing import NamedTuple, Tuple
+from typing import NamedTuple
 
 class ControllerState(NamedTuple):
     button_a: bool = False
@@ -15,8 +15,8 @@ class ControllerState(NamedTuple):
     button_d_down: bool = False
     button_d_left: bool = False
     button_d_right: bool = False
-    main_stick: Tuple(float, float) = (0.5, 0.5)
-    c_stick: Tuple(float, float) = (0.5, 0.5)
+    main_stick: tuple[float, float] = (0, 0) # -1 -> +1
+    c_stick: tuple[float, float] = (0, 0) # -1 -> +1
 
 class Controller():
     def __init__(self, console: Console, port: int=1):
@@ -24,14 +24,14 @@ class Controller():
         self.port = port
 
     def press(self):
-        res = self.console.operateController()
+        res = self.console.api.send_command()
         return res
 
     def release(self):
-        res = self.console.operateController()
+        res = self.console.api.send_command()
         return res
 
     def release_all(self):
-        res = self.console.operateController()
+        res = self.console.api.send_command()
         return res
         

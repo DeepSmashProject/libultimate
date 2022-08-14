@@ -6,7 +6,10 @@ use smash::lib::lua_const::*;
 use skyline::nro::{self, NroInfo};
 mod charge;
 use std::fs;
+use std::fs::{File, OpenOptions};
 use std::io::Write;
+use std::io;
+use std::path::Path;
 //use nix::unistd;
 //use nix::sys::stat;
 //use std::path::Path;
@@ -126,10 +129,26 @@ fn nro_main(nro: &NroInfo<'_>) {
     }
 }
 
+fn touch(path: &Path) -> io::Result<()> {
+    match OpenOptions::new().create(true).write(true).open(path) {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e),
+    }
+}
+
+fn create_data() {
+    println!("[Skyline Test4] create data.");
+    fs::create_dir_all("sd:/LibUltimate").expect("could not create data directory.");
+    touch(&Path::new("sd:/LibUltimate/game_state.json")).expect("Error on creating game_state.json.");
+    touch(&Path::new("sd:/LibUltimate/config.json")).expect("Error on creating config.json.");
+    touch(&Path::new("sd:/LibUltimate/command.json")).expect("Error on creating command.json.");
+}
+
 #[skyline::main(name = "libultimate-plugin")]
 pub fn main() {
     println!("[Skyline Test4] Hello from skyline plugin");
-    save_state();
+    create_data();
+    //save_state();
     println!("[Skyline Test4] finish savestate");
 
     nro::add_hook(nro_main).unwrap();

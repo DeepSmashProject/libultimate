@@ -1,34 +1,29 @@
 import os
 import sys
+import time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
-import grpc
-from proto.libultimate_pb2 import ControlProps, GameStateProps
-from proto.libultimate_pb2_grpc import LibUltimateStub
-from contextlib import contextmanager     
+from .api import API
 
 class Console():
-    def __init__(self, address="0.0.0.0:10000"):
-        self.address=address
+    def __init__(self, ryujinx_path):
+        self.ryujinx_path = ryujinx_path
+        self.api = API(ryujinx_path)
 
     def run(self):
         pass
 
-    @contextmanager
-    def connect(self):
-        self.channel = grpc.insecure_channel(self.address)
-        self.stub = LibUltimateStub(self.channel)
-        print("opened connection!: {}".format(self.address))
-        try:
-            yield
-        finally:
-            self.channel.close()
-            print("closed connection!: {}".format(self.address))
-
     def stream(self, hz=60):
-        for res in self.stub.GetGameState(GameStateProps(hz=hz)):
-            yield res
+        interval = hz * (1/60)
+        while True:
+            try:
+                time.sleep(interval)
+                yield self.api.read_state()
+            except Exception as err:
+                print("Warning: couldn't read state: {}".format(err))
 
-    def operateController(self):
-        res = self.stub.OperateController(ControlProps(message="test"))
-        return res
+
+if __name__ == "__main__":
+    RYUJINX_PATH = os.path.join(os.path.dirname(__file__), "test")
+    console = Console(RYUJINX_PATH)
+    for game_state in console.stream(hz=5):
+        print(game_state)
