@@ -12,7 +12,7 @@ install_requires = [x.strip() for x in all_reqs]
 
 setup(
     name="libultimate",
-    version="0.0.0",
+    version="1.0.0-beta0",
     packages=['libultimate'],
     install_requires = install_requires,
     description='',

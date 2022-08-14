@@ -1,0 +1,12 @@
+{
+  "players": [
+    {
+      "fighter": 10,
+      "direction": true,
+      "percent": 15,
+      "position": null,
+      "charge": 0
+    }
+  ],
+  "projectiles": []
+}

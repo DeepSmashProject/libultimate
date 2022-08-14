@@ -1,57 +1,37 @@
-import pyautogui
-from .enums import Action
-import time
-from yuzulib.controller import Controller
-from yuzulib.enums import Button
-import os
-from pathlib import Path
-from .mode import Action, TrainingMode, Stage, Fighter
+from .console import Console
+from typing import NamedTuple, Tuple
 
-class UltimateController(Controller):
-    def __init__(self):
-        super(UltimateController, self).__init__()
-        self.training_mode = None
+class ControllerState(NamedTuple):
+    button_a: bool = False
+    button_b: bool = False
+    button_x: bool = False
+    button_y: bool = False
+    button_l: bool = False
+    button_r: bool = False
+    button_z: bool = False
+    button_zl: bool = False
+    button_zr: bool = False
+    button_d_up: bool = False
+    button_d_down: bool = False
+    button_d_left: bool = False
+    button_d_right: bool = False
+    main_stick: Tuple(float, float) = (0.5, 0.5)
+    c_stick: Tuple(float, float) = (0.5, 0.5)
 
-    def act(self, action: Action):
-        buttons = action["buttons"]
-        hold = action["hold"]
-        sec = action["sec"]
-        wait = action["wait"]
-        refresh = action["refresh"]
-        self.press(buttons, hold=hold, sec=sec, wait=wait, refresh=refresh)
+class Controller():
+    def __init__(self, console: Console, port: int=1):
+        self.console = console
+        self.port = port
 
-    def move_to_home(self):
-        data_path = Path(os.path.dirname(__file__)).joinpath('data/').resolve()
-        path = str(data_path) + '/home.png'
-        print(path)
+    def press(self):
+        res = self.console.operateController()
+        return res
 
-        while True:
-            time.sleep(1)
-            res = pyautogui.locateOnScreen(path, confidence=.8)
-            if res != None:
-                print("Reached Home!")
-                break
-            else:
-                self.press([Button.BUTTON_X], sec=0.02)
-                time.sleep(0.1)
-                self.press([Button.BUTTON_B], sec=0.02)
-                time.sleep(0.1)
+    def release(self):
+        res = self.console.operateController()
+        return res
 
-    def move_to_training(self, config):
-        self.training_mode = TrainingMode(
-            controller=self,
-            stage=Stage[config["stage"]], 
-            player=Fighter[config["player"]["fighter"]],
-            cpu=Fighter[config["cpu"]["fighter"]],
-            cpu_level=config["cpu"]["level"],
-        )
-        self.training_mode.start()
-
-    def reset_training(self):
-        self.press([Button.BUTTON_L, Button.BUTTON_R, Button.BUTTON_A], sec=0.02)
-        time.sleep(0.1)
-
-
-if __name__ == '__main__':
-    controller = UltimateController()
-    controller.act(Action.ACTION_JAB)
+    def release_all(self):
+        res = self.console.operateController()
+        return res
+        
