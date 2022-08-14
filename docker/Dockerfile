@@ -97,8 +97,9 @@ RUN apt-get install -y --no-install-recommends \
 
 ######### Install and Build ryujinx #############
 COPY ./docker/install_ryujinx.sh /install_ryujinx.sh
-RUN apt update && apt install -y shared-mime-info desktop-file-utils && \
-    /install_ryujinx.sh
+RUN apt-get update && apt-get install -y shared-mime-info desktop-file-utils sudo \
+    python3 python3-pip && \
+    sudo bash /install_ryujinx.sh
 
 ############# for NVIDIA ##################
 ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
@@ -109,7 +110,7 @@ ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPA
 RUN apt -y install python3-tk python3-dev scrot vim
 #RUN apt install -y --no-install-recommends ubuntu-desktop && \
 #    apt install -y gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
-WORKDIR /workspace/yuzulib
+WORKDIR /workspace/libultimate
 COPY . .
 #RUN git clone https://github.com/DeepSmashProject/yuzulib.git
 RUN pip install -e .
