@@ -34,6 +34,7 @@ source = "git+https://github.com/ultimate-research/libc-nnsdk.git#98c11e074317f2
 name = "libultimate-plugin"
 version = "0.1.0"
 dependencies = [
+ "once_cell",
  "serde",
  "serde_json",
  "skyline",
@@ -53,6 +54,12 @@ source = "git+https://github.com/ultimate-research/nnsdk-rs.git#c9b66a3423d86ead
 dependencies = [
  "libc-nnsdk",
 ]
+
+[[package]]
+name = "once_cell"
+version = "1.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "18a6dbe30758c9f83eb00cbea4ac95966305f5a7772f3f42ebfc7fc7eddbd8e1"
 
 [[package]]
 name = "paste"

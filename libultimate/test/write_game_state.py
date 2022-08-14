@@ -8,7 +8,7 @@ from gamestate import GameState
 from enums import Fighter
 
 def write_game_state(game_state):
-    game_state_path = os.path.join(os.path.dirname(__file__), 'sdcard/game_state.json')
+    game_state_path = os.path.join(os.path.dirname(__file__), 'sdcard/libultimate/game_state.json')
     with open(game_state_path, 'w') as f:
         json.dump(game_state, f, indent=2, ensure_ascii=False)
 

@@ -11,6 +11,9 @@ use std::io::Write;
 use std::io;
 use std::path::Path;
 mod gamestate;
+use once_cell::sync::OnceCell;
+
+static globalGameState: OnceCell<gamestate::GameState> = OnceCell::new();
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterBase_change_status)]
 pub unsafe fn handle_change_status(
@@ -18,9 +21,6 @@ pub unsafe fn handle_change_status(
     _status_kind: L2CValue,
     _unk: L2CValue,
 ){
-    //let mut status_kind = status_kind;
-    //let mut unk = unk;
-    //let fighter_str = _fighter.try_get_string().unwrap_or("");
     let module_accessor = sv_system::battle_object_module_accessor(_fighter.lua_state_agent);
     let fighter_kind = app::utility::get_kind(module_accessor);
     let status_kind_int = _status_kind
@@ -36,8 +36,8 @@ pub unsafe fn handle_change_status(
     let percent = DamageModule::damage(module_accessor, 0);
     let situation_kind = StatusModule::situation_kind(module_accessor);
     let _charge = charge::get_charge(module_accessor, fighter_kind);
-    println!("[libultimate] fighter change status. {}, status {}, percent {}, xy {} {}, lr {}, attack {}", fighter_kind, status_kind_int, percent, x, y, lr, attack);
-    let stick_x = ControlModule::set_main_stick_x(module_accessor, 1.0);
+    //println!("[libultimate] fighter change status. {}, status {}, percent {}, xy {} {}, lr {}, attack {}", fighter_kind, status_kind_int, percent, x, y, lr, attack);
+    //let stick_x = ControlModule::set_main_stick_x(module_accessor, 1.0);
     let player_state = gamestate::PlayerState {
         fighter_kind: fighter_kind,
         situation_kind: status_kind_int,
@@ -53,7 +53,6 @@ pub unsafe fn handle_change_status(
         players: Box::new([player_state]),
         projectiles: Box::new([]),
     };
-    //get_file();
     gamestate::save_game_state(game_state);
     original!()(_fighter, _status_kind, _unk);
 }
@@ -89,11 +88,9 @@ fn create_data() {
 
 #[skyline::main(name = "libultimate-plugin")]
 pub fn main() {
-    println!("[libultimate] Hello from skyline plugin");
-    let gsModule = gamestate::GameStateModule::default();
+    println!("[libultimate] Initializing...");
+    globalGameState.set(gamestate::GameState::default());
     create_data();
-    //save_state();
-    println!("[libultimate] finish savestate");
-
     nro::add_hook(nro_main).unwrap();
+    println!("[libultimate] Finished Initializing.");
 }
