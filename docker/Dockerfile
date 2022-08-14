@@ -7,6 +7,12 @@ ENV USER root
 # Almost same procesure as nvidia/driver https://gitlab.com/nvidia/driver/blob/master/ubuntu16.04/Dockerfile
 
 # (1-1) Install prerequisites
+RUN rm -f /etc/apt/sources.list.d/cuda.list \
+    && apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    && wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb \
+    && dpkg -i cuda-keyring_1.0-1_all.deb \
+    && rm -f cuda-keyring_1.0-1_all.deb
 RUN dpkg --add-architecture i386 && \
     apt update && apt install -y --no-install-recommends \
     apt-utils \
