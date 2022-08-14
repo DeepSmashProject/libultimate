@@ -15,6 +15,19 @@ use once_cell::sync::OnceCell;
 
 static globalGameState: OnceCell<gamestate::GameState> = OnceCell::new();
 
+#[skyline::hook(replace = ControlModule::get_command_flag_cat)]
+pub unsafe fn handle_get_command_flag_cat(
+    module_accessor: &mut app::BattleObjectModuleAccessor,
+    category: i32,
+) -> i32 {
+    let x = PostureModule::pos_x(module_accessor);
+    let y = PostureModule::pos_y(module_accessor);
+    let lr = PostureModule::lr(module_accessor); //left or right
+    println!("[libultimate] fighter change status. category: {}, x {}, y {}, lr {}", category, x, y, lr);
+    //once_per_frame_per_fighter(module_accessor, category);
+    return original!()(module_accessor, category);
+}
+
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterBase_change_status)]
 pub unsafe fn handle_change_status(
     _fighter: &mut L2CFighterBase,
@@ -66,7 +79,8 @@ fn nro_main(nro: &NroInfo<'_>) {
 
     if nro.name == "common" {
         skyline::install_hooks!(
-            handle_change_status,
+            //handle_change_status,
+            handle_get_command_flag_cat,
         );
     }
 }
