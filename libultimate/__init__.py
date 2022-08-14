@@ -1,5 +1,5 @@
 from .console import Console
-from .controller import Controller
+from .controller import Controller, UltimateController
 from .api import API
-from .enums import Stage, Fighter, Button
+from .enums import Stage, Fighter, Button, Action
 from .gamestate import GameState, Position, PlayerState, Projectile

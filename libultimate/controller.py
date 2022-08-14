@@ -6,6 +6,7 @@ from .enums import Button
 import threading
 import time
 from pynput.keyboard import Controller as Con, Key
+from .enums import Action
 
 class ControllerState(NamedTuple):
     button_a: bool = False
@@ -114,6 +115,20 @@ class Controller:
         self.unhold_event.set()
         self.kill_event.set()
         self.control_event.set()
+
+class UltimateController(Controller):
+    def __init__(self):
+        super(UltimateController, self).__init__()
+        #self.mode = Mode(self)
+
+    def act(self, action: Action):
+        buttons = action["buttons"]
+        hold = action["hold"]
+        sec = action["sec"]
+        wait = action["wait"]
+        refresh = action["refresh"]
+        self.press(buttons, hold=hold, sec=sec, wait=wait, refresh=refresh)
+
 
 if __name__ == '__main__':
     controller = Controller()
