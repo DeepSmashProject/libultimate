@@ -1,95 +1,70 @@
-use smash::lib::L2CValue;
-use smash::lua2cpp::L2CFighterBase;
-use smash::app::sv_system;
-use smash::app::{self, lua_bind::*};
-use smash::lib::lua_const::*;
-use skyline::nro::{self, NroInfo};
-mod charge;
+use crate::charge::ChargeState;
 use std::fs;
-use std::io::Write;
+use std::io::{self, Read, Write, BufReader};
+use serde::{Serialize};
 //use nix::unistd;
 //use nix::sys::stat;
 //use std::path::Path;
 //use std::env;
 
-struct SavedState {
-    x: f32,
-    y: f32,
-    percent: f32,
-    lr: f32,
-    situation_kind: i32,
-    fighter_kind: i32,
-    charge: charge::ChargeState,
+#[derive(Serialize)]
+pub struct GameState {
+    pub players: Box<[PlayerState]>,
+    pub projectiles: Box<[Projectile]>,
 }
-
-struct GameState {
-    players: Box<[PlayerState]>,
-    projectiles: Box<[Projectile]>,
-    stage: i32,
+#[derive(Serialize)]
+pub struct PlayerState{
+    pub fighter_kind: i32,
+    pub situation_kind: i32,
+    pub lr: f32,
+    pub percent: f32,
+    pub position: Position,
+    //pub charge: ChargeState,
 }
-
-struct PlayerState{
-    fighter_kind: i32,
-    situation_kind: i32,
-    lr: i32,
-    percent: f32,
-    position: Position,
-    charge: charge::ChargeState,
-}
-
-struct Projectile{
+#[derive(Serialize)]
+pub struct Projectile{
 
 }
 
-struct Position{
-    x: f32,
-    y: f32,
+#[derive(Serialize)]
+pub struct Position{
+    pub x: f32,
+    pub y: f32,
 }
 
-trait GameStateModule {
-    fn open(&self) -> u64;
-    fn close(&self) -> u64;
-    fn save(&self) -> u64;
+pub struct GameStateModule {
+    game_state: GameState,
 }
 
-struct GameStateModuleStruct {
-    game_state: GameState
-}
 
-impl GameStateModule for GameStateModuleStruct {
-    fn open(&self) -> u64 {
-        println!("open");
+impl Default for GameStateModule {
+    fn default() -> Self {
+        Self {
+            game_state: GameState {
+                players: Box::new([]),
+                projectiles: Box::new([]),
+            },
+        }
     }
+}
 
-    fn save(&self) -> u64 {
+impl GameStateModule {
+    fn save(&self) {
         println!("save");
+       // let gs_text = serde_json::to_string(&self.game_state).unwrap();
+        let mut f = fs::File::open("sd:/libultimate/game_state.json").expect("file not found");
+        //write!(&f, "{}", gs_text).expect("something went wrong reading the file");
     }
 
-    fn close(&self) -> u64 {
-        println!("close");
+    fn update_player_state(&self) {
+        println!("update_player_state");
+        self.save();
     }
 }
 
-trait ControllerModule {
-    fn open(&self) -> u64;
-    fn close(&self) -> u64;
-    fn on_push_control(&self) -> u64;
-}
-
-struct ControllerModuleStruct {
-    game_state: Controller
-}
-
-impl ControllerModule for ControllerModuleStruct {
-    fn open(&self) -> u64 {
-        println!("open");
-    }
-
-    fn on_push_control(&self) -> u64 {
-        println!("on_push_control");
-    }
-
-    fn close(&self) -> u64 {
-        println!("close");
-    }
+pub fn save_game_state(game_state: GameState) {
+    println!("save");
+    let gs_text = serde_json::to_string(&game_state).unwrap();
+    let mut f = fs::File::open("sd:/libultimate/game_state.json").expect("game_state.json file not found");
+    write!(&f, "{}", gs_text).expect("something went wrong reading the file");
 }

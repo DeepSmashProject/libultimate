@@ -10,45 +10,7 @@ use std::fs::{File, OpenOptions};
 use std::io::Write;
 use std::io;
 use std::path::Path;
-//use nix::unistd;
-//use nix::sys::stat;
-//use std::path::Path;
-//use std::env;
-
-struct SavedState {
-    x: f32,
-    y: f32,
-    percent: f32,
-    lr: f32,
-    situation_kind: i32,
-    fighter_kind: i32,
-    charge: charge::ChargeState,
-}
-
-struct GameState {
-    players: Box<[PlayerState]>,
-    projectiles: Box<[Projectile]>,
-    stage: i32,
-}
-
-struct PlayerState{
-    fighter_kind: i32,
-    situation_kind: i32,
-    lr: i32,
-    percent: f32,
-    position: Position,
-    charge: charge::ChargeState,
-}
-
-struct Projectile{
-
-}
-
-struct Position{
-    x: f32,
-    y: f32,
-}
-
+mod gamestate;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterBase_change_status)]
 pub unsafe fn handle_change_status(
@@ -74,53 +36,34 @@ pub unsafe fn handle_change_status(
     let percent = DamageModule::damage(module_accessor, 0);
     let situation_kind = StatusModule::situation_kind(module_accessor);
     let _charge = charge::get_charge(module_accessor, fighter_kind);
-    println!("[Skyline Test4] fighter change status. {}, status {}, percent {}, xy {} {}, lr {}, attack {}", fighter_kind, status_kind_int, percent, x, y, lr, attack);
+    println!("[libultimate] fighter change status. {}, status {}, percent {}, xy {} {}, lr {}, attack {}", fighter_kind, status_kind_int, percent, x, y, lr, attack);
     let stick_x = ControlModule::set_main_stick_x(module_accessor, 1.0);
+    let player_state = gamestate::PlayerState {
+        fighter_kind: fighter_kind,
+        situation_kind: status_kind_int,
+        lr: lr,
+        percent: percent,
+        position: gamestate::Position{
+            x: x,
+            y: y,
+        },
+        //charge: _charge,
+    };
+    let game_state = gamestate::GameState {
+        players: Box::new([player_state]),
+        projectiles: Box::new([]),
+    };
     //get_file();
+    gamestate::save_game_state(game_state);
     original!()(_fighter, _status_kind, _unk);
 }
 
-/*fn get_file() -> Result<(), Box<dyn std::error::Error>>{
-    println!("[Skyline Test4] Read Start");
-    let filename = "/home/map4/.config/Ryujinx/sdcard/test.txt";
-    let mut f = fs::File::open(filename).expect("file not found");
-    let content = fs::read_to_string(filename).expect("file cannot read");
-    println!("[Skyline Test4] Read {}", content);
-    Ok(())
-}*/
-
-fn save_state(){
-    const fpath: &str = "sd:/TrainingModpack/fifo_test";
-    match fs::File::create(fpath){
-        Ok(file) => println!("Path {:?}", fpath),
-        Err(err) => println!("Error creating file: {}", err),
-    }
-    let mut f = fs::File::open(fpath).expect("file not found");
-    f.write_all(b"nju33").expect("something went wrong reading the file");
-    /*match fs::File::open(fpath){
-        Ok(file) => {
-            println!("Opened Path");
-            file.write_all(b"nju33").unwrap();
-        },
-        Err(err) => println!("Error creating fifo: {}", err),
-    }*/
-    /*let tmp_dir = TempDir::new("test_fifo").unwrap();
-    let fifo_path = tmp_dir.path().join("foo.pipe");*/
-
-    // create new fifo and give read, write and execute rights to the owner
-    /*const fifo_path: &str = "sd:/TrainingModpack/fifo_test";
-    match unistd::mkfifo(&fifo_path, stat::Mode::S_IRWXU) {
-       Ok(_) => println!("created {:?}", fifo_path),
-       Err(err) => println!("Error creating fifo: {}", err),
-    }*/
-}
-
 fn nro_main(nro: &NroInfo<'_>) {
-    println!("[Skyline Test4] nro module.");
+    println!("[libultimate] nro module.");
     if nro.module.isLoaded {
         return;
     }
-    println!("[Skyline Test4] nro module.2");
+    println!("[libultimate] nro module.2");
 
     if nro.name == "common" {
         skyline::install_hooks!(
@@ -137,19 +80,20 @@ fn touch(path: &Path) -> io::Result<()> {
 }
 
 fn create_data() {
-    println!("[Skyline Test4] create data.");
-    fs::create_dir_all("sd:/LibUltimate").expect("could not create data directory.");
-    touch(&Path::new("sd:/LibUltimate/game_state.json")).expect("Error on creating game_state.json.");
-    touch(&Path::new("sd:/LibUltimate/config.json")).expect("Error on creating config.json.");
-    touch(&Path::new("sd:/LibUltimate/command.json")).expect("Error on creating command.json.");
+    println!("[libultimate] create data.");
+    fs::create_dir_all("sd:/libultimate").expect("could not create data directory.");
+    touch(&Path::new("sd:/libultimate/game_state.json")).expect("Error on creating game_state.json.");
+    touch(&Path::new("sd:/libultimate/config.json")).expect("Error on creating config.json.");
+    touch(&Path::new("sd:/libultimate/command.json")).expect("Error on creating command.json.");
 }
 
 #[skyline::main(name = "libultimate-plugin")]
 pub fn main() {
-    println!("[Skyline Test4] Hello from skyline plugin");
+    println!("[libultimate] Hello from skyline plugin");
+    let gsModule = gamestate::GameStateModule::default();
     create_data();
     //save_state();
-    println!("[Skyline Test4] finish savestate");
+    println!("[libultimate] finish savestate");
 
     nro::add_hook(nro_main).unwrap();
 }
