@@ -20,8 +20,6 @@ class API():
     def send_command(self, command):
         pass
 
-
-
 if __name__ == "__main__":
     RYUJINX_DIR = os.path.join(os.path.dirname(__file__), "test")
     api = API(RYUJINX_DIR)
