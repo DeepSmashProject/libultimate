@@ -20,14 +20,38 @@ pub unsafe fn handle_get_command_flag_cat(
     module_accessor: &mut app::BattleObjectModuleAccessor,
     category: i32,
 ) -> i32 {
-    let x = PostureModule::pos_x(module_accessor);
-    let y = PostureModule::pos_y(module_accessor);
-    let lr = PostureModule::lr(module_accessor); //left or right
-    println!("[libultimate] fighter change status. category: {}, x {}, y {}, lr {}", category, x, y, lr);
-    if (category & *FIGHTER_PAD_CMD_CAT1_DASH) != 0 {
-        println!("[libultimate] dashed!");
+    // once per frame
+    if category == FIGHTER_PAD_COMMAND_CATEGORY1 {
+        let x = PostureModule::pos_x(module_accessor);
+        let y = PostureModule::pos_y(module_accessor);
+        let lr = PostureModule::lr(module_accessor); //left or right
+        let guard = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD);
+        let catch = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH);
+        let jump = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP);
+        let percent = DamageModule::damage(module_accessor, 0);
+        let situation_kind = StatusModule::situation_kind(module_accessor);
+        let fighter_kind = app::utility::get_kind(module_accessor);
+        let fighter_status_kind = StatusModule::status_kind(module_accessor);
+        let fighter_status_catch = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CATCH;
+        let _charge = charge::get_charge(module_accessor, fighter_kind);
+        let player_state = gamestate::PlayerState {
+            fighter_kind: fighter_kind,
+            situation_kind: situation_kind,
+            lr: lr,
+            percent: percent,
+            position: gamestate::Position{
+                x: x,
+                y: y,
+            },
+            //charge: _charge,
+        };
+        let game_state = gamestate::GameState {
+            players: Box::new([player_state]),
+            projectiles: Box::new([]),
+        };
+        gamestate::save_game_state(game_state);
+        println!("[libultimate] fighter change status. category: {}, x {}, y {}, lr {}, guard {}, jump {}, catch {}, catch2 {},", category, x, y, lr, guard, jump, catch, fighter_status_catch);
     }
-    //once_per_frame_per_fighter(module_accessor, category);
     return original!()(module_accessor, category);
 }
 
