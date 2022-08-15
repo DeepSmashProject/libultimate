@@ -73,6 +73,7 @@ class UltimateEnv(gym.Env):
         if not without_reset:
             self.controller.mode.training.reset()
         observation = self._gamestate_to_observation(self.gamestate)
+        self.controller.release_all()
         time.sleep(1)
         return observation
 

@@ -2,11 +2,10 @@ from .console import Console
 from typing import NamedTuple, Tuple
 from contextlib import ExitStack
 from typing import List
-from .enums import Button
 import threading
 import time
 from pynput.keyboard import Controller as Con, Key
-from .enums import Action
+from .enums import Action, Button
 from .mode import Mode
 
 class ControllerState(NamedTuple):
@@ -114,6 +113,11 @@ class Controller:
         self.unhold_event.set()
         self.kill_event.set()
         self.control_event.set()
+
+    def release_all(self):
+        pynput_buttons = self._convert_pynput_buttons([b for b in Button])
+        for b in pynput_buttons:
+            self.keyboard.release(b)
 
 class UltimateController(Controller):
     def __init__(self):
