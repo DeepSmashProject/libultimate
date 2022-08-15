@@ -1,15 +1,12 @@
 from enum import Enum
 
 class Stage(Enum):
-    """A VS-mode stage """
-    NO_STAGE = 0
-    FINAL_DESTINATION = 1
-    BATTLEFIELD = 2
-    POKEMON_STADIUM = 3
-    DREAMLAND = 4
-    FOUNTAIN_OF_DREAMS = 5
-    YOSHIS_STORY = 6
-    RANDOM_STAGE = 7
+    STAGE_BATTLE_FIELD=1
+    STAGE_FINAL_DESTINATION=4
+    STAGE_POKEMON_STADIUM2=41
+    STAGE_SMASH_VILLE=45
+    STAGE_HANENBOW=55
+    STAGE_TOWN_AND_CITY=86
 
 class Fighter(Enum):
     FIGHTER_MARIO = 0

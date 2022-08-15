@@ -7,6 +7,7 @@ import threading
 import time
 from pynput.keyboard import Controller as Con, Key
 from .enums import Action
+from .mode import Mode
 
 class ControllerState(NamedTuple):
     button_a: bool = False
@@ -119,7 +120,7 @@ class Controller:
 class UltimateController(Controller):
     def __init__(self):
         super(UltimateController, self).__init__()
-        #self.mode = Mode(self)
+        self.mode = Mode(self)
 
     def act(self, action: Action):
         buttons = action["buttons"]
