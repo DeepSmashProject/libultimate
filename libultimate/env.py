@@ -73,14 +73,17 @@ class UltimateEnv(gym.Env):
         if not without_reset:
             self.controller.mode.training.reset()
         observation = self._gamestate_to_observation(self.gamestate)
+        time.sleep(1)
         return observation
 
     def step(self, action: Action):
         self.controller.act(action)
+        interval = 60/self.hz * (1/60)
+        time.sleep(interval)
         observation = self._gamestate_to_observation(self.gamestate)
         info = self.gamestate
-        reward = self._reward(self.gamestate, self.prev_gamestate)
         self.done = self._done(self.gamestate, self.prev_gamestate)
+        reward = self._reward(self.done, self.gamestate, self.prev_gamestate)
         self.prev_gamestate = self.gamestate
         return observation, reward, self.done, info
 
@@ -95,8 +98,13 @@ class UltimateEnv(gym.Env):
             return True
         return False
 
-    def _reward(self, gamestate, prev_gamestate):
+    def _reward(self, done, gamestate, prev_gamestate):
         p1_diff_damage = gamestate.players[0].percent - prev_gamestate.players[0].percent
         p2_diff_damage = gamestate.players[1].percent - prev_gamestate.players[1].percent
         reward = p2_diff_damage - p1_diff_damage
+        if done:
+            if gamestate.players[0].percent == 0:
+                reward = -1
+            if gamestate.players[1].percent == 0:
+                reward = 1
         return reward

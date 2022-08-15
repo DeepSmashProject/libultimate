@@ -13,7 +13,7 @@ class Console():
         pass
 
     def stream(self, hz=60):
-        interval = hz * (1/60)
+        interval = 60/hz * (1/60)
         while True:
             try:
                 time.sleep(interval)
