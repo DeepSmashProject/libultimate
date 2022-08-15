@@ -29,6 +29,7 @@ class PlayerState(NamedTuple):
     #charge: float
     control_state: ControlState
     is_cpu: bool
+    is_dead: bool
 
 class Projectile(NamedTuple):
     position: Position
