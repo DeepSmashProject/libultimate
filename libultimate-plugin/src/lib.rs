@@ -83,15 +83,12 @@ pub unsafe fn handle_get_command_flag_cat(
 }
 
 fn nro_main(nro: &NroInfo<'_>) {
-    println!("[libultimate] nro module.");
     if nro.module.isLoaded {
         return;
     }
-    println!("[libultimate] nro module.2");
 
     if nro.name == "common" {
         skyline::install_hooks!(
-            //handle_change_status,
             handle_get_command_flag_cat,
         );
     }

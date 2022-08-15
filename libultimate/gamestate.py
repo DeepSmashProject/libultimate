@@ -65,7 +65,8 @@ def toGameState(gs_json):
                 button_jump_mini=p["control_state"]["button_jump_mini"],
                 button_invalid=p["control_state"]["button_invalid"]
             ),
-            is_cpu=p["is_cpu"]
+            is_cpu=p["is_cpu"],
+            is_dead=p["is_dead"],
         ))
     return GameState(
         players=players,
