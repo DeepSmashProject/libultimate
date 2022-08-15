@@ -1,4 +1,4 @@
-from ultimatelib import Action, UltimateController, Console
+from libultimate import Action, UltimateController, Console
 import gym
 import time
 import threading

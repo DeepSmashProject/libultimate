@@ -1,6 +1,6 @@
 import os
 import random
-from libultimate import Console, Controller, UltimateController, Action, UltimateEnv
+from libultimate import Console, UltimateController, Action, UltimateEnv
 
 action_list = [
     Action.ACTION_JAB,
@@ -59,6 +59,6 @@ if __name__ == "__main__":
         while not done:
             action = random.choice(action_list)
             next_obs, reward, done, info = env.step(action)
-            print("episode: {}, step: {}, action: {}, obs: {}, done: {}, reward: {}, info: {}".format(k, step, action["name"], next_obs, done, reward, info))
+            print("episode: {}, step: {}, done: {}, reward: {}, action: {}".format(k, step, done, reward, action["name"]))
             step += 1
     print("finished!")

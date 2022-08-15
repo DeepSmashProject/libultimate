@@ -90,8 +90,6 @@ class Controller:
             self._press()
 
     def _press(self):
-        #print(self.data)
-        #buttons = self.data["buttons"]
         buttons = self._convert_pynput_buttons(self.data["buttons"])
         if len(buttons) == 0:
             return

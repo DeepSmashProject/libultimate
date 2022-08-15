@@ -1,13 +1,9 @@
-use smash::lib::L2CValue;
-use smash::lua2cpp::L2CFighterBase;
-use smash::app::sv_system;
 use smash::app::{self, lua_bind::*};
 use smash::lib::lua_const::*;
 use skyline::nro::{self, NroInfo};
 mod charge;
 use std::fs;
-use std::fs::{File, OpenOptions};
-use std::io::Write;
+use std::fs::{OpenOptions};
 use std::io;
 use std::path::Path;
 use std::sync::Mutex;
@@ -24,7 +20,7 @@ pub unsafe fn handle_get_command_flag_cat(
     // once per frame
     if category == FIGHTER_PAD_COMMAND_CATEGORY1 {
         let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
-        let entry_id = app::FighterEntryID(entry_id_int);
+        //let entry_id = app::FighterEntryID(entry_id_int);
         let x = PostureModule::pos_x(module_accessor);
         let y = PostureModule::pos_y(module_accessor);
         let lr = PostureModule::lr(module_accessor); //left or right
@@ -43,9 +39,10 @@ pub unsafe fn handle_get_command_flag_cat(
         let situation_kind = StatusModule::situation_kind(module_accessor);
         let fighter_kind = app::utility::get_kind(module_accessor);
         let fighter_status_kind = StatusModule::status_kind(module_accessor);
-        let fighter_status_catch = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_CATCH;
+        let is_dead = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD;
         let _charge = charge::get_charge(module_accessor, fighter_kind);
         let is_cpu = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == gamestate::FighterId::CPU as i32;
+
         let player_state = gamestate::PlayerState {
             id: entry_id_int,
             fighter_kind: fighter_kind,
@@ -71,6 +68,7 @@ pub unsafe fn handle_get_command_flag_cat(
                 button_invalid: button_invalid,
             },
             is_cpu: is_cpu,
+            is_dead: is_dead,
             //charge: _charge,
         };
         let mut game_state = GAMESTATE

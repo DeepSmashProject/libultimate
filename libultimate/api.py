@@ -1,10 +1,8 @@
 import os
 import sys
-import time
 import json
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .gamestate import GameState, toGameState
-from .utils import create_namedtuple_from_dict
 
 class API():
     def __init__(self, ryujinx_path: str):

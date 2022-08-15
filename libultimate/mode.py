@@ -1,43 +1,12 @@
-from enum import Enum
-from .enums import Action, Stage, Fighter, Button
-from .controller import Controller
+from .enums import Stage, Button
 import time
-import pyautogui
-import os
-from pathlib import Path
-from collections import namedtuple
+
 class Mode:
-    def __init__(self, controller: Controller):
+    def __init__(self, controller):
         self.training = TrainingMode(controller)
-        self.home = HomeMode(controller)
-
-class HomeMode:
-    def __init__(self, controller: Controller):
-        self._controller = controller
-        self.data_path = Path(os.path.dirname(__file__)).joinpath('data/').resolve()
-        self.path = str(self.data_path) + '/home.png'
-        print("Home data path: ", self.path)
-
-    def move(self):
-        while True:
-            time.sleep(1)
-            if self.is_home():
-                print("Reached Home!")
-                break
-            else:
-                self._controller.press([Button.BUTTON_X], sec=0.02)
-                time.sleep(0.1)
-                self._controller.press([Button.BUTTON_B], sec=0.02)
-                time.sleep(0.1)
-
-    def is_home(self):
-        res = pyautogui.locateOnScreen(self.path, confidence=.8)
-        if res == None:
-            return False
-        return True
 
 class TrainingMode:
-    def __init__(self, controller: Controller):
+    def __init__(self, controller):
         self._controller = controller
 
     def start(self, config):
