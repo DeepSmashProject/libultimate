@@ -6,6 +6,7 @@ import uuid
 
 class Command(NamedTuple):
     id: string
+    player_id: int
     action: Action
 
 
@@ -13,9 +14,10 @@ class UltimateController:
     def __init__(self, console: Console):
         self.console = console
 
-    def act(self, action: Action):
+    def act(self, player_id: int, action: Action):
         command: Command = {
             id: uuid.uuid4(),
+            player_id: player_id,
             action: action
         }
         self.console.api.send_command(command)
