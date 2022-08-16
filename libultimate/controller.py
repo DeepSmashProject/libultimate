@@ -5,7 +5,7 @@ from typing import NamedTuple
 import uuid
 
 class Command(NamedTuple):
-    id: string
+    id: str
     player_id: int
     action: Action
 
@@ -16,8 +16,8 @@ class UltimateController:
 
     def act(self, player_id: int, action: Action):
         command: Command = {
-            id: uuid.uuid4(),
-            player_id: player_id,
-            action: action
+            "id": str(uuid.uuid4()),
+            "player_id": player_id,
+            "action": action
         }
         self.console.api.send_command(command)

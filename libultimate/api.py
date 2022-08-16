@@ -3,7 +3,6 @@ import sys
 import json
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .gamestate import GameState, toGameState
-from .controller import Command
 
 class API():
     def __init__(self, ryujinx_path: str):
@@ -17,7 +16,7 @@ class API():
             game_state: GameState = toGameState(gs_json)
             return game_state
 
-    def send_command(self, command: Command):
+    def send_command(self, command):
         with open(self.command_path, 'w') as f:
             json.dump(command, f)
 

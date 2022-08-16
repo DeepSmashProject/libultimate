@@ -170,7 +170,7 @@ class Action_OLD:
     ACTION_DOWN_STICK = {"name": "ACTION_DOWN_STICK", "buttons": [Button.BUTTON_S_DOWN], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
     ACTION_NO_OPERATION = {"name": "ACTION_NO_OPERATION", "buttons": [], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
     
-class Action(Enum):
+class Action(str, Enum):
     AIR_ESCAPE = "AIR_ESCAPE"
     ATTACK_HI3 = "ATTACK_HI3"
     ATTACK_HI4 = "ATTACK_HI4"
