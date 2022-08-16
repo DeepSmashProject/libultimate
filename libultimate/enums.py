@@ -124,7 +124,7 @@ class Button(Enum):
     BUTTON_S_RIGHT = "d"
     BUTTON_MODIFIER = "shift"
 
-class Action:
+class Action_OLD:
     """A single button on a PRO controller"""
     ACTION_JAB = {"name": "ACTION_JAB", "buttons": [Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
     ACTION_RIGHT_TILT = {"name": "ACTION_RIGHT_TILT", "buttons": [Button.BUTTON_MODIFIER, Button.BUTTON_S_RIGHT, Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
@@ -170,3 +170,30 @@ class Action:
     ACTION_DOWN_STICK = {"name": "ACTION_DOWN_STICK", "buttons": [Button.BUTTON_S_DOWN], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
     ACTION_NO_OPERATION = {"name": "ACTION_NO_OPERATION", "buttons": [], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
     
+class Action(Enum):
+    AIR_ESCAPE = "AIR_ESCAPE"
+    ATTACK_HI3 = "ATTACK_HI3"
+    ATTACK_HI4 = "ATTACK_HI4"
+    ATTACK_LW3 = "ATTACK_LW3"
+    ATTACK_LW4 = "ATTACK_LW4"
+    ATTACK_N = "ATTACK_N"
+    ATTACK_S3 = "ATTACK_S3"
+    ATTACK_S4 = "ATTACK_S4"
+    CATCH = "CATCH"
+    DASH = "DASH"
+    ESCAPE = "ESCAPE"
+    ESCAPE_B = "ESCAPE_B"
+    ESCAPE_F = "ESCAPE_F"
+    JUMP = "JUMP"
+    JUMP_BUTTON = "JUMP_BUTTON"
+    SPECIAL_ANY = "SPECIAL_ANY"
+    SPECIAL_HI = "SPECIAL_HI"
+    SPECIAL_LW = "SPECIAL_LW"
+    SPECIAL_N = "SPECIAL_N"
+    SPECIAL_S = "SPECIAL_S"
+    TURN = "TURN"
+    TURN_DASH = "TURN_DASH"
+    WALK = "WALK"
+    WALL_JUMP_LEFT = "WALL_JUMP_LEFT"
+    WALL_JUMP_RIGHT = "WALL_JUMP_RIGHT"
+    NONE = "NONE"
