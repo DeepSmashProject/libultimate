@@ -37,6 +37,7 @@ pub enum Action {
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Command {
     pub id: String,
+    pub player_id: i32,
     pub action: Action,
 }
 
@@ -44,6 +45,7 @@ impl Default for Command {
     fn default() -> Self {
         Self {
             id: "".to_string(),
+            player_id: 0,
             action: Action::NONE,
         }
     }
