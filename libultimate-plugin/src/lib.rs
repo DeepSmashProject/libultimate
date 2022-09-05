@@ -11,21 +11,21 @@ mod gamestate;
 mod command;
 use once_cell::sync::OnceCell;
 
+static GAMESTATE: OnceCell<Mutex<gamestate::GameState>> = OnceCell::new();
+static COMMAND: OnceCell<Mutex<command::Command>> = OnceCell::new();
+static mut FIGHTER_MANAGER_ADDR: usize = 0;
+
 fn global_gamestate() -> gamestate::GameState {
-    static GAMESTATE: OnceCell<Mutex<gamestate::GameState>> = OnceCell::new();
     return GAMESTATE.get_or_init(|| {
         Mutex::new(gamestate::GameState::default())
     }).lock().unwrap().clone();
 }
 
 fn global_command() -> command::Command {
-    static COMMAND: OnceCell<Mutex<command::Command>> = OnceCell::new();
     return COMMAND.get_or_init(|| {
         Mutex::new(command::Command::default())
     }).lock().unwrap().clone();
 }
-
-pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
 
 #[skyline::hook(replace = ControlModule::get_command_flag_cat)]
 pub unsafe fn handle_get_command_flag_cat(
