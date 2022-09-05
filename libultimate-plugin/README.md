@@ -49,3 +49,33 @@ https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/training/mash
 | CLIFF    | 1   | on cliff    |
 | AIR      | 2   | on air      |
 | OUTFIELD | 5   | on outfield |
+
+# Action
+
+| Status          | Description        |
+| --------------- | ------------------ |
+| AIR_ESCAPE      | air escape         |
+| ATTACK_HI3      | up tilt            |
+| ATTACK_HI4      | up smash           |
+| ATTACK_LW3      | down tilt          |
+| ATTACK_LW4      | down smash         |
+| ATTACK_N        | Jab                |
+| ATTACK_S3       | side tilt          |
+| ATTACK_S4       | side smash         |
+| CATCH           | grab               |
+| DASH            | dash               |
+| ESCAPE          | spot dogde         |
+| ESCAPE_B        | back roll dodge    |
+| ESCAPE_F        | forward roll dodge |
+| JUMP            | jump               |
+| JUMP_BUTTON     | jump               |
+| SPECIAL_ANY     | up special ?       |
+| SPECIAL_HI      | up special         |
+| SPECIAL_LW      | down special       |
+| SPECIAL_N       | neutral special    |
+| SPECIAL_S       | side special       |
+| TURN            | turn               |
+| TURN_DASH       | turn dash          |
+| WALK            | walk               |
+| WALL_JUMP_LEFT  | wall jump left     |
+| WALL_JUMP_RIGHT | wall jump right    |
