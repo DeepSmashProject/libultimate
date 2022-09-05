@@ -7,9 +7,8 @@ from .gamestate import GameState, toGameState
 
 class API():
     def __init__(self, ryujinx_path: str):
+        self.ryujinx_path = ryujinx_path
         self.game_state_path = os.path.join(ryujinx_path, 'sdcard/libultimate/game_state.json')
-        self.command_path = os.path.join(ryujinx_path, 'sdcard/libultimate/command.json')
-        self.command_ok_path = os.path.join(ryujinx_path, 'sdcard/libultimate/command.ok.json')
         self.logger = logging.getLogger(__name__)
 
     def read_state(self):
@@ -19,12 +18,14 @@ class API():
             game_state: GameState = toGameState(gs_json)
             return game_state
 
-    def send_command(self, command):
-        if not os.path.isfile(self.command_ok_path):
-            with open(self.command_path, 'w') as f:
+    def send_command(self, player_id: int, command):
+        command_path = os.path.join(self.ryujinx_path, 'sdcard/libultimate/command_{}.json'.format(player_id))
+        command_ok_path = os.path.join(self.ryujinx_path, 'sdcard/libultimate/command_{}.ok.json'.format(player_id))
+        if not os.path.isfile(command_ok_path):
+            with open(command_path, 'w') as f:
                 json.dump(command, f)
             # create ok file
-            with open(self.command_ok_path, 'w') as f:
+            with open(command_ok_path, 'w') as f:
                 pass
         else:
             self.logger.warning("command cannot sent.")

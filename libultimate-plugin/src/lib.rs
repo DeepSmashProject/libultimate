@@ -4,7 +4,7 @@ use skyline::nro::{self, NroInfo};
 mod charge;
 use std::fs;
 use std::fs::{OpenOptions};
-use std::io;
+use std::io::{Error};
 use std::path::Path;
 use std::sync::Mutex;
 mod gamestate;
@@ -44,9 +44,9 @@ pub unsafe fn handle_get_command_flag_cat(
     return flag;
 }
 
-unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor) -> Result<i32, String>{
-    let _command = command::Command::get();
+unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor) -> Result<i32, Error>{
     let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
+    let _command = command::Command::get(entry_id_int)?;
 
     let mut prev_command = global_command();
 
@@ -208,7 +208,7 @@ fn nro_main(nro: &NroInfo<'_>) {
     }
 }
 
-fn touch(path: &Path) -> io::Result<()> {
+fn touch(path: &Path) -> Result<(), Error> {
     match OpenOptions::new().create(true).write(true).open(path) {
         Ok(_) => Ok(()),
         Err(e) => Err(e),

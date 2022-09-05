@@ -1,5 +1,5 @@
 //use crate::charge::ChargeState;
-use std::io::{Write, BufReader};
+use std::io::{Write, BufReader, Error};
 use serde::{Serialize, Deserialize};
 use std::fs::{OpenOptions, File};
 use std::fs;
@@ -53,18 +53,20 @@ impl Default for Command {
 }
 
 impl Command {
-    pub fn get() -> Command{
+    pub fn get(entry_id: i32) -> Result<Command, Error>{
         let mut command: Command = Command::default();
-        if Path::new("sd:/libultimate/command.ok.json").exists() {
-            let file = File::open("sd:/libultimate/command.json").expect("Failed to load JSON");
+        let command_ok_path = format!("sd:/libultimate/command_{}.ok.json", entry_id);
+        let command_path = format!("sd:/libultimate/command_{}.json", entry_id);
+        if Path::new(&command_ok_path).exists() {
+            let file = File::open(&command_path)?;
             let reader = BufReader::new(file);
             command = match serde_json::from_reader(reader){
                 Ok(command) => command,
                 Err(e) => Command::default(),
             };
             // remove ok.json
-            fs::remove_file("sd:/libultimate/command.ok.json").unwrap();
+            fs::remove_file(&command_ok_path).unwrap();
         }
-        return command;
+        return Ok(command);
     }
 }

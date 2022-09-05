@@ -20,4 +20,4 @@ class UltimateController:
             "player_id": player_id,
             "action": action
         }
-        self.console.api.send_command(command)
+        self.console.api.send_command(player_id, command)
