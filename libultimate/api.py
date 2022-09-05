@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import logging
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .gamestate import GameState, toGameState
 
@@ -9,6 +10,7 @@ class API():
         self.game_state_path = os.path.join(ryujinx_path, 'sdcard/libultimate/game_state.json')
         self.command_path = os.path.join(ryujinx_path, 'sdcard/libultimate/command.json')
         self.command_ok_path = os.path.join(ryujinx_path, 'sdcard/libultimate/command.ok.json')
+        self.logger = logging.getLogger(__name__)
 
     def read_state(self):
         with open(self.game_state_path, 'r') as f:
@@ -25,5 +27,5 @@ class API():
             with open(self.command_ok_path, 'w') as f:
                 pass
         else:
-            print("Warning: command not sent, previous command not acknowledged")
+            self.logger.warning("command cannot sent.")
 
