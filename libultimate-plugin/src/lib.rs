@@ -9,23 +9,12 @@ use std::path::Path;
 use std::sync::Mutex;
 mod gamestate;
 mod command;
+use once_cell::sync::Lazy;
 use once_cell::sync::OnceCell;
 
-static GAMESTATE: OnceCell<Mutex<gamestate::GameState>> = OnceCell::new();
-static COMMAND: OnceCell<Mutex<command::Command>> = OnceCell::new();
+static GAMESTATE: Lazy<Mutex<gamestate::GameState>> = Lazy::new(|| Mutex::new(gamestate::GameState::default()));
+static COMMAND: Lazy<Mutex<command::Command>> = Lazy::new(|| Mutex::new(command::Command::default()));
 static mut FIGHTER_MANAGER_ADDR: usize = 0;
-
-fn global_gamestate() -> gamestate::GameState {
-    return GAMESTATE.get_or_init(|| {
-        Mutex::new(gamestate::GameState::default())
-    }).lock().unwrap().clone();
-}
-
-fn global_command() -> command::Command {
-    return COMMAND.get_or_init(|| {
-        Mutex::new(command::Command::default())
-    }).lock().unwrap().clone();
-}
 
 #[skyline::hook(replace = ControlModule::get_command_flag_cat)]
 pub unsafe fn handle_get_command_flag_cat(
@@ -48,11 +37,11 @@ unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor
     let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
     let _command = command::Command::get(entry_id_int)?;
 
-    let mut prev_command = global_command();
+    let mut prev_command = COMMAND.lock().unwrap();
 
     if _command.id != prev_command.id && entry_id_int == _command.player_id {
-        prev_command = _command;
-        match prev_command.action {
+        *COMMAND.lock().unwrap() = _command.clone();
+        match _command.action {
             command::Action::AIR_ESCAPE => {
                 return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE);
             }
@@ -190,9 +179,10 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
         is_dead: is_dead,
         //charge: _charge,
     };
-    let mut game_state = global_gamestate();
-    game_state = gamestate::GameState::update_player_state(&game_state, player_state);
-    gamestate::GameState::save(&game_state);
+    let game_state = GAMESTATE.lock().unwrap();
+    let updated_game_state = gamestate::GameState::update_player_state(&game_state, player_state);
+    gamestate::GameState::save(&updated_game_state);
+    *GAMESTATE.lock().unwrap() = updated_game_state;
     //println!("[libultimate] fighter change status. id {} category: {}, x {}, y {}, lr {}", entry_id_int, category, x, y, lr);
 }
 
