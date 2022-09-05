@@ -19,27 +19,6 @@ impl Default for GameState {
 }
 
 impl GameState {
-    pub fn update_player_state(&self, player_state: PlayerState) -> GameState {
-        let mut index: i32 = -1;
-        let mut players = self.players.clone();
-        for (i, ps) in self.players.iter().enumerate(){
-            if ps.id == player_state.id{
-                index = i as i32;
-            }
-        }
-        if index < 0 {
-            // not exist
-            players.push(player_state);
-        }else{
-            // exist
-            players[index as usize] = player_state;
-        }
-        GameState {
-            players: players,
-            projectiles: Vec::new(),
-        }
-    }
-
     pub fn save(&self){
         let gs_text = serde_json::to_string(&self).expect("game_state serialize error.");
         let file = OpenOptions::new().write(true).truncate(true).open("sd:/libultimate/game_state.json").expect("game_state.json file not found");
