@@ -40,7 +40,7 @@ unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor
     let mut prev_command = COMMAND.lock().unwrap();
 
     if _command.id != prev_command.id && entry_id_int == _command.player_id {
-        *COMMAND.lock().unwrap() = _command.clone();
+        //*COMMAND.lock().unwrap() = _command.clone(); // TODO: freeze here
         match _command.action {
             command::Action::AIR_ESCAPE => {
                 return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE);
@@ -179,11 +179,19 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
         is_dead: is_dead,
         //charge: _charge,
     };
-    let game_state = GAMESTATE.lock().unwrap();
-    let updated_game_state = gamestate::GameState::update_player_state(&game_state, player_state);
-    gamestate::GameState::save(&updated_game_state);
-    *GAMESTATE.lock().unwrap() = updated_game_state;
-    //println!("[libultimate] fighter change status. id {} category: {}, x {}, y {}, lr {}", entry_id_int, category, x, y, lr);
+    let mut game_state = GAMESTATE.lock().unwrap();
+    let mut exist = false;
+    for (i, ps) in game_state.players.iter().enumerate() {
+        if ps.id == player_state.id {
+            game_state.players[i] = player_state;
+            exist = true;
+            break;
+        }
+    }
+    if !exist {
+        game_state.players.push(player_state);
+    }
+    gamestate::GameState::save(&game_state);
 }
 
 fn nro_main(nro: &NroInfo<'_>) {
