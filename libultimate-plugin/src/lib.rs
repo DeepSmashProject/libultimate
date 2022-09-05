@@ -1,6 +1,7 @@
 use smash::app::{self, lua_bind::*};
 use smash::lib::lua_const::*;
 use skyline::nro::{self, NroInfo};
+use skyline::nn::hid;
 mod charge;
 use std::fs;
 use std::fs::{OpenOptions};
@@ -15,6 +16,23 @@ use once_cell::sync::OnceCell;
 static GAMESTATE: Lazy<Mutex<gamestate::GameState>> = Lazy::new(|| Mutex::new(gamestate::GameState::default()));
 static COMMAND: Lazy<Mutex<command::Command>> = Lazy::new(|| Mutex::new(command::Command::default()));
 static mut FIGHTER_MANAGER_ADDR: usize = 0;
+
+/*#[skyline::hook(replace = hid::GetNpadGcState)]
+pub unsafe fn handle_get_npad_gc_state(){
+
+}*/
+
+#[skyline::hook(replace = ControlModule::get_stick_y)]
+pub unsafe fn get_stick_y(module_accessor: &mut app::BattleObjectModuleAccessor) -> f32 {
+    let ori = original!()(module_accessor);
+    return 1.0 as f32;
+}
+
+#[skyline::hook(replace = ControlModule::get_stick_x)]
+pub unsafe fn get_stick_x(module_accessor: &mut app::BattleObjectModuleAccessor) -> f32 {
+    let ori = original!()(module_accessor);
+    return 1.0 as f32;
+}
 
 #[skyline::hook(replace = ControlModule::get_command_flag_cat)]
 pub unsafe fn handle_get_command_flag_cat(
