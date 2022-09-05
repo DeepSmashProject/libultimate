@@ -3,6 +3,7 @@ use std::io::{Write, BufReader};
 use serde::{Serialize, Deserialize};
 use std::fs::{OpenOptions, File};
 use std::fs;
+use std::path::Path;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub enum Action {
@@ -53,12 +54,17 @@ impl Default for Command {
 
 impl Command {
     pub fn get() -> Command{
-        let file = File::open("sd:/libultimate/command.json").expect("Failed to load JSON");
-        let reader = BufReader::new(file);
-        let command: Command = match serde_json::from_reader(reader){
-            Ok(command) => command,
-            Err(e) => Command::default(),
-        };
+        let mut command: Command = Command::default();
+        if Path::new("sd:/libultimate/command.ok.json").exists() {
+            let file = File::open("sd:/libultimate/command.json").expect("Failed to load JSON");
+            let reader = BufReader::new(file);
+            command = match serde_json::from_reader(reader){
+                Ok(command) => command,
+                Err(e) => Command::default(),
+            };
+            // remove ok.json
+            fs::remove_file("sd:/libultimate/command.ok.json").unwrap();
+        }
         return command;
     }
 }
