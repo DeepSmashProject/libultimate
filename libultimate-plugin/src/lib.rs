@@ -47,85 +47,92 @@ unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor
 
     let mut prev_command = COMMAND.lock().unwrap();
 
-    if _command.id != prev_command.id && entry_id_int == _command.player_id {
-        //*COMMAND.lock().unwrap() = _command.clone(); // TODO: freeze here
-        match _command.action {
-            command::Action::AIR_ESCAPE => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE);
+    if entry_id_int == _command.player_id {
+        // execute stick until recieve next command
+        ControlModule::set_main_stick_x(module_accessor, _command.stick_x);
+        ControlModule::set_main_stick_y(module_accessor, _command.stick_y);
+
+        // execute command once per recieve command
+        if _command.id != prev_command.id {
+            match _command.action {
+                command::Action::AIR_ESCAPE => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE);
+                }
+                command::Action::ATTACK_HI3 => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3);
+                }
+                command::Action::ATTACK_HI4 => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4);
+                }
+                command::Action::ATTACK_LW3 => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3);
+                }
+                command::Action::ATTACK_LW4 => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4);
+                }
+                command::Action::ATTACK_N => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N);
+                }
+                command::Action::ATTACK_S3 => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3);
+                }
+                command::Action::ATTACK_S4 => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4);
+                }
+                command::Action::CATCH => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_CATCH);
+                }
+                command::Action::DASH => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_DASH);
+                }
+                command::Action::ESCAPE => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE);
+                }
+                command::Action::ESCAPE_B => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_B);
+                }
+                command::Action::ESCAPE_F => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_F);
+                }
+                command::Action::JUMP => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_JUMP);
+                }
+                command::Action::JUMP_BUTTON => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON);
+                }
+                command::Action::SPECIAL_ANY => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY);
+                }
+                command::Action::SPECIAL_HI => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI);
+                }
+                command::Action::SPECIAL_LW => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW);
+                }
+                command::Action::SPECIAL_N => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N);
+                }
+                command::Action::SPECIAL_S => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S);
+                }
+                command::Action::TURN => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_TURN);
+                }
+                command::Action::TURN_DASH => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH);
+                }
+                command::Action::WALK => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALK);
+                }
+                command::Action::WALL_JUMP_LEFT => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_LEFT);
+                }
+                command::Action::WALL_JUMP_RIGHT => {
+                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_RIGHT);
+                }
+                _ => return Err(Error::new(ErrorKind::Other, "NO CMD")),
             }
-            command::Action::ATTACK_HI3 => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3);
-            }
-            command::Action::ATTACK_HI4 => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4);
-            }
-            command::Action::ATTACK_LW3 => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3);
-            }
-            command::Action::ATTACK_LW4 => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4);
-            }
-            command::Action::ATTACK_N => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N);
-            }
-            command::Action::ATTACK_S3 => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3);
-            }
-            command::Action::ATTACK_S4 => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4);
-            }
-            command::Action::CATCH => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_CATCH);
-            }
-            command::Action::DASH => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_DASH);
-            }
-            command::Action::ESCAPE => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE);
-            }
-            command::Action::ESCAPE_B => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_B);
-            }
-            command::Action::ESCAPE_F => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_F);
-            }
-            command::Action::JUMP => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_JUMP);
-            }
-            command::Action::JUMP_BUTTON => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON);
-            }
-            command::Action::SPECIAL_ANY => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY);
-            }
-            command::Action::SPECIAL_HI => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI);
-            }
-            command::Action::SPECIAL_LW => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW);
-            }
-            command::Action::SPECIAL_N => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N);
-            }
-            command::Action::SPECIAL_S => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S);
-            }
-            command::Action::TURN => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_TURN);
-            }
-            command::Action::TURN_DASH => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH);
-            }
-            command::Action::WALK => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALK);
-            }
-            command::Action::WALL_JUMP_LEFT => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_LEFT);
-            }
-            command::Action::WALL_JUMP_RIGHT => {
-                return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_RIGHT);
-            }
-            _ => return Err(Error::new(ErrorKind::Other, "NO CMD")),
+            prev_command.update(_command);
         }
     }
     

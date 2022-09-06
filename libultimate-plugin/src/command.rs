@@ -40,6 +40,8 @@ pub struct Command {
     pub id: String,
     pub player_id: i32,
     pub action: Action,
+    pub stick_x: f32, // -1 ~ 1
+    pub stick_y: f32, // -1 ~ 1
 }
 
 impl Default for Command {
@@ -48,6 +50,8 @@ impl Default for Command {
             id: "".to_string(),
             player_id: 0,
             action: Action::NONE,
+            stick_x: 0.0,
+            stick_y: 0.0,
         }
     }
 }
@@ -68,5 +72,13 @@ impl Command {
             fs::remove_file(&command_ok_path).unwrap();
         }
         return Ok(command);
+    }
+
+    pub fn update(mut self, command: Command){
+        self.id = command.id;
+        self.player_id = command.player_id;
+        self.action = command.action;
+        self.stick_x = command.stick_x;
+        self.stick_y = command.stick_y;
     }
 }
