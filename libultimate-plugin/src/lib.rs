@@ -221,8 +221,6 @@ fn nro_main(nro: &NroInfo<'_>) {
         }
         skyline::install_hooks!(
             handle_get_command_flag_cat,
-            handle_get_stick_x,
-            handle_get_stick_y,
         );
     }
 }
