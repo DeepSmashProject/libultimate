@@ -4,31 +4,11 @@ import time
 import threading
 
 action_list_default = [
-    Action.AIR_ESCAPE,
-    Action.ATTACK_HI3,
-    Action.ATTACK_HI4,
-    Action.ATTACK_LW3,
-    Action.ATTACK_LW4,
-    Action.ATTACK_N,
-    Action.ATTACK_S3,
-    Action.ATTACK_S4,
-    Action.CATCH,
     Action.DASH,
-    Action.ESCAPE,
-    Action.ESCAPE_B,
-    Action.ESCAPE_F,
     Action.JUMP,
-    Action.JUMP_BUTTON,
-    Action.SPECIAL_ANY,
-    Action.SPECIAL_HI,
-    Action.SPECIAL_LW,
-    Action.SPECIAL_N,
-    Action.SPECIAL_S,
     Action.TURN,
     Action.TURN_DASH,
     Action.WALK,
-    Action.WALL_JUMP_LEFT,
-    Action.WALL_JUMP_RIGHT,
     Action.NONE,
 ]
 

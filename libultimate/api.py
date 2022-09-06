@@ -31,8 +31,8 @@ class API():
             self.logger.warning("command cannot sent.")
 
     def send_control_state(self, player_id: int, control_state):
-        control_state_path = os.path.join(self.ryujinx_path, 'sdcard/libultimate/control_state.json')
-        control_state_ok_path = os.path.join(self.ryujinx_path, 'sdcard/libultimate/control_state.ok.json')
+        control_state_path = os.path.join(self.ryujinx_path, 'sdcard/libultimate/control_state_{}.json'.format(player_id))
+        control_state_ok_path = os.path.join(self.ryujinx_path, 'sdcard/libultimate/control_state_{}.ok.json'.format(player_id))
         if not os.path.isfile(control_state_ok_path):
             with open(control_state_path, 'w') as f:
                 json.dump(control_state, f)

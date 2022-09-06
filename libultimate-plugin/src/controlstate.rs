@@ -7,6 +7,8 @@ use std::path::Path;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct ControlState {
+    pub id: String,
+    pub player_id: u32,
     pub update_count: i64,
     pub buttons: u64,
     pub l_stick_x: i32,
@@ -21,6 +23,8 @@ pub struct ControlState {
 impl Default for ControlState {
     fn default() -> Self {
         Self {
+            id: "".to_string(),
+            player_id: 0,
             update_count: 0,
             buttons: 0,
             l_stick_x: 0,
@@ -35,10 +39,10 @@ impl Default for ControlState {
 }
 
 impl ControlState {
-    pub fn get() -> Result<ControlState, Error>{
+    pub fn get(entry_id: i32) -> Result<ControlState, Error>{
         let mut control_state: ControlState = ControlState::default();
-        let control_state_ok_path = format!("sd:/libultimate/control_state.ok.json");
-        let control_state_path = format!("sd:/libultimate/control_state.json");
+        let control_state_ok_path = format!("sd:/libultimate/control_state_{}.ok.json", entry_id);
+        let control_state_path = format!("sd:/libultimate/control_state_{}.json", entry_id);
         if Path::new(&control_state_ok_path).exists() {
             let file = File::open(&control_state_path)?;
             let reader = BufReader::new(file);

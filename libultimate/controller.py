@@ -12,6 +12,8 @@ class Command(NamedTuple):
     stick_y: float
 
 class ControlState(NamedTuple):
+    id: str
+    player_id: int
     update_count: str
     buttons: int
     l_stick_x: Action
@@ -38,6 +40,8 @@ class UltimateController:
 
     def act2(self, player_id: int, l_stick = (0, 0), r_stick = (0, 0), l_trigger = 0, r_trigger = 0, buttons = 0, flags = 0):
         control_state: ControlState = {
+            "id": str(uuid.uuid4()),
+            "player_id": player_id,
             "update_count": 0,
             "buttons": buttons,
             "l_stick_x": l_stick[0],

@@ -19,20 +19,6 @@ static CONTROLSTATE: Lazy<Mutex<controlstate::ControlState>> = Lazy::new(|| Mute
 static COMMAND: Lazy<Mutex<command::Command>> = Lazy::new(|| Mutex::new(command::Command::default()));
 static mut FIGHTER_MANAGER_ADDR: usize = 0;
 
-pub unsafe fn p1_controller_id() -> u32 {
-    let min_controller_id = (0..8)
-        .filter(|i| GetNpadStyleSet(i as *const _).flags != 0)
-        .min()
-        .unwrap_or(0);
-
-    let handheld_id = 0x20;
-    if GetNpadStyleSet(&handheld_id as *const _).flags != 0 {
-        handheld_id
-    } else {
-        min_controller_id
-    }
-}
-
 pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32){
     unsafe {
         get_npad_state(state, _controller_id);
@@ -40,17 +26,19 @@ pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32
 }
 
 unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) -> Result<(), Error>{
-    println!("gcstate: {} {}, {}", _controller_id as i32, (*state).LStickX, p1_controller_id());
-    let control_state = controlstate::ControlState::get()?;
-    //(*state).updateCount = control_state.update_count;
-    (*state).Buttons = control_state.buttons;
-    (*state).LStickX = control_state.l_stick_x;
-    (*state).LStickY = control_state.l_stick_y;
-    (*state).RStickX = control_state.r_stick_x;
-    (*state).RStickY = control_state.r_stick_y;
-    (*state).Flags = control_state.flags;
-    (*state).LTrigger = control_state.l_trigger;
-    (*state).RTrigger = control_state.r_trigger;
+    println!("gcstate: {} {}", *_controller_id, (*state).LStickX);
+    let control_state = controlstate::ControlState::get(*_controller_id as i32)?;
+    if control_state.player_id == *_controller_id{
+        //(*state).updateCount = control_state.update_count;
+        (*state).Buttons = control_state.buttons;
+        (*state).LStickX = control_state.l_stick_x;
+        (*state).LStickY = control_state.l_stick_y;
+        (*state).RStickX = control_state.r_stick_x;
+        (*state).RStickY = control_state.r_stick_y;
+        (*state).Flags = control_state.flags;
+        (*state).LTrigger = control_state.l_trigger;
+        (*state).RTrigger = control_state.r_trigger;
+    }
     return Ok(());
 }
 
