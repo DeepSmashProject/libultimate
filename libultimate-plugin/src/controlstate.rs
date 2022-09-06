@@ -18,6 +18,7 @@ pub struct ControlState {
     pub flags: u32,
     pub l_trigger: u32,
     pub r_trigger: u32,
+    pub hold: bool,
 }
 
 impl Default for ControlState {
@@ -34,6 +35,7 @@ impl Default for ControlState {
             flags: 0,
             l_trigger: 0,
             r_trigger: 0,
+            hold: false,
         }
     }
 }

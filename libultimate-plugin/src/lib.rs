@@ -34,7 +34,7 @@ unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) ->
     let mut prev_control_state = CONTROLSTATE.lock().unwrap();
     if control_state.player_id == player_id{
         //(*state).updateCount = control_state.update_count;
-        if control_state.id != prev_control_state.id {
+        if control_state.id != prev_control_state.id || control_state.hold {
             (*state).Buttons = control_state.buttons;
             (*state).LStickX = control_state.l_stick_x;
             (*state).LStickY = control_state.l_stick_y;
@@ -55,6 +55,7 @@ unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) ->
             prev_control_state.flags = control_state.clone().flags;
             prev_control_state.l_trigger = control_state.clone().l_trigger;
             prev_control_state.r_trigger = control_state.clone().r_trigger;
+            prev_control_state.hold = control_state.clone().hold;
         }
     }
     return Ok(());
