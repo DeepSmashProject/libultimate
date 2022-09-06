@@ -1,5 +1,5 @@
 //use crate::charge::ChargeState;
-use std::io::{Write, BufReader, Error};
+use std::io::{Write, BufReader, Error, ErrorKind};
 use serde::{Serialize, Deserialize};
 use std::fs::{OpenOptions, File};
 use std::fs;
@@ -66,19 +66,13 @@ impl Command {
             let reader = BufReader::new(file);
             command = match serde_json::from_reader(reader){
                 Ok(command) => command,
-                Err(_) => Command::default(),
+                Err(_) => return Err(Error::new(ErrorKind::Other, "Cannot parse command.json")),
             };
             // remove ok.json
             fs::remove_file(&command_ok_path).unwrap();
+        }else{
+            return Err(Error::new(ErrorKind::Other, "command.json does not exist"));
         }
         return Ok(command);
-    }
-
-    pub fn update(mut self, command: Command){
-        self.id = command.id;
-        self.player_id = command.player_id;
-        self.action = command.action;
-        self.stick_x = command.stick_x;
-        self.stick_y = command.stick_y;
     }
 }

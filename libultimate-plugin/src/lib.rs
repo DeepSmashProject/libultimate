@@ -21,23 +21,38 @@ static mut FIGHTER_MANAGER_ADDR: usize = 0;
 
 pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32){
     unsafe {
-        get_npad_state(state, _controller_id);
+        get_npad_state(state, _controller_id).unwrap();
     }
 }
 
 unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) -> Result<(), Error>{
     println!("gcstate: {} {}", *_controller_id, (*state).LStickX);
     let control_state = controlstate::ControlState::get(*_controller_id as i32)?;
+    let mut prev_control_state = CONTROLSTATE.lock().unwrap();
     if control_state.player_id == *_controller_id{
         //(*state).updateCount = control_state.update_count;
-        (*state).Buttons = control_state.buttons;
-        (*state).LStickX = control_state.l_stick_x;
-        (*state).LStickY = control_state.l_stick_y;
-        (*state).RStickX = control_state.r_stick_x;
-        (*state).RStickY = control_state.r_stick_y;
-        (*state).Flags = control_state.flags;
-        (*state).LTrigger = control_state.l_trigger;
-        (*state).RTrigger = control_state.r_trigger;
+        if control_state.id != prev_control_state.id {
+            (*state).Buttons = control_state.buttons;
+            (*state).LStickX = control_state.l_stick_x;
+            (*state).LStickY = control_state.l_stick_y;
+            (*state).RStickX = control_state.r_stick_x;
+            (*state).RStickY = control_state.r_stick_y;
+            (*state).Flags = control_state.flags;
+            (*state).LTrigger = control_state.l_trigger;
+            (*state).RTrigger = control_state.r_trigger;
+            // update prev_control_state
+            prev_control_state.id = control_state.clone().id;
+            prev_control_state.player_id = control_state.clone().player_id;
+            prev_control_state.update_count = control_state.clone().update_count;
+            prev_control_state.buttons = control_state.clone().buttons;
+            prev_control_state.l_stick_x = control_state.clone().l_stick_x;
+            prev_control_state.l_stick_y = control_state.clone().l_stick_y;
+            prev_control_state.r_stick_x = control_state.clone().r_stick_x;
+            prev_control_state.r_stick_y = control_state.clone().r_stick_y;
+            prev_control_state.flags = control_state.clone().flags;
+            prev_control_state.l_trigger = control_state.clone().l_trigger;
+            prev_control_state.r_trigger = control_state.clone().r_trigger;
+        }
     }
     return Ok(());
 }
@@ -72,6 +87,13 @@ unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor
 
         // execute command once per recieve command
         if _command.id != prev_command.id {
+            // update prev_command
+            prev_command.id = _command.clone().id;
+            prev_command.player_id = _command.clone().player_id;
+            prev_command.action = _command.clone().action;
+            prev_command.stick_x = _command.clone().stick_x;
+            prev_command.stick_y = _command.clone().stick_y;
+            // action
             match _command.action {
                 command::Action::AIR_ESCAPE => {
                     return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE);
@@ -150,7 +172,7 @@ unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor
                 }
                 _ => return Err(Error::new(ErrorKind::Other, "NO CMD")),
             }
-            prev_command.update(_command);
+            //prev_command.update(_command);
         }
     }
     
