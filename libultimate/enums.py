@@ -199,3 +199,30 @@ class Action(str, Enum):
     #WALL_JUMP_LEFT = "WALL_JUMP_LEFT"
     #WALL_JUMP_RIGHT = "WALL_JUMP_RIGHT"
     NONE = "NONE"
+
+class Button(Enum):
+    NONE = 0
+    A = 1
+    B = 2
+    X = 4
+    Y = 8
+    L_STICK_BUTTON = 16
+    R_STICK_BUTTON = 32
+    L = 64
+    R = 128
+    ZL = 256
+    ZR = 512
+    PLUS = 1024
+    MINUS = 2048
+    D_PAD_LEFT = 4096
+    D_PAD_UP = 8192
+    D_PAD_RIGHT = 16384
+    D_PAD_DOWN = 32768
+    L_STICK_LEFT = 65536
+    L_STICK_UP = 131072
+    L_STICK_RIGHT = 262144
+    L_STICK_DOWN = 524288
+    R_STICK_LEFT = 1048576
+    R_STICK_UP = 2097152
+    R_STICK_RIGHT = 4194304
+    R_STICK_DOWN = 8388608

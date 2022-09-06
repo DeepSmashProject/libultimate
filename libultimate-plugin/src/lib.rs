@@ -21,15 +21,17 @@ static mut FIGHTER_MANAGER_ADDR: usize = 0;
 
 pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32){
     unsafe {
-        get_npad_state(state, _controller_id).unwrap();
+        match get_npad_state(state, _controller_id){
+            Ok(_) => {},
+            Err(_) => {},
+        };
     }
 }
 
 unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) -> Result<(), Error>{
-    println!("gcstate: {} {}", *_controller_id, (*state).LStickX);
     let control_state = controlstate::ControlState::get(*_controller_id as i32)?;
     let mut prev_control_state = CONTROLSTATE.lock().unwrap();
-    if control_state.player_id == *_controller_id{
+    if control_state.player_id == *_controller_id+1{
         //(*state).updateCount = control_state.update_count;
         if control_state.id != prev_control_state.id {
             (*state).Buttons = control_state.buttons;
@@ -80,7 +82,7 @@ unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor
 
     let mut prev_command = COMMAND.lock().unwrap();
 
-    if entry_id_int == _command.player_id {
+    if entry_id_int+1 == _command.player_id {
         // execute stick until recieve next command
         ControlModule::set_main_stick_x(module_accessor, _command.stick_x);
         ControlModule::set_main_stick_y(module_accessor, _command.stick_y);
