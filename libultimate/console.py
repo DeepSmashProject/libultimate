@@ -6,13 +6,16 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .api import API
 
 class Console():
-    def __enter__(self, ryujinx_path, level=logging.WARNING):
+    def __init__(self, ryujinx_path, level=logging.WARNING):
         logging.basicConfig(format='%(asctime)s - [%(levelname)s] - %(message)s', level=level)
         self.logger = logging.getLogger(__name__)
         self.ryujinx_path = ryujinx_path
         self.api = API(ryujinx_path)
         self.controllers = []
 
+    def __enter__(self):
+        return self
+        
     def __exit__(self, exc_type, exc_value, traceback):
         print('EXIT!')
         for controller in self.controllers:

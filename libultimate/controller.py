@@ -55,8 +55,8 @@ class Controller:
             "buttons": button.value,
             "l_stick_x": main_stick[0] * 32768, # Min: 0, Max: 0x7FFF
             "l_stick_y": main_stick[1] * 32768, # Min: 0, Max: -0x7FFF
-            "r_stick_x": c_stick[0],
-            "r_stick_y": c_stick[1],
+            "r_stick_x": c_stick[0] * 32768, # Min: 0, Max: 0x7FFF
+            "r_stick_y": c_stick[1] * 32768, # Min: 0, Max: 0x7FFF
             "flags": flags,
             "l_trigger": l_trigger,
             "r_trigger": r_trigger,
