@@ -8,4 +8,4 @@ if __name__ == "__main__":
 
     for gamestate in console.stream(hz=5):
         print("gamestate: ", gamestate)
-        controller.act(0, Action.JUMP)
+        controller.act(0, Action.JUMP, main_stick=(1, 0))
