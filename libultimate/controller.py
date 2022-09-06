@@ -39,7 +39,7 @@ class UltimateController:
     def act2(self, player_id: int, l_stick = (0, 0), r_stick = (0, 0), l_trigger = 0, r_trigger = 0, buttons = 0, flags = 0):
         control_state: ControlState = {
             "update_count": 0,
-            "buttons": 0,
+            "buttons": buttons,
             "l_stick_x": l_stick[0],
             "l_stick_y": l_stick[1],
             "r_stick_x": r_stick[0],

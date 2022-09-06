@@ -79,3 +79,33 @@ https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/training/mash
 | WALK            | walk               |
 | WALL_JUMP_LEFT  | wall jump left     |
 | WALL_JUMP_RIGHT | wall jump right    |
+
+# Button
+
+| Status        | Num     | Description    |
+| ------------- | ------- | -------------- |
+| NONE          | 0       | none           |
+| A             | 1       | a              |
+| B             | 2       | b              |
+| X             | 4       | x              |
+| Y             | 8       | y              |
+| LStick Button | 16      | l stick button |
+| RStick Button | 32      | r stick button |
+| L             | 64      | l              |
+| R             | 128     | r              |
+| ZL            | 256     | zl             |
+| ZR            | 512     | zr             |
+| Plus          | 1024    | +              |
+| Minus         | 2048    | -              |
+| DPad Left     | 4096    | d pad left     |
+| DPad Up       | 8192    | d pad up       |
+| DPad Right    | 16384   | d pad right    |
+| DPad Down     | 32768   | d pad down     |
+| LStick Left   | 65536   | l stick left   |
+| LStick Up     | 131072  | l stick up     |
+| LStick Right  | 262144  | l stick right  |
+| LStick Down   | 524288  | l stick down   |
+| RStick Left   | 1048576 | r stick left   |
+| RStick Up     | 2097152 | r stick up     |
+| RStick Right  | 4194304 | r stick right  |
+| RStick Down   | 8388608 | r stick down   |
