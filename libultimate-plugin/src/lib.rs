@@ -1,11 +1,11 @@
 use smash::app::{self, lua_bind::*};
 use smash::lib::lua_const::*;
 use skyline::nro::{self, NroInfo};
-use skyline::nn::hid;
+use skyline::nn::hid::{NpadGcState};
 mod charge;
 use std::fs;
 use std::fs::{OpenOptions};
-use std::io::{Error};
+use std::io::{Error, ErrorKind};
 use std::path::Path;
 use std::sync::Mutex;
 mod gamestate;
@@ -17,21 +17,29 @@ static GAMESTATE: Lazy<Mutex<gamestate::GameState>> = Lazy::new(|| Mutex::new(ga
 static COMMAND: Lazy<Mutex<command::Command>> = Lazy::new(|| Mutex::new(command::Command::default()));
 static mut FIGHTER_MANAGER_ADDR: usize = 0;
 
-/*#[skyline::hook(replace = hid::GetNpadGcState)]
-pub unsafe fn handle_get_npad_gc_state(){
-
-}*/
+pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32){
+    unsafe {
+        //println!("gcstate: {} {}", _controller_id as i32, (*state).LStickX);
+        //(*state).LStickX = 1;
+    }
+}
 
 #[skyline::hook(replace = ControlModule::get_stick_y)]
-pub unsafe fn get_stick_y(module_accessor: &mut app::BattleObjectModuleAccessor) -> f32 {
+pub unsafe fn handle_get_stick_y(module_accessor: &mut app::BattleObjectModuleAccessor) -> f32 {
     let ori = original!()(module_accessor);
     return 1.0 as f32;
 }
 
 #[skyline::hook(replace = ControlModule::get_stick_x)]
-pub unsafe fn get_stick_x(module_accessor: &mut app::BattleObjectModuleAccessor) -> f32 {
+pub unsafe fn handle_get_stick_x(module_accessor: &mut app::BattleObjectModuleAccessor) -> f32 {
     let ori = original!()(module_accessor);
     return 1.0 as f32;
+}
+
+#[skyline::hook(replace = ControlModule::get_button)]
+pub unsafe fn handle_get_button(module_accessor: &mut app::BattleObjectModuleAccessor) -> i32 {
+    let ori = original!()(module_accessor);
+    return 1 as i32;
 }
 
 #[skyline::hook(replace = ControlModule::get_command_flag_cat)]
@@ -45,7 +53,7 @@ pub unsafe fn handle_get_command_flag_cat(
         save_gamestate(module_accessor);
         flag = match get_command_flag(module_accessor){
             Ok(flag) => flag,
-            Err(_) => 0,
+            Err(_) => original!()(module_accessor, category),
         };
     }
     return flag;
@@ -135,11 +143,11 @@ unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor
             command::Action::WALL_JUMP_RIGHT => {
                 return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_RIGHT);
             }
-            _ => return Ok(0),
+            _ => return Err(Error::new(ErrorKind::Other, "NO CMD")),
         }
     }
     
-    return Ok(0);
+    return Err(Error::new(ErrorKind::Other, "NO CMD"));
 }
 
 unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
@@ -212,14 +220,27 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     gamestate::GameState::save(&game_state);
 }
 
+#[allow(improper_ctypes)]
+extern "C" {
+    fn add_nn_hid_hook(callback: fn(*mut NpadGcState, *const u32));
+}
+
 fn nro_main(nro: &NroInfo<'_>) {
     if nro.module.isLoaded {
         return;
     }
 
     if nro.name == "common" {
+        unsafe {
+            if (add_nn_hid_hook as *const ()).is_null() {
+                panic!("The NN-HID hook plugin could not be found and is required to add NRO hooks. Make sure libnn_hid_hook.nro is installed.");
+            }
+            add_nn_hid_hook(handle_get_npad_state);
+        }
         skyline::install_hooks!(
             handle_get_command_flag_cat,
+            handle_get_stick_x,
+            handle_get_stick_y,
         );
     }
 }
