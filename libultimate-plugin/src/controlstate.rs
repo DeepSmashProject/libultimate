@@ -39,7 +39,7 @@ impl Default for ControlState {
 }
 
 impl ControlState {
-    pub fn get(entry_id: i32) -> Result<ControlState, Error>{
+    pub fn get(entry_id: u32) -> Result<ControlState, Error>{
         let mut control_state: ControlState = ControlState::default();
         let control_state_ok_path = format!("sd:/libultimate/control_state_{}.ok.json", entry_id);
         let control_state_path = format!("sd:/libultimate/control_state_{}.json", entry_id);

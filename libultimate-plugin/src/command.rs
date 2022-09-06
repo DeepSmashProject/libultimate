@@ -38,7 +38,7 @@ pub enum Action {
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Command {
     pub id: String,
-    pub player_id: i32,
+    pub player_id: u32,
     pub action: Action,
     pub stick_x: f32, // -1 ~ 1
     pub stick_y: f32, // -1 ~ 1
@@ -57,7 +57,7 @@ impl Default for Command {
 }
 
 impl Command {
-    pub fn get(entry_id: i32) -> Result<Command, Error>{
+    pub fn get(entry_id: u32) -> Result<Command, Error>{
         let mut command: Command = Command::default();
         let command_ok_path = format!("sd:/libultimate/command_{}.ok.json", entry_id);
         let command_path = format!("sd:/libultimate/command_{}.json", entry_id);
