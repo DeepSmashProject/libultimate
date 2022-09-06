@@ -24,24 +24,6 @@ pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32
     }
 }
 
-#[skyline::hook(replace = ControlModule::get_stick_y)]
-pub unsafe fn handle_get_stick_y(module_accessor: &mut app::BattleObjectModuleAccessor) -> f32 {
-    let ori = original!()(module_accessor);
-    return 1.0 as f32;
-}
-
-#[skyline::hook(replace = ControlModule::get_stick_x)]
-pub unsafe fn handle_get_stick_x(module_accessor: &mut app::BattleObjectModuleAccessor) -> f32 {
-    let ori = original!()(module_accessor);
-    return 1.0 as f32;
-}
-
-#[skyline::hook(replace = ControlModule::get_button)]
-pub unsafe fn handle_get_button(module_accessor: &mut app::BattleObjectModuleAccessor) -> i32 {
-    let ori = original!()(module_accessor);
-    return 1 as i32;
-}
-
 #[skyline::hook(replace = ControlModule::get_command_flag_cat)]
 pub unsafe fn handle_get_command_flag_cat(
     module_accessor: &mut app::BattleObjectModuleAccessor,
