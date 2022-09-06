@@ -30,8 +30,11 @@ pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32
 
 unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) -> Result<(), Error>{
     let player_id = *_controller_id + 1;
-    let control_state = controlstate::ControlState::get(player_id)?;
     let mut prev_control_state = CONTROLSTATE.lock().unwrap();
+    let control_state = match controlstate::ControlState::get(player_id){
+        Ok(cs) => cs,
+        Err(_) => prev_control_state.clone(),
+    };
     if control_state.player_id == player_id{
         //(*state).updateCount = control_state.update_count;
         if control_state.id != prev_control_state.id || control_state.hold {
