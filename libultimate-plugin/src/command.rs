@@ -66,7 +66,7 @@ impl Command {
             let reader = BufReader::new(file);
             command = match serde_json::from_reader(reader){
                 Ok(command) => command,
-                Err(e) => Command::default(),
+                Err(_) => Command::default(),
             };
             // remove ok.json
             fs::remove_file(&command_ok_path).unwrap();

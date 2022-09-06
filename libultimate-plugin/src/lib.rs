@@ -9,19 +9,35 @@ use std::io::{Error, ErrorKind};
 use std::path::Path;
 use std::sync::Mutex;
 mod gamestate;
+mod controlstate;
 mod command;
 use once_cell::sync::Lazy;
 use once_cell::sync::OnceCell;
 
 static GAMESTATE: Lazy<Mutex<gamestate::GameState>> = Lazy::new(|| Mutex::new(gamestate::GameState::default()));
+static CONTROLSTATE: Lazy<Mutex<controlstate::ControlState>> = Lazy::new(|| Mutex::new(controlstate::ControlState::default()));
 static COMMAND: Lazy<Mutex<command::Command>> = Lazy::new(|| Mutex::new(command::Command::default()));
 static mut FIGHTER_MANAGER_ADDR: usize = 0;
 
 pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32){
     unsafe {
-        //println!("gcstate: {} {}", _controller_id as i32, (*state).LStickX);
-        //(*state).LStickX = 1;
+        get_npad_state(state, _controller_id);
     }
+}
+
+unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) -> Result<(), Error>{
+    println!("gcstate: {} {}", _controller_id as i32, (*state).LStickX);
+    let control_state = controlstate::ControlState::get()?;
+    //(*state).updateCount = control_state.update_count;
+    (*state).Buttons = control_state.buttons;
+    (*state).LStickX = control_state.l_stick_x;
+    (*state).LStickY = control_state.l_stick_y;
+    (*state).RStickX = control_state.r_stick_x;
+    (*state).RStickY = control_state.r_stick_y;
+    (*state).Flags = control_state.flags;
+    (*state).LTrigger = control_state.l_trigger;
+    (*state).RTrigger = control_state.r_trigger;
+    return Ok(());
 }
 
 #[skyline::hook(replace = ControlModule::get_command_flag_cat)]
