@@ -17,7 +17,8 @@ class Console():
         return self
         
     def __exit__(self, exc_type, exc_value, traceback):
-        print('EXIT!')
+        self.logger.info('Exit from console.')
+        time.sleep(0.1)
         for controller in self.controllers:
             controller.release_all()
 
