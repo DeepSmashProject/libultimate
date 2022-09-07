@@ -3,6 +3,7 @@
 Open API written in Python 3 for making your own Smash Bros Ultimate AI that works with RyujinX
 
 ### Demo
+https://user-images.githubusercontent.com/43264434/188854277-5facc0c9-8c50-412e-853a-112a45fef26f.mp4
 
 ## Required
 - Ryujinx (latest)
