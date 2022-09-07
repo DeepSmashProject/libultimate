@@ -32,8 +32,9 @@ if __name__ == "__main__":
             {"name": "LEFT WALK", "func": lambda : controller_1p.walk(lr=False)}, # Left
             {"name": "RIGHT DASH", "func": lambda : controller_1p.dash(lr=True)}, # Right
             {"name": "LEFT DASH", "func": lambda : controller_1p.dash(lr=False)}, # Left
-            {"name": "RIGHT JUMP", "func": lambda : controller_1p.jump(lr=True)}, # Right
-            {"name": "LEFT JUMP", "func": lambda : controller_1p.jump(lr=False)}, # Left
+            {"name": "JUMP", "func": lambda : controller_1p.jump(Direction.NONE)},
+            {"name": "RIGHT JUMP", "func": lambda : controller_1p.jump(Direction.RIGHT)}, # Right
+            {"name": "LEFT JUMP", "func": lambda : controller_1p.jump(Direction.LEFT)}, # Left
             {"name": "UP TAINT", "func": lambda : controller_1p.taint(Direction.UP)},
             {"name": "DOWN TAINT", "func": lambda : controller_1p.taint(Direction.DOWN)},
             {"name": "LEFT TAINT", "func": lambda : controller_1p.taint(Direction.LEFT)},
