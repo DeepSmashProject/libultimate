@@ -48,10 +48,7 @@ impl ControlState {
         if Path::new(&control_state_ok_path).exists() {
             let file = File::open(&control_state_path)?;
             let reader = BufReader::new(file);
-            control_state = match serde_json::from_reader(reader){
-                Ok(control_state) => control_state,
-                Err(_) => return Err(Error::new(ErrorKind::Other, "Cannot parse control_state.json")),
-            };
+            control_state = serde_json::from_reader(reader)?;
             // remove ok.json
             fs::remove_file(&control_state_ok_path).unwrap();
         }else{

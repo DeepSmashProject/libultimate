@@ -64,10 +64,7 @@ impl Command {
         if Path::new(&command_ok_path).exists() {
             let file = File::open(&command_path)?;
             let reader = BufReader::new(file);
-            command = match serde_json::from_reader(reader){
-                Ok(command) => command,
-                Err(_) => return Err(Error::new(ErrorKind::Other, "Cannot parse command.json")),
-            };
+            command = serde_json::from_reader(reader)?;
             // remove ok.json
             fs::remove_file(&command_ok_path).unwrap();
         }else{

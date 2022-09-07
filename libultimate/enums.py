@@ -130,51 +130,6 @@ class Button(Enum):
     D_PAD_RIGHT = 16384
     D_PAD_DOWN = 32768
 
-class Action:
-    NONE = 0
-    JAB = {"name": "JAB", "buttons": [Button.BUTTON_A], "main_stick": (0, 0), "c_stick": (0, 0), "hold": False}
-    RIGHT_TILT = {"name": "RIGHT_TILT", "buttons": [Button.BUTTON_MODIFIER, Button.BUTTON_S_RIGHT, Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    LEFT_TILT = {"name": "LEFT_TILT", "buttons": [Button.BUTTON_MODIFIER, Button.BUTTON_S_LEFT, Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    UP_TILT = {"name": "UP_TILT", "buttons": [Button.BUTTON_MODIFIER, Button.BUTTON_S_UP, Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    DOWN_TILT = {"name": "DOWN_TILT", "buttons": [Button.BUTTON_MODIFIER, Button.BUTTON_S_DOWN, Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    RIGHT_SMASH = {"name": "RIGHT_SMASH", "buttons": [Button.BUTTON_S_RIGHT, Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    LEFT_SMASH = {"name": "LEFT_SMASH", "buttons": [Button.BUTTON_S_LEFT, Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    UP_SMASH = {"name": "UP_SMASH", "buttons": [Button.BUTTON_S_UP, Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    DOWN_SMASH = {"name": "DOWN_SMASH", "buttons": [Button.BUTTON_S_DOWN, Button.BUTTON_A], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    NEUTRAL_SPECIAL = {"name": "NEUTRAL_SPECIAL", "buttons": [Button.BUTTON_B], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    RIGHT_SPECIAL = {"name": "RIGHT_SPECIAL", "buttons": [Button.BUTTON_S_RIGHT, Button.BUTTON_B], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    LEFT_SPECIAL = {"name": "LEFT_SPECIAL", "buttons": [Button.BUTTON_S_LEFT, Button.BUTTON_B], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    UP_SPECIAL = {"name": "UP_SPECIAL", "buttons": [Button.BUTTON_S_UP, Button.BUTTON_B], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    UP_RIGHT_SPECIAL = {"name": "UP_RIGHT_SPECIAL", "buttons": [Button.BUTTON_S_UP, Button.BUTTON_S_RIGHT, Button.BUTTON_B], "hold": False, "sec": 0.05, "wait": 0.05, "refresh": False}
-    UP_LEFT_SPECIAL = {"name": "UP_LEFT_SPECIAL", "buttons": [Button.BUTTON_S_UP, Button.BUTTON_S_LEFT, Button.BUTTON_B], "hold": False, "sec": 0.05, "wait": 0.05, "refresh": False}
-    DOWN_SPECIAL = {"name": "DOWN_SPECIAL", "buttons": [Button.BUTTON_S_DOWN, Button.BUTTON_B], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    GRAB = {"name": "GRAB", "buttons": [Button.BUTTON_R], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    GUARD = {"name": "GUARD", "buttons": [Button.BUTTON_ZR], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
-    JUMP = {"name": "JUMP", "buttons": [Button.BUTTON_Y], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": True}
-    RIGHT_JUMP = {"name": "RIGHT_JUMP", "buttons": [Button.BUTTON_S_RIGHT, Button.BUTTON_Y], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": True}
-    LEFT_JUMP = {"name": "LEFT_JUMP", "buttons": [Button.BUTTON_S_LEFT, Button.BUTTON_Y], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": True}
-    SHORT_HOP = {"name": "SHORT_HOP", "buttons": [Button.BUTTON_Y, Button.BUTTON_X], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": True}
-    RIGHT_SHORT_HOP = {"name": "RIGHT_SHORT_HOP", "buttons": [Button.BUTTON_S_RIGHT, Button.BUTTON_Y, Button.BUTTON_X], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": True}
-    LEFT_SHORT_HOP = {"name": "LEFT_SHORT_HOP", "buttons": [Button.BUTTON_S_LEFT, Button.BUTTON_Y, Button.BUTTON_X], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": True}
-    UP_TAUNT = {"name": "UP_TAUNT", "buttons": [Button.BUTTON_D_UP], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    DOWN_TAUNT = {"name": "DOWN_TAUNT", "buttons": [Button.BUTTON_D_DOWN], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    LEFT_TAUNT = {"name": "LEFT_TAUNT", "buttons": [Button.BUTTON_D_LEFT], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    RIGHT_TAUNT = {"name": "RIGHT_TAUNT", "buttons": [Button.BUTTON_D_RIGHT], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    SPOT_DODGE = {"name": "SPOT_DODGE", "buttons": [Button.BUTTON_ZR, Button.BUTTON_S_DOWN], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    RIGHT_ROLL = {"name": "RIGHT_ROLL", "buttons": [Button.BUTTON_ZR, Button.BUTTON_S_RIGHT], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    LEFT_ROLL = {"name": "LEFT_ROLL", "buttons": [Button.BUTTON_ZR, Button.BUTTON_S_LEFT], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    RIGHT_DASH = {"name": "RIGHT_DASH", "buttons": [Button.BUTTON_S_RIGHT], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    LEFT_DASH = {"name": "LEFT_DASH", "buttons": [Button.BUTTON_S_LEFT], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    RIGHT_WALK = {"name": "RIGHT_WALK", "buttons": [Button.BUTTON_MODIFIER, Button.BUTTON_S_RIGHT], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
-    LEFT_WALK = {"name": "LEFT_WALK", "buttons": [Button.BUTTON_MODIFIER, Button.BUTTON_S_LEFT], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
-    CROUCH = {"name": "CROUCH", "buttons": [Button.BUTTON_S_DOWN], "hold": False, "sec": 0.02, "wait": 0.05, "refresh": False}
-    RIGHT_CRAWL = {"name": "RIGHT_CRAWL", "buttons": [Button.BUTTON_S_DOWN, Button.BUTTON_MODIFIER, Button.BUTTON_S_RIGHT], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
-    LEFT_CRAWL = {"name": "LEFT_CRAWL", "buttons": [Button.BUTTON_S_DOWN, Button.BUTTON_MODIFIER, Button.BUTTON_S_LEFT], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
-    RIGHT_STICK = {"name": "RIGHT_STICK", "buttons": [Button.BUTTON_S_RIGHT], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
-    LEFT_STICK = {"name": "LEFT_STICK", "buttons": [Button.BUTTON_S_LEFT], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
-    UP_STICK = {"name": "UP_STICK", "buttons": [Button.BUTTON_S_UP], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
-    DOWN_STICK = {"name": "DOWN_STICK", "buttons": [Button.BUTTON_S_DOWN], "hold": True, "sec": 0.02, "wait": 0.05, "refresh": False}
-    
 class Action_Old(str, Enum):
     #AIR_ESCAPE = "AIR_ESCAPE"
     UP_TILT = "ATTACK_HI3"

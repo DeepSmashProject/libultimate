@@ -41,5 +41,5 @@ if __name__ == "__main__":
         ]
         for data in funcs:
             print(data["name"])
-            data.func()
+            data["func"]()
             time.sleep(2)

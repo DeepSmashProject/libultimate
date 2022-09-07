@@ -1,4 +1,4 @@
-from libultimate import Action, UltimateController, Console
+from libultimate import Controller, Console
 import gym
 import time
 import threading
@@ -13,7 +13,7 @@ action_list_default = [
 ]
 
 class UltimateEnv(gym.Env):
-    def __init__(self, console: Console, controller: UltimateController, hz=60, action_list=action_list_default):
+    def __init__(self, console: Console, controller: Controller, hz=60, action_list=action_list_default):
         super().__init__()
         self.hz = hz
         self.action_space = gym.spaces.Discrete(len(action_list)) 
@@ -44,7 +44,7 @@ class UltimateEnv(gym.Env):
         time.sleep(1)
         return observation
 
-    def step(self, action: Action):
+    def step(self, action):
         self.controller.act(action)
         interval = 60/self.hz * (1/60)
         time.sleep(interval)
