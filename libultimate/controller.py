@@ -26,7 +26,7 @@ class Controller:
     def set_console(self, console: Console):
         self.console = console
 
-    def input(self, button: Button, main_stick = (0, 0), c_stick = (0, 0), l_trigger = 0, r_trigger = 0, flags = 0, hold = True):
+    def input(self, button: Button, main_stick = (0, 0), c_stick = (0, 0), l_trigger = 0, r_trigger = 0, flags = 0, hold = False):
         control_state: ControlState = {
             "id": str(uuid.uuid4()),
             "player_id": int(self.player_id),
