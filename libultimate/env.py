@@ -4,12 +4,6 @@ import time
 import threading
 
 action_list_default = [
-    Action.DASH,
-    Action.JUMP,
-    Action.TURN,
-    Action.TURN_DASH,
-    Action.WALK,
-    Action.NONE,
 ]
 
 class UltimateEnv(gym.Env):
