@@ -9,4 +9,4 @@ if __name__ == "__main__":
 
         for gamestate in console.stream(hz=5):
             print("gamestate: ", gamestate)
-            controller_1p.act(Button.A)
+            controller_1p.input(Button.A)
