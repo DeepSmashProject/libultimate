@@ -45,6 +45,10 @@ Linux/OSX/Windows
 2. Add libultimate plugin
    - Click "File" -> "Open Ryujinx Folder" on emulator.
    - Move plugin folder to "/mods/"
+   - Required other nros
+     - libnro_hook.nro: https://github.com/ultimate-research/nro-hook-plugin/releases/download/v0.3.0/libnro_hook.nro
+     - libparam_hook.nro: https://github.com/ultimate-research/params-hook-plugin/releases/download/v0.1.1/libparam_hook.nro
+     - libnn_hid_hook.nro: https://github.com/jugeeya/nn-hid-hook/releases/download/beta/libnn_hid_hook.nro
 3. Run Emulator
    - Move to training mode.
    - If you want to check the plugin runnning status, you can see plugin logs by "cargo skyline listen" 
