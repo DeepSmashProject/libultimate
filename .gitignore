@@ -111,3 +111,5 @@ dmypy.json
 
 develop.txt
 #develop.py
+
+.DS_Store
