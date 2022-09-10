@@ -22,13 +22,9 @@ class ControlState(NamedTuple):
 class Controller:
     def __init__(self, player_id: int):
         self.player_id = player_id
-        self.gamestate = None
 
     def set_console(self, console: Console):
         self.console = console
-
-    def update_gamestate(self, gamestate):
-        self.gamestate = gamestate
 
     def input(self, button: Button, main_stick = (0, 0), c_stick = (0, 0), l_trigger = 0, r_trigger = 0, flags = 0, hold = False):
         control_state: ControlState = {
@@ -107,37 +103,32 @@ class Controller:
     def jump(self, direction: Direction):
         if direction == Direction.NONE: self.input(Button.X, hold=True)
         elif direction == Direction.RIGHT: 
-            self.input(Button.X, main_stick=(1, 0), hold=True)
-            time.sleep(0.1)
             self.input(Button.NONE, main_stick=(1, 0), hold=True)
+            time.sleep(0.05)
+            self.input(Button.X, main_stick=(1, 0), hold=True)
         elif direction == Direction.LEFT: 
-            self.input(Button.X, main_stick=(-1, 0), hold=True)
-            time.sleep(0.1)
             self.input(Button.NONE, main_stick=(-1, 0), hold=True)
+            time.sleep(0.05)
+            self.input(Button.X, main_stick=(-1, 0), hold=True)
 
     def short_hop(self, direction: Direction):
         if direction == Direction.NONE: self.input(Button.X, hold=False)
         elif direction == Direction.RIGHT: 
-            self.input(Button.X, main_stick=(1, 0), hold=False)
-            time.sleep(0.1)
             self.input(Button.NONE, main_stick=(1, 0), hold=True)
+            time.sleep(0.05)
+            self.input(Button.X, main_stick=(1, 0), hold=False)
         elif direction == Direction.LEFT: 
-            self.input(Button.X, main_stick=(-1, 0), hold=False)
-            time.sleep(0.1)
             self.input(Button.NONE, main_stick=(-1, 0), hold=True)
+            time.sleep(0.05)
+            self.input(Button.X, main_stick=(-1, 0), hold=False)
 
     def walk(self, lr: bool): # True = Right, False = Left
-        situation_kind = 0 if not self.gamestate else self.gamestate.players[0].situation_kind
-        if situation_kind == 0:
-            if lr: self.input(Button.NONE, main_stick=(0.5, 0), hold=True)
-            else: self.input(Button.NONE, main_stick=(-0.5, 0), hold=True)
+        if lr: self.input(Button.NONE, main_stick=(0.5, 0), hold=True)
+        else: self.input(Button.NONE, main_stick=(-0.5, 0), hold=True)
 
     def dash(self, lr: bool): # True = Right, False = Left
-        status_kind = 0 if not self.gamestate else self.gamestate.players[0].fighter_status_kind
-        situation_kind = 0 if not self.gamestate else self.gamestate.players[0].situation_kind
-        if situation_kind == 0:
-            if lr: self.input(Button.NONE, main_stick=(1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
-            else: self.input(Button.NONE, main_stick=(-1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
+        if lr: self.input(Button.NONE, main_stick=(1, 0), hold=False)
+        else: self.input(Button.NONE, main_stick=(-1, 0), hold=False)
 
     def taint(self, direction: Direction):
         if direction== Direction.UP: self.input(Button.D_PAD_UP, hold=True)

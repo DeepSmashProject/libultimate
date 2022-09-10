@@ -35,6 +35,8 @@ if __name__ == "__main__":
             {"name": "JUMP", "func": lambda : controller_1p.jump(Direction.NONE)},
             {"name": "RIGHT JUMP", "func": lambda : controller_1p.jump(Direction.RIGHT)}, # Right
             {"name": "LEFT JUMP", "func": lambda : controller_1p.jump(Direction.LEFT)}, # Left
+            {"name": "RIGHT SHORT HOP", "func": lambda : controller_1p.short_hop(Direction.RIGHT)}, # Right
+            {"name": "LEFT SHORT HOP", "func": lambda : controller_1p.short_hop(Direction.LEFT)}, # Left
             {"name": "UP TAINT", "func": lambda : controller_1p.taint(Direction.UP)},
             {"name": "DOWN TAINT", "func": lambda : controller_1p.taint(Direction.DOWN)},
             {"name": "LEFT TAINT", "func": lambda : controller_1p.taint(Direction.LEFT)},

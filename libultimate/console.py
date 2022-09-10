@@ -33,8 +33,6 @@ class Console():
             try:
                 time.sleep(interval)
                 gamestate = self.api.read_state()
-                for controller in self.controllers:
-                    controller.update_gamestate(gamestate)
                 yield gamestate
             except Exception as err:
                 self.logger.warning("couldn't read state: {}".format(err))
