@@ -1,6 +1,6 @@
 import string
 import time
-from .enums import Button, Direction
+from .enums import Button, Direction, Action
 from .console import Console
 from typing import NamedTuple, Tuple
 import uuid
@@ -138,3 +138,27 @@ class Controller:
 
     def release_all(self):
         self.input(Button.NONE)
+
+class Command(NamedTuple):
+    id: str
+    player_id: int
+    action: Action
+    stick_x: float
+    stick_y: float
+
+class ActionController:
+    def __init__(self, player_id: int):
+        self.player_id = player_id
+
+    def set_console(self, console: Console):
+        self.console = console
+
+    def act(self, action: Action, main_stick = (0, 0)):
+        command: Command = {
+            "id": str(uuid.uuid4()),
+            "player_id": self.player_id,
+            "action": action,
+            "stick_x": main_stick[0],
+            "stick_y": main_stick[1],
+        }
+        self.console.api.send_command(self.player_id, command)
