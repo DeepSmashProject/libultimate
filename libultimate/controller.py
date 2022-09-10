@@ -164,3 +164,6 @@ class ActionController:
             "hold": hold,
         }
         self.console.api.send_command(self.player_id, command)
+
+    def release_all(self):
+        pass
