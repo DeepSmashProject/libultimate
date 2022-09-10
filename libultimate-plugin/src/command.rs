@@ -44,6 +44,7 @@ pub struct Command {
     pub action: Action,
     pub stick_x: f32, // -1 ~ 1
     pub stick_y: f32, // -1 ~ 1
+    pub hold: bool,
 }
 
 impl Default for Command {
@@ -54,6 +55,7 @@ impl Default for Command {
             action: Action::NONE,
             stick_x: 0.0,
             stick_y: 0.0,
+            hold: false,
         }
     }
 }

@@ -94,7 +94,7 @@ unsafe fn get_command_flag(category: i32, module_accessor: &mut app::BattleObjec
         //ControlModule::set_main_stick_y(module_accessor, _command.stick_y);
 
         // execute command once per recieve command
-        if _command.id != prev_command.id {
+        if _command.id != prev_command.id || _command.hold {
             if category == FIGHTER_PAD_COMMAND_CATEGORY1 {
                 let flag: i32;
                 match _command.action {

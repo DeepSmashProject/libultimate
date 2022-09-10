@@ -145,6 +145,7 @@ class Command(NamedTuple):
     action: Action
     stick_x: float
     stick_y: float
+    hold: bool
 
 class ActionController:
     def __init__(self, player_id: int):
@@ -153,12 +154,13 @@ class ActionController:
     def set_console(self, console: Console):
         self.console = console
 
-    def act(self, action: Action, main_stick = (0, 0)):
+    def act(self, action: Action, main_stick = (0, 0), hold=False):
         command: Command = {
             "id": str(uuid.uuid4()),
             "player_id": self.player_id,
             "action": action,
             "stick_x": main_stick[0],
             "stick_y": main_stick[1],
+            "hold": hold,
         }
         self.console.api.send_command(self.player_id, command)
