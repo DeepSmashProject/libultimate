@@ -2,6 +2,8 @@ import os
 import sys
 import time
 import logging
+
+from DeepSmashProject.libultimate.libultimate import gamestate
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .api import API
 
@@ -31,6 +33,9 @@ class Console():
         while True:
             try:
                 time.sleep(interval)
-                yield self.api.read_state()
+                gamestate = self.api.read_state()
+                for controller in self.controllers:
+                    controller.update_gamestate(gamestate)
+                yield gamestate
             except Exception as err:
                 self.logger.warning("couldn't read state: {}".format(err))

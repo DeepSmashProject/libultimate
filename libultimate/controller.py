@@ -22,9 +22,13 @@ class ControlState(NamedTuple):
 class Controller:
     def __init__(self, player_id: int):
         self.player_id = player_id
+        self.gamestate = None
 
     def set_console(self, console: Console):
         self.console = console
+
+    def update_gamestate(self, gamestate):
+        self.gamestate = gamestate
 
     def input(self, button: Button, main_stick = (0, 0), c_stick = (0, 0), l_trigger = 0, r_trigger = 0, flags = 0, hold = False):
         control_state: ControlState = {
@@ -127,8 +131,9 @@ class Controller:
         else: self.input(Button.NONE, main_stick=(-0.5, 0), hold=True)
 
     def dash(self, lr: bool): # True = Right, False = Left
-        if lr: self.input(Button.NONE, main_stick=(1, 0), hold=True)
-        else: self.input(Button.NONE, main_stick=(-1, 0), hold=True)
+        status_kind = self.gamestate.players[0].fighter_status_kind
+        if lr: self.input(Button.NONE, main_stick=(1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
+        else: self.input(Button.NONE, main_stick=(-1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
 
     def taint(self, direction: Direction):
         if direction== Direction.UP: self.input(Button.D_PAD_UP, hold=True)
