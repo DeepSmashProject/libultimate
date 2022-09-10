@@ -127,12 +127,14 @@ class Controller:
             self.input(Button.NONE, main_stick=(-1, 0), hold=True)
 
     def walk(self, lr: bool): # True = Right, False = Left
-        if lr: self.input(Button.NONE, main_stick=(0.5, 0), hold=True)
-        else: self.input(Button.NONE, main_stick=(-0.5, 0), hold=True)
+        situation_kind = 0 if not self.gamestate else self.gamestate.players[0].situation_kind
+        if situation_kind == 0:
+            if lr: self.input(Button.NONE, main_stick=(0.5, 0), hold=True)
+            else: self.input(Button.NONE, main_stick=(-0.5, 0), hold=True)
 
     def dash(self, lr: bool): # True = Right, False = Left
-        status_kind = self.gamestate.players[0].fighter_status_kind
-        situation_kind = self.gamestate.players[0].situation_kind
+        status_kind = 0 if not self.gamestate else self.gamestate.players[0].fighter_status_kind
+        situation_kind = 0 if not self.gamestate else self.gamestate.players[0].situation_kind
         if situation_kind == 0:
             if lr: self.input(Button.NONE, main_stick=(1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
             else: self.input(Button.NONE, main_stick=(-1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
