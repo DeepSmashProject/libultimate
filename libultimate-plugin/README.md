@@ -109,3 +109,15 @@ https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/training/mash
 | RStick Up     | 2097152 | r stick up     |
 | RStick Right  | 4194304 | r stick right  |
 | RStick Down   | 8388608 | r stick down   |
+
+# test
+NONE
+DASH, WALK, JUMP, SHORT_HOP
+GUARD, SPOT_DODGE, F_ROL, B_ROLL
+CATCH, THROW_F, THROW_B, THROW_U, THROW_D
+TILT_FBUD
+SMASH_FBUD
+ATTACK_FBUD, JAB
+DASH_ATTAK
+NAIR, BAIR, FAIR, UAIR, DAIR
+TURN, TURN_DASH

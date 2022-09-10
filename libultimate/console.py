@@ -3,7 +3,6 @@ import sys
 import time
 import logging
 
-from DeepSmashProject.libultimate.libultimate import gamestate
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .api import API
 

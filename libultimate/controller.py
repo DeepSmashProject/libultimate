@@ -132,8 +132,10 @@ class Controller:
 
     def dash(self, lr: bool): # True = Right, False = Left
         status_kind = self.gamestate.players[0].fighter_status_kind
-        if lr: self.input(Button.NONE, main_stick=(1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
-        else: self.input(Button.NONE, main_stick=(-1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
+        situation_kind = self.gamestate.players[0].situation_kind
+        if situation_kind == 0:
+            if lr: self.input(Button.NONE, main_stick=(1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
+            else: self.input(Button.NONE, main_stick=(-1, 0), hold=False if status_kind != 3 and status_kind != 4 else True)
 
     def taint(self, direction: Direction):
         if direction== Direction.UP: self.input(Button.D_PAD_UP, hold=True)
