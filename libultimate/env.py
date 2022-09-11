@@ -56,6 +56,7 @@ class UltimateEnv(gym.Env):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        print("[libultimate] Stopping stream...")
         self.stop_event.set()
         time.sleep(1)
 
