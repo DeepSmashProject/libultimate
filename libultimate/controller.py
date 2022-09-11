@@ -2,7 +2,7 @@ import string
 import time
 from .enums import Button, Direction, Action
 from .console import Console
-from typing import NamedTuple, Tuple
+from typing import List, NamedTuple, Tuple
 import uuid
 
 class ControlState(NamedTuple):
@@ -26,118 +26,111 @@ class Controller:
     def set_console(self, console: Console):
         self.console = console
 
-    def input(self, button: Button, main_stick = (0, 0), c_stick = (0, 0), l_trigger = 0, r_trigger = 0, flags = 0, hold = False):
+    def input(self, buttons: List[Button], main_stick = (0, 0), c_stick = (0, 0), hold = False):
+        buttons_total = int(sum([btn.value for btn in buttons]))
         control_state: ControlState = {
             "id": str(uuid.uuid4()),
             "player_id": int(self.player_id),
             "update_count": int(0),
-            "buttons": int(button.value),
+            "buttons": buttons_total,
             "l_stick_x": int(main_stick[0] * 32768), # Min: 0, Max: 0x7FFF
             "l_stick_y": int(main_stick[1] * 32768), # Min: 0, Max: -0x7FFF
             "r_stick_x": int(c_stick[0] * 32768), # Min: 0, Max: 0x7FFF
             "r_stick_y": int(c_stick[1] * 32768), # Min: 0, Max: 0x7FFF
-            "flags": int(flags),
-            "l_trigger": int(l_trigger),
-            "r_trigger": int(r_trigger),
+            "flags": int(0),
+            "l_trigger": int(0),
+            "r_trigger": int(0),
             "hold": hold,
         }
         self.console.api.send_control_state(self.player_id, control_state)
 
     def jab(self):
-        self.input(Button.A)
+        self.input([Button.A])
 
     def tilt(self, direction: Direction):
-        if direction== Direction.UP: self.input(Button.A, main_stick=(0, 0.5), hold=False)
-        elif direction== Direction.UP_RIGHT: self.input(Button.A, main_stick=(0.5, 0.5), hold=False)
-        elif direction== Direction.RIGHT: self.input(Button.A, main_stick=(0.5, 0), hold=False)
-        elif direction== Direction.DOWN_RIGHT: self.input(Button.A, main_stick=(0.5, -0.5), hold=False)
-        elif direction== Direction.DOWN: self.input(Button.A, main_stick=(0, -0.5), hold=False)
-        elif direction== Direction.DOWN_LEFT: self.input(Button.A, main_stick=(-0.5, -0.5), hold=False)
-        elif direction== Direction.LEFT: self.input(Button.A, main_stick=(-0.5, 0), hold=False)
-        elif direction== Direction.UP_LEFT: self.input(Button.A, main_stick=(-0.5, 0.5), hold=False)
+        if direction== Direction.UP: self.input([Button.C_STICK_UP], hold=False)
+        elif direction== Direction.UP_RIGHT: self.input([Button.C_STICK_UP, Button.C_STICK_RIGHT], hold=False)
+        elif direction== Direction.RIGHT: self.input([Button.C_STICK_RIGHT], hold=False)
+        elif direction== Direction.DOWN_RIGHT: self.input([Button.C_STICK_DOWN, Button.C_STICK_RIGHT], hold=False)
+        elif direction== Direction.DOWN: self.input([Button.C_STICK_DOWN], hold=False)
+        elif direction== Direction.DOWN_LEFT: self.input([Button.C_STICK_DOWN, Button.C_STICK_LEFT], hold=False)
+        elif direction== Direction.LEFT: self.input([Button.C_STICK_LEFT], hold=False)
+        elif direction== Direction.UP_LEFT: self.input([Button.C_STICK_UP, Button.C_STICK_LEFT], hold=False)
 
     def smash(self, direction: Direction):
-        if direction== Direction.UP: self.input(Button.A, main_stick=(0, 1), hold=False)
-        elif direction== Direction.UP_RIGHT: self.input(Button.A, main_stick=(1, 1), hold=False)
-        elif direction== Direction.RIGHT: self.input(Button.A, main_stick=(1, 0), hold=False)
-        elif direction== Direction.DOWN_RIGHT: self.input(Button.A, main_stick=(1, -1), hold=False)
-        elif direction== Direction.DOWN: self.input(Button.A, main_stick=(0, -1), hold=False)
-        elif direction== Direction.DOWN_LEFT: self.input(Button.A, main_stick=(-1, -1), hold=False)
-        elif direction== Direction.LEFT: self.input(Button.A, main_stick=(-1, 0), hold=False)
-        elif direction== Direction.UP_LEFT: self.input(Button.A, main_stick=(-1, 1), hold=False)
+        if direction== Direction.UP: self.input([Button.A, Button.MAIN_STICK_UP], hold=False)
+        elif direction== Direction.UP_RIGHT: self.input([Button.A, Button.MAIN_STICK_UP], hold=False)
+        elif direction== Direction.RIGHT: self.input([Button.A, Button.MAIN_STICK_RIGHT], hold=False)
+        elif direction== Direction.DOWN_RIGHT: self.input([Button.A, Button.MAIN_STICK_DOWN],  hold=False)
+        elif direction== Direction.DOWN: self.input([Button.A, Button.MAIN_STICK_DOWN],  hold=False)
+        elif direction== Direction.DOWN_LEFT: self.input([Button.A, Button.MAIN_STICK_DOWN], hold=False)
+        elif direction== Direction.LEFT: self.input([Button.A, Button.MAIN_STICK_LEFT], hold=False)
+        elif direction== Direction.UP_LEFT: self.input([Button.A, Button.MAIN_STICK_UP], hold=False)
 
     def special(self, direction: Direction):
-        if direction== Direction.NONE: self.input(Button.B, main_stick=(0, 0), hold=False)
-        elif direction== Direction.UP: self.input(Button.B, main_stick=(0, 1), hold=False)
-        elif direction== Direction.UP_RIGHT: self.input(Button.B, main_stick=(1, 1), hold=False)
-        elif direction== Direction.RIGHT: self.input(Button.B, main_stick=(1, 0), hold=False)
-        elif direction== Direction.DOWN_RIGHT: self.input(Button.B, main_stick=(1, -1), hold=False)
-        elif direction== Direction.DOWN: self.input(Button.B, main_stick=(0, -1), hold=False)
-        elif direction== Direction.DOWN_LEFT: self.input(Button.B, main_stick=(-1, -1), hold=False)
-        elif direction== Direction.LEFT: self.input(Button.B, main_stick=(-1, 0), hold=False)
-        elif direction== Direction.UP_LEFT: self.input(Button.B, main_stick=(-1, 1), hold=False)
+        if direction== Direction.NONE: self.input([Button.B], hold=False)
+        elif direction== Direction.UP: self.input([Button.B, Button.MAIN_STICK_UP], hold=False)
+        elif direction== Direction.UP_RIGHT: self.input([Button.B, Button.MAIN_STICK_UP], hold=False)
+        elif direction== Direction.RIGHT: self.input([Button.B, Button.MAIN_STICK_RIGHT], hold=False)
+        elif direction== Direction.DOWN_RIGHT: self.input([Button.B, Button.MAIN_STICK_DOWN], hold=False)
+        elif direction== Direction.DOWN: self.input([Button.B, Button.MAIN_STICK_DOWN], hold=False)
+        elif direction== Direction.DOWN_LEFT: self.input([Button.B, Button.MAIN_STICK_DOWN], hold=False)
+        elif direction== Direction.LEFT: self.input([Button.B, Button.MAIN_STICK_LEFT], hold=False)
+        elif direction== Direction.UP_LEFT: self.input([Button.B, Button.MAIN_STICK_UP], hold=False)
 
     def dash_attack(self, lr: bool): # True = Right, False = Left
         if lr: 
-            self.input(Button.NONE, main_stick=(1, 0), hold=True)
+            self.input([Button.NONE], main_stick=(1, 0), hold=True)
             time.sleep(0.2)
-            self.input(Button.A, main_stick=(1, 0), hold=False)
+            self.input([Button.A], main_stick=(1, 0), hold=False)
         else:
-            self.input(Button.NONE, main_stick=(-1, 0), hold=True)
+            self.input([Button.NONE], main_stick=(-1, 0), hold=True)
             time.sleep(0.2)
-            self.input(Button.A, main_stick=(-1, 0), hold=False)
+            self.input([Button.A], main_stick=(-1, 0), hold=False)
 
     def guard(self):
-        self.input(Button.ZL, hold=True)
+        self.input([Button.ZL], hold=True)
     
     def grab(self):
-        self.input(Button.L, hold=False)
+        self.input([Button.L], hold=False)
 
     def spot_dodge(self):
-        self.input(Button.ZL, main_stick=(0, -1), hold=False)
+        self.input([Button.ZL, Button.MAIN_STICK_DOWN], hold=False)
 
     def roll(self, lr: bool): # True = Right, False = Left
-        if lr: self.input(Button.ZL, main_stick=(1, 0), hold=False)
-        else: self.input(Button.ZL, main_stick=(-1, 0), hold=False)
+        if lr: self.input([Button.ZL, Button.MAIN_STICK_RIGHT], hold=False)
+        else: self.input([Button.ZL, Button.MAIN_STICK_LEFT], hold=False)
 
     def jump(self, direction: Direction):
-        if direction == Direction.NONE: self.input(Button.X, hold=True)
+        if direction == Direction.NONE: self.input([Button.X], hold=True)
         elif direction == Direction.RIGHT: 
-            self.input(Button.NONE, main_stick=(1, 0), hold=True)
-            time.sleep(0.05)
-            self.input(Button.X, main_stick=(1, 0), hold=True)
+            self.input([Button.X, Button.MAIN_STICK_RIGHT], hold=True)
         elif direction == Direction.LEFT: 
-            self.input(Button.NONE, main_stick=(-1, 0), hold=True)
-            time.sleep(0.05)
-            self.input(Button.X, main_stick=(-1, 0), hold=True)
+            self.input([Button.X, Button.MAIN_STICK_LEFT], hold=True)
 
     def short_hop(self, direction: Direction):
-        if direction == Direction.NONE: self.input(Button.X, hold=False)
+        if direction == Direction.NONE: self.input([Button.X, Button.Y], hold=False)
         elif direction == Direction.RIGHT: 
-            self.input(Button.NONE, main_stick=(1, 0), hold=True)
-            time.sleep(0.05)
-            self.input(Button.X, main_stick=(1, 0), hold=False)
+            self.input([Button.X, Button.Y, Button.MAIN_STICK_RIGHT], hold=False)
         elif direction == Direction.LEFT: 
-            self.input(Button.NONE, main_stick=(-1, 0), hold=True)
-            time.sleep(0.05)
-            self.input(Button.X, main_stick=(-1, 0), hold=False)
+            self.input([Button.X, Button.Y, Button.MAIN_STICK_LEFT], hold=False)
 
     def walk(self, lr: bool): # True = Right, False = Left
-        if lr: self.input(Button.NONE, main_stick=(0.5, 0), hold=True)
-        else: self.input(Button.NONE, main_stick=(-0.5, 0), hold=True)
+        if lr: self.input([Button.NONE], main_stick=(0.5, 0), hold=True)
+        else: self.input([Button.NONE], main_stick=(-0.5, 0), hold=True)
 
     def dash(self, lr: bool): # True = Right, False = Left
-        if lr: self.input(Button.NONE, main_stick=(1, 0), hold=False)
-        else: self.input(Button.NONE, main_stick=(-1, 0), hold=False)
+        if lr: self.input([Button.MAIN_STICK_RIGHT], hold=False)
+        else: self.input([Button.MAIN_STICK_LEFT], hold=False)
 
     def taint(self, direction: Direction):
-        if direction== Direction.UP: self.input(Button.D_PAD_UP, hold=True)
-        elif direction== Direction.RIGHT: self.input(Button.D_PAD_RIGHT, hold=True)
-        elif direction== Direction.DOWN: self.input(Button.D_PAD_DOWN, hold=True)
-        elif direction== Direction.LEFT: self.input(Button.D_PAD_LEFT, hold=True)
+        if direction== Direction.UP: self.input([Button.D_PAD_UP], hold=True)
+        elif direction== Direction.RIGHT: self.input([Button.D_PAD_RIGHT], hold=True)
+        elif direction== Direction.DOWN: self.input([Button.D_PAD_DOWN], hold=True)
+        elif direction== Direction.LEFT: self.input([Button.D_PAD_LEFT], hold=True)
 
     def release_all(self):
-        self.input(Button.NONE)
+        self.input([Button.NONE])
 
 class Command(NamedTuple):
     id: str

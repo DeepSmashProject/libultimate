@@ -117,8 +117,8 @@ class Button(Enum):
     B = 2
     X = 4
     Y = 8
-    L_STICK_BUTTON = 16
-    R_STICK_BUTTON = 32
+    MAIN_STICK_BUTTON = 16
+    C_STICK_BUTTON = 32
     L = 64
     R = 128
     ZL = 256
@@ -129,6 +129,14 @@ class Button(Enum):
     D_PAD_UP = 8192
     D_PAD_RIGHT = 16384
     D_PAD_DOWN = 32768
+    MAIN_STICK_LEFT = 65536
+    MAIN_STICK_UP = 131072
+    MAIN_STICK_RIGHT = 262144
+    MAIN_STICK_DOWN = 524288
+    C_STICK_LEFT = 1048576
+    C_STICK_UP = 2097152
+    C_STICK_RIGHT = 4194304
+    C_STICK_DOWN = 8388608
 
 class Action(str, Enum):
     TILT_U = "TILT_U"
