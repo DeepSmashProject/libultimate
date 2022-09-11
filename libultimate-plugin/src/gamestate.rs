@@ -35,14 +35,15 @@ pub struct PlayerState{
     pub lr: f32,
     pub percent: f32,
     //pub stock: i32,
+    pub speed: Speed,
     pub position: Position,
-    pub control_state: ControlState,
+    //pub control_state: ControlState,
     pub is_cpu: bool,
     pub is_dead: bool,
     pub frame: f32,
     pub end_frame: f32,
     pub is_actionable: bool,
-    pub fighter_information: FighterInformation,
+    //pub fighter_information: FighterInformation,
     //pub charge: ChargeState,
 }
 
@@ -89,6 +90,12 @@ pub struct Projectile{
 
 #[derive(Serialize, Clone, Copy)]
 pub struct Position{
+    pub x: f32,
+    pub y: f32,
+}
+
+#[derive(Serialize, Clone, Copy)]
+pub struct Speed{
     pub x: f32,
     pub y: f32,
 }

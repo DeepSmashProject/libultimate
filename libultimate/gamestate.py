@@ -5,6 +5,10 @@ class Position(NamedTuple):
     x: float = 0
     y: float = 0
 
+class Speed(NamedTuple):
+    x: float = 0
+    y: float = 0
+
 class ControlState(NamedTuple):
     stick_x: float
     stick_y: float
@@ -39,6 +43,7 @@ class PlayerState(NamedTuple):
     lr: float
     percent: float
     position: Position
+    speed: Speed
     #charge: float
     #control_state: ControlState
     frame: int
@@ -46,7 +51,7 @@ class PlayerState(NamedTuple):
     is_cpu: bool
     is_dead: bool
     is_actionable: bool
-    fighter_information: FighterInformation
+    #fighter_information: FighterInformation
 
 class Projectile(NamedTuple):
     position: Position
@@ -69,6 +74,10 @@ def toGameState(gs_json):
                 x=p["position"]["x"],
                 y=p["position"]["y"],
             ),
+            speed=Speed(
+                x=p["speed"]["x"],
+                y=p["speed"]["y"],
+            ),
             #charge=p["charge"],
             #control_state=ControlState(
             #    stick_x=p["control_state"]["stick_x"],
@@ -88,20 +97,19 @@ def toGameState(gs_json):
             is_cpu=p["is_cpu"],
             is_dead=p["is_dead"],
             is_actionable=p["is_actionable"],
-            fighter_information=FighterInformation(
-                hit_point=p["fighter_information"]["hit_point"],
-                fighter_color=p["fighter_information"]["fighter_color"],
-                is_operation_cpu=p["fighter_information"]["is_operation_cpu"],
-                dead_count=p["fighter_information"]["dead_count"],
-                stock_count=p["fighter_information"]["stock_count"],
-                suicide_count=p["fighter_information"]["suicide_count"],
-                total_beat_count=p["fighter_information"]["total_beat_count"],
-                is_last_dead_suicide=p["fighter_information"]["is_last_dead_suicide"],
-                is_on_rebirth=p["fighter_information"]["is_on_rebirth"],
-                fighter_category=p["fighter_information"]["fighter_category"],
-                gravity=p["fighter_information"]["gravity"],
-
-            )
+            #fighter_information=FighterInformation(
+            #    hit_point=p["fighter_information"]["hit_point"],
+            #    fighter_color=p["fighter_information"]["fighter_color"],
+            #    is_operation_cpu=p["fighter_information"]["is_operation_cpu"],
+            #    dead_count=p["fighter_information"]["dead_count"],
+            #    stock_count=p["fighter_information"]["stock_count"],
+            #    suicide_count=p["fighter_information"]["suicide_count"],
+            #    total_beat_count=p["fighter_information"]["total_beat_count"],
+            #    is_last_dead_suicide=p["fighter_information"]["is_last_dead_suicide"],
+            #    is_on_rebirth=p["fighter_information"]["is_on_rebirth"],
+            #    fighter_category=p["fighter_information"]["fighter_category"],
+            #    gravity=p["fighter_information"]["gravity"],
+            #)
         ))
     return GameState(
         players=players,
