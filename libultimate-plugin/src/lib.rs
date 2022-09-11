@@ -248,7 +248,7 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     let fighter_status_kind = StatusModule::status_kind(module_accessor);
     let frame = MotionModule::frame(module_accessor);
     let end_frame = MotionModule::end_frame(module_accessor);
-    let is_dead = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_STANDBY;
+    let is_dead = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD;
     let is_actionable = is_actionable(module_accessor);
     //let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
     //let fighter_info = app::FighterManager::get_fighter_information(fighter_manager, entry_id);
