@@ -101,27 +101,27 @@ class Controller:
         if lr: self.input([Button.ZL], main_stick=(1, 0), hold=False)
         else: self.input([Button.ZL], main_stick=(-1, 0), hold=False)
 
-    def jump(self, direction: Direction):
-        if direction == Direction.NONE: self.input([Button.X], hold=True)
-        elif direction == Direction.RIGHT: 
-            self.input([Button.NONE], main_stick=(1, 0), hold=True)
+    def jump(self, lr=None): # True = Right, False = Left
+        if lr == None: self.input([Button.X], hold=True)
+        elif lr: 
+            self.input([Button.NONE], main_stick=(0, 0), hold=True)
             time.sleep(0.05)
             self.input([Button.X], main_stick=(1, 0), hold=True)
-        elif direction == Direction.LEFT: 
-            self.input([Button.NONE], main_stick=(-1, 0), hold=True)
+        elif not lr: 
+            self.input([Button.NONE], main_stick=(0, 0), hold=True)
             time.sleep(0.05)
             self.input([Button.X], main_stick=(-1, 0), hold=True)
 
-    def short_hop(self, direction: Direction):
-        if direction == Direction.NONE: self.input([Button.X], hold=False)
-        elif direction == Direction.RIGHT: 
-            self.input([Button.NONE], main_stick=(1, 0), hold=True)
+    def short_hop(self, lr=None):
+        if lr == None: self.input([Button.X, Button.Y], hold=True)
+        elif lr: 
+            self.input([Button.NONE], main_stick=(0, 0), hold=True)
             time.sleep(0.05)
-            self.input([Button.X], main_stick=(1, 0), hold=False)
-        elif direction == Direction.LEFT: 
-            self.input([Button.NONE], main_stick=(-1, 0), hold=True)
+            self.input([Button.X, Button.Y], main_stick=(1, 0), hold=True)
+        elif not lr: 
+            self.input([Button.NONE], main_stick=(0, 0), hold=True)
             time.sleep(0.05)
-            self.input([Button.X], main_stick=(-1, 0), hold=False)
+            self.input([Button.X, Button.Y], main_stick=(-1, 0), hold=True)
 
     def walk(self, lr: bool): # True = Right, False = Left
         if lr: self.input([Button.NONE], main_stick=(0.5, 0), hold=True)
