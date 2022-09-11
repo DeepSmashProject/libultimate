@@ -27,7 +27,7 @@ class PlayerState(NamedTuple):
     percent: float
     position: Position
     #charge: float
-    control_state: ControlState
+    #control_state: ControlState
     is_cpu: bool
     is_dead: bool
 
@@ -52,19 +52,19 @@ def toGameState(gs_json):
                 x=p["position"]["x"],
                 y=p["position"]["y"],
             ),
-            control_state=ControlState(
-                stick_x=p["control_state"]["stick_x"],
-                stick_y=p["control_state"]["stick_y"],
-                button_attack=p["control_state"]["button_attack"],
-                button_special=p["control_state"]["button_special"],
-                button_smash=p["control_state"]["button_smash"],
-                button_guard=p["control_state"]["button_guard"],
-                button_guard_hold=p["control_state"]["button_guard_hold"],
-                button_catch=p["control_state"]["button_catch"],
-                button_jump=p["control_state"]["button_jump"],
-                button_jump_mini=p["control_state"]["button_jump_mini"],
-                button_invalid=p["control_state"]["button_invalid"]
-            ),
+            #control_state=ControlState(
+            #    stick_x=p["control_state"]["stick_x"],
+            #    stick_y=p["control_state"]["stick_y"],
+            #    button_attack=p["control_state"]["button_attack"],
+            #    button_special=p["control_state"]["button_special"],
+            #    button_smash=p["control_state"]["button_smash"],
+            #    button_guard=p["control_state"]["button_guard"],
+            #    button_guard_hold=p["control_state"]["button_guard_hold"],
+            #    button_catch=p["control_state"]["button_catch"],
+            #    button_jump=p["control_state"]["button_jump"],
+            #    button_jump_mini=p["control_state"]["button_jump_mini"],
+            #    button_invalid=p["control_state"]["button_invalid"]
+            #),
             is_cpu=p["is_cpu"],
             is_dead=p["is_dead"],
         ))
