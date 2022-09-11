@@ -64,7 +64,7 @@ from libultimate import Console, Controller, Button
 if __name__ == "__main__":
     RYUJINX_PATH = os.path.join("path/to/Ryujinx") # ex. "/home/user/.config/Ryujinx"
     with Console(ryujinx_path=RYUJINX_PATH) as console:
-        controller_1p = Controller(player_id=1)
+        controller_1p = Controller(player_id=0) # player_id: 0 ~ 7
         console.add_controller(controller_1p)
 
         for gamestate in console.stream(hz=5):
@@ -116,7 +116,7 @@ controller_1p = Controller(player_id=1)
 
 | Name      | Default   | Type      | Description           |
 | --------- | --------- | --------- | --------------------- |
-| player_id | Required* | int (1~8) | Controller port (1~8) |
+| player_id | Required* | int (0~7) | Controller port (0~7) |
 
 ### input
 

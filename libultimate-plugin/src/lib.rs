@@ -29,13 +29,12 @@ pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32
 }
 
 unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) -> Result<(), Error>{
-    let player_id = *_controller_id + 1;
     let mut prev_control_state = CONTROLSTATE.lock().unwrap();
-    let control_state = match controlstate::ControlState::get(player_id){
+    let control_state = match controlstate::ControlState::get(*_controller_id){
         Ok(cs) => cs,
         Err(_) => prev_control_state.clone(),
     };
-    if control_state.player_id == player_id{
+    if control_state.player_id == *_controller_id{
         //(*state).updateCount = control_state.update_count;
         if control_state.id != prev_control_state.id || control_state.hold {
             (*state).Buttons = control_state.buttons;
@@ -83,12 +82,11 @@ pub unsafe fn handle_get_command_flag_cat(
 
 unsafe fn get_command_flag(category: i32, module_accessor: &mut app::BattleObjectModuleAccessor) -> Result<i32, Error>{
     let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    let player_id = entry_id_int + 1;
-    let _command = command::Command::get(player_id)?;
+    let _command = command::Command::get(entry_id_int)?;
 
     let mut prev_command = COMMAND.lock().unwrap();
 
-    if player_id == _command.player_id {
+    if entry_id_int == _command.player_id {
         // execute stick until recieve next command
         //ControlModule::set_main_stick_x(module_accessor, _command.stick_x);
         //ControlModule::set_main_stick_y(module_accessor, _command.stick_y);
