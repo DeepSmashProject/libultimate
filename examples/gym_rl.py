@@ -32,7 +32,7 @@ action_list = [
 ]
 
 if __name__ == "__main__":
-    RYUJINX_PATH = os.path.join(os.path.dirname(__file__), "../libultimate/test")
+    RYUJINX_PATH = "/path/to/Ryujinx" # ex: /home/username/.config/Ryujinx
     console = Console(ryujinx_path=RYUJINX_PATH)
     controller = UltimateController(console)
     env = UltimateEnv(console, controller, hz=6, action_list=action_list)

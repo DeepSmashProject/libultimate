@@ -28,8 +28,11 @@ class PlayerState(NamedTuple):
     position: Position
     #charge: float
     #control_state: ControlState
+    frame: int
+    end_frame: int
     is_cpu: bool
     is_dead: bool
+    is_actionable: bool
 
 class Projectile(NamedTuple):
     position: Position
@@ -52,6 +55,7 @@ def toGameState(gs_json):
                 x=p["position"]["x"],
                 y=p["position"]["y"],
             ),
+            #charge=p["charge"],
             #control_state=ControlState(
             #    stick_x=p["control_state"]["stick_x"],
             #    stick_y=p["control_state"]["stick_y"],
@@ -65,8 +69,11 @@ def toGameState(gs_json):
             #    button_jump_mini=p["control_state"]["button_jump_mini"],
             #    button_invalid=p["control_state"]["button_invalid"]
             #),
+            frame=p["frame"],
+            end_frame=p["end_frame"],
             is_cpu=p["is_cpu"],
             is_dead=p["is_dead"],
+            is_actionable=p["is_actionable"],
         ))
     return GameState(
         players=players,
