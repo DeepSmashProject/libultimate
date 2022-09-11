@@ -35,11 +35,31 @@ pub struct PlayerState{
     pub lr: f32,
     pub percent: f32,
     //pub stock: i32,
+    pub speed: Speed,
     pub position: Position,
-    pub control_state: ControlState,
+    //pub control_state: ControlState,
     pub is_cpu: bool,
     pub is_dead: bool,
+    pub frame: f32,
+    pub end_frame: f32,
+    pub is_actionable: bool,
+    //pub fighter_information: FighterInformation,
     //pub charge: ChargeState,
+}
+
+#[derive(Serialize, Clone, Copy)]
+pub struct FighterInformation{
+    pub hit_point: u64,
+    pub fighter_color: u64,
+    pub is_operation_cpu: bool,
+    pub dead_count: u64,
+    pub stock_count: u64,
+    pub suicide_count: u64,
+    pub total_beat_count: u64,
+    pub is_last_dead_suicide: bool,
+    pub is_on_rebirth: bool,
+    pub fighter_category: u64,
+    pub gravity: u64
 }
 
 #[derive(Serialize, Debug, Clone, Copy)]
@@ -70,6 +90,12 @@ pub struct Projectile{
 
 #[derive(Serialize, Clone, Copy)]
 pub struct Position{
+    pub x: f32,
+    pub y: f32,
+}
+
+#[derive(Serialize, Clone, Copy)]
+pub struct Speed{
     pub x: f32,
     pub y: f32,
 }

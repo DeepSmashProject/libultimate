@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import logging
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .api import API
 
@@ -17,10 +18,11 @@ class Console():
         return self
         
     def __exit__(self, exc_type, exc_value, traceback):
-        self.logger.info('Exit from console.')
+        self.logger.info('[libultimate] Cleaning up...')
         time.sleep(0.1)
         for controller in self.controllers:
             controller.release_all()
+        self.logger.info('[libultimate] Done.')
 
     def add_controller(self, controller):
         controller.set_console(self)
@@ -31,6 +33,7 @@ class Console():
         while True:
             try:
                 time.sleep(interval)
-                yield self.api.read_state()
+                gamestate = self.api.read_state()
+                yield gamestate
             except Exception as err:
                 self.logger.warning("couldn't read state: {}".format(err))

@@ -64,7 +64,7 @@ from libultimate import Console, Controller, Button
 if __name__ == "__main__":
     RYUJINX_PATH = os.path.join("path/to/Ryujinx") # ex. "/home/user/.config/Ryujinx"
     with Console(ryujinx_path=RYUJINX_PATH) as console:
-        controller_1p = Controller(player_id=1)
+        controller_1p = Controller(player_id=0) # player_id: 0 ~ 7
         console.add_controller(controller_1p)
 
         for gamestate in console.stream(hz=5):
@@ -116,7 +116,7 @@ controller_1p = Controller(player_id=1)
 
 | Name      | Default   | Type      | Description           |
 | --------- | --------- | --------- | --------------------- |
-| player_id | Required* | int (1~8) | Controller port (1~8) |
+| player_id | Required* | int (0~7) | Controller port (0~7) |
 
 ### input
 
@@ -193,6 +193,10 @@ controller_1p.taint(Direction.RIGHT)
 | lr                  | int      | left = False, right = True |
 | percent             | float    | damage percent             |
 | position            | Position | position                   |
+| speed               | Speed    | speed                      |
+| is_dead             | bool     | dead flag                  |
+| is_actionable       | bool     | actionable flag            |
+| is_cpu              | bool     | cpu: True, player: False   |
 
 ## Position
 
@@ -201,6 +205,13 @@ controller_1p.taint(Direction.RIGHT)
 | x    | float | x position  |
 | y    | float | y position  |
 
+## Speed
+
+| Name | Type  | Description |
+| ---- | ----- | ----------- |
+| x    | float | x speed     |
+| y    | float | y speed     |
+
 ## Fighter Status
 Reference: https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/training/mash.rs
 
@@ -208,7 +219,9 @@ Reference: https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/tr
 | ---------------- | --- | ------------------- |
 | WAIT             | 0   | no action           |
 | WALK             | 1   | walk                |
-| RUN              | 4   | run                 |
+| DASH             | 4   | dash                |
+| TURN             | 7   | turn                |
+| TURN_DASH        | 8   | turn dash           |
 | JUMP             | 11  | jump on ground      |
 | JUMP_AERIAL      | 12  | jump on aerial      |
 | CANNOT_ACTION    | 16  | cannot action       |

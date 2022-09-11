@@ -7,31 +7,33 @@ use std::path::Path;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub enum Action {
-    AIR_ESCAPE,
-    ATTACK_HI3,
-    ATTACK_HI4,
-    ATTACK_LW3,
-    ATTACK_LW4,
-    ATTACK_N,
-    ATTACK_S3,
-    ATTACK_S4,
-    CATCH,
+    AIR_DODGE,
+    TILT_U,
+    TILT_F,
+    TILT_D,
+    SMASH_U,
+    SMASH_F,
+    SMASH_D,
+    JAB,
+    GRAB,
     DASH,
-    ESCAPE,
-    ESCAPE_B,
-    ESCAPE_F,
+    SPOT_DODGE,
+    ROLL_B,
+    ROLL_F,
     JUMP,
-    JUMP_BUTTON,
-    SPECIAL_ANY,
-    SPECIAL_HI,
-    SPECIAL_LW,
+    SPECIAL_U,
+    SPECIAL_D,
     SPECIAL_N,
-    SPECIAL_S,
+    SPECIAL_F,
     TURN,
     TURN_DASH,
     WALK,
-    WALL_JUMP_LEFT,
-    WALL_JUMP_RIGHT,
+    GUARD,
+    THROW_B,
+    THROW_F,
+    THROW_U,
+    THROW_D,
+    DASH_ATTACK,
     NONE,
 }
 
@@ -42,6 +44,7 @@ pub struct Command {
     pub action: Action,
     pub stick_x: f32, // -1 ~ 1
     pub stick_y: f32, // -1 ~ 1
+    pub hold: bool,
 }
 
 impl Default for Command {
@@ -52,6 +55,7 @@ impl Default for Command {
             action: Action::NONE,
             stick_x: 0.0,
             stick_y: 0.0,
+            hold: false,
         }
     }
 }

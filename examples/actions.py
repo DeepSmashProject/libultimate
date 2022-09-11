@@ -2,9 +2,9 @@ import os
 from libultimate import Console, Controller, Direction
 import time
 if __name__ == "__main__":
-    RYUJINX_PATH = os.path.join(os.path.dirname(__file__), "../libultimate/test")
+    RYUJINX_PATH = "/path/to/Ryujinx" # ex: /home/username/.config/Ryujinx
     with Console(ryujinx_path=RYUJINX_PATH) as console:
-        controller_1p = Controller(player_id=1)
+        controller_1p = Controller(player_id=0)
         console.add_controller(controller_1p)
 
         funcs = [
@@ -32,9 +32,12 @@ if __name__ == "__main__":
             {"name": "LEFT WALK", "func": lambda : controller_1p.walk(lr=False)}, # Left
             {"name": "RIGHT DASH", "func": lambda : controller_1p.dash(lr=True)}, # Right
             {"name": "LEFT DASH", "func": lambda : controller_1p.dash(lr=False)}, # Left
-            {"name": "JUMP", "func": lambda : controller_1p.jump(Direction.NONE)},
-            {"name": "RIGHT JUMP", "func": lambda : controller_1p.jump(Direction.RIGHT)}, # Right
-            {"name": "LEFT JUMP", "func": lambda : controller_1p.jump(Direction.LEFT)}, # Left
+            {"name": "JUMP", "func": lambda : controller_1p.jump()},
+            {"name": "RIGHT JUMP", "func": lambda : controller_1p.jump(lr=True)}, # Right
+            {"name": "LEFT JUMP", "func": lambda : controller_1p.jump(lr=False)}, # Left
+            {"name": "RIGHT SHORT HOP", "func": lambda : controller_1p.short_hop()}, 
+            {"name": "RIGHT SHORT HOP", "func": lambda : controller_1p.short_hop(lr=True)}, # Right
+            {"name": "LEFT SHORT HOP", "func": lambda : controller_1p.short_hop(lr=False)}, # Left
             {"name": "UP TAINT", "func": lambda : controller_1p.taint(Direction.UP)},
             {"name": "DOWN TAINT", "func": lambda : controller_1p.taint(Direction.DOWN)},
             {"name": "LEFT TAINT", "func": lambda : controller_1p.taint(Direction.LEFT)},

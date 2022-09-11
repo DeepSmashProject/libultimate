@@ -29,13 +29,12 @@ pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32
 }
 
 unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) -> Result<(), Error>{
-    let player_id = *_controller_id + 1;
     let mut prev_control_state = CONTROLSTATE.lock().unwrap();
-    let control_state = match controlstate::ControlState::get(player_id){
+    let control_state = match controlstate::ControlState::get(*_controller_id){
         Ok(cs) => cs,
         Err(_) => prev_control_state.clone(),
     };
-    if control_state.player_id == player_id{
+    if control_state.player_id == *_controller_id{
         //(*state).updateCount = control_state.update_count;
         if control_state.id != prev_control_state.id || control_state.hold {
             (*state).Buttons = control_state.buttons;
@@ -73,118 +72,155 @@ pub unsafe fn handle_get_command_flag_cat(
     let mut flag = original!()(module_accessor, category);
     if category == FIGHTER_PAD_COMMAND_CATEGORY1 {
         save_gamestate(module_accessor);
-        flag = match get_command_flag(module_accessor){
-            Ok(flag) => flag,
-            Err(_) => original!()(module_accessor, category),
-        };
     }
+    flag = match get_command_flag(category, module_accessor){
+        Ok(flag) => flag,
+        Err(_) => original!()(module_accessor, category),
+    };
     return flag;
 }
 
-unsafe fn get_command_flag(module_accessor: &mut app::BattleObjectModuleAccessor) -> Result<i32, Error>{
+unsafe fn get_command_flag(category: i32, module_accessor: &mut app::BattleObjectModuleAccessor) -> Result<i32, Error>{
     let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    let player_id = entry_id_int + 1;
-    let _command = command::Command::get(player_id)?;
+    let _command = command::Command::get(entry_id_int)?;
 
     let mut prev_command = COMMAND.lock().unwrap();
 
-    if player_id == _command.player_id {
+    if entry_id_int == _command.player_id {
         // execute stick until recieve next command
-        ControlModule::set_main_stick_x(module_accessor, _command.stick_x);
-        ControlModule::set_main_stick_y(module_accessor, _command.stick_y);
+        //ControlModule::set_main_stick_x(module_accessor, _command.stick_x);
+        //ControlModule::set_main_stick_y(module_accessor, _command.stick_y);
 
         // execute command once per recieve command
-        if _command.id != prev_command.id {
-            // update prev_command
-            prev_command.id = _command.clone().id;
-            prev_command.player_id = _command.clone().player_id;
-            prev_command.action = _command.clone().action;
-            prev_command.stick_x = _command.clone().stick_x;
-            prev_command.stick_y = _command.clone().stick_y;
-            // action
-            match _command.action {
-                command::Action::AIR_ESCAPE => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE);
+        if _command.id != prev_command.id || _command.hold {
+            if category == FIGHTER_PAD_COMMAND_CATEGORY1 {
+                let flag: i32;
+                match _command.action {
+                    command::Action::AIR_DODGE => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE;
+                    }
+                    command::Action::TILT_U => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3;
+                    }
+                    command::Action::SMASH_U => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4;
+                    }
+                    command::Action::TILT_D => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3;
+                    }
+                    command::Action::SMASH_D => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4;
+                    }
+                    command::Action::JAB => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N;
+                    }
+                    command::Action::TILT_F => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3;
+                    }
+                    command::Action::SMASH_F => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4;
+                    }
+                    command::Action::GRAB => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH;
+                    }
+                    command::Action::DASH => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_DASH;
+                    }
+                    command::Action::SPOT_DODGE => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE;
+                    }
+                    command::Action::ROLL_B => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_B;
+                    }
+                    command::Action::ROLL_F => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_F;
+                    }
+                    command::Action::JUMP => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP;
+                    }
+                    command::Action::SPECIAL_U => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI;
+                    }
+                    command::Action::SPECIAL_D => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW;
+                    }
+                    command::Action::SPECIAL_N => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N;
+                    }
+                    command::Action::SPECIAL_F => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S;
+                    }
+                    command::Action::TURN => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_TURN;
+                    }
+                    command::Action::TURN_DASH => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH;
+                    }
+                    command::Action::WALK => {
+                        flag = *FIGHTER_PAD_CMD_CAT1_FLAG_WALK;
+                    }
+                    _ => return Err(Error::new(ErrorKind::Other, "NO CMD")),
                 }
-                command::Action::ATTACK_HI3 => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3);
-                }
-                command::Action::ATTACK_HI4 => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4);
-                }
-                command::Action::ATTACK_LW3 => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3);
-                }
-                command::Action::ATTACK_LW4 => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4);
-                }
-                command::Action::ATTACK_N => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N);
-                }
-                command::Action::ATTACK_S3 => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3);
-                }
-                command::Action::ATTACK_S4 => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4);
-                }
-                command::Action::CATCH => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_CATCH);
-                }
-                command::Action::DASH => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_DASH);
-                }
-                command::Action::ESCAPE => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE);
-                }
-                command::Action::ESCAPE_B => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_B);
-                }
-                command::Action::ESCAPE_F => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_ESCAPE_F);
-                }
-                command::Action::JUMP => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_JUMP);
-                }
-                command::Action::JUMP_BUTTON => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON);
-                }
-                command::Action::SPECIAL_ANY => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY);
-                }
-                command::Action::SPECIAL_HI => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI);
-                }
-                command::Action::SPECIAL_LW => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW);
-                }
-                command::Action::SPECIAL_N => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N);
-                }
-                command::Action::SPECIAL_S => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S);
-                }
-                command::Action::TURN => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_TURN);
-                }
-                command::Action::TURN_DASH => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH);
-                }
-                command::Action::WALK => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALK);
-                }
-                command::Action::WALL_JUMP_LEFT => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_LEFT);
-                }
-                command::Action::WALL_JUMP_RIGHT => {
-                    return Ok(*FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_RIGHT);
-                }
-                _ => return Err(Error::new(ErrorKind::Other, "NO CMD")),
+                // update prev_command
+                prev_command.id = _command.clone().id;
+                prev_command.player_id = _command.clone().player_id;
+                prev_command.action = _command.clone().action;
+                prev_command.stick_x = _command.clone().stick_x;
+                prev_command.stick_y = _command.clone().stick_y;
+                return Ok(flag);
             }
-            //prev_command.update(_command);
+            if category == 1 {
+                let flag: i32;
+                match _command.action {
+                    command::Action::GUARD => {
+                        flag = *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD;
+                    }
+                    command::Action::THROW_B => {
+                        flag = *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_B;
+                    }
+                    command::Action::THROW_F => {
+                        flag = *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_F;
+                    }
+                    command::Action::THROW_U => {
+                        flag = *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_HI;
+                    }
+                    command::Action::THROW_D => {
+                        flag = *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_LW;
+                    }
+                    command::Action::DASH_ATTACK => {
+                        flag = *FIGHTER_PAD_CMD_CAT2_FLAG_DASH_ATTACK_S4;
+                    }
+                    _ => return Err(Error::new(ErrorKind::Other, "NO CMD")),
+                }
+                // update prev_command
+                prev_command.id = _command.clone().id;
+                prev_command.player_id = _command.clone().player_id;
+                prev_command.action = _command.clone().action;
+                prev_command.stick_x = _command.clone().stick_x;
+                prev_command.stick_y = _command.clone().stick_y;
+                return Ok(flag);
+            }
         }
     }
     
     return Err(Error::new(ErrorKind::Other, "NO CMD"));
+}
+
+macro_rules! actionable_statuses {
+    () => {
+        vec![
+            FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR,
+            FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR,
+            FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON,
+            FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
+        ]
+    };
+}
+
+unsafe fn is_actionable(module_accessor: *mut app::BattleObjectModuleAccessor) -> bool {
+    actionable_statuses!().iter().any(|actionable_transition| {
+        WorkModule::is_enable_transition_term(module_accessor, **actionable_transition)
+    }) || CancelModule::is_enable_cancel(module_accessor)
 }
 
 unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
@@ -193,6 +229,8 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     let x = PostureModule::pos_x(module_accessor);
     let y = PostureModule::pos_y(module_accessor);
     let lr = PostureModule::lr(module_accessor); //left or right
+    let speed_x = KineticModule::get_sum_speed_x(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let speed_y = KineticModule::get_sum_speed_y(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let button_attack = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
     let button_special = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL);
     let button_smash = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SMASH);
@@ -208,9 +246,12 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     let situation_kind = StatusModule::situation_kind(module_accessor);
     let fighter_kind = app::utility::get_kind(module_accessor);
     let fighter_status_kind = StatusModule::status_kind(module_accessor);
+    let frame = MotionModule::frame(module_accessor);
+    let end_frame = MotionModule::end_frame(module_accessor);
     let is_dead = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD;
+    let is_actionable = is_actionable(module_accessor);
     //let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
-    //let fighter_info = app::FighterManager::get_fighter_information(fighter_manager, entry_id);
+    //let fighter_info = FighterManager::get_fighter_information(fighter_manager, entry_id);
     let _charge = charge::get_charge(module_accessor, fighter_kind);
     let is_cpu = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == gamestate::FighterId::CPU as i32;
 
@@ -225,7 +266,11 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
             x: x,
             y: y,
         },
-        control_state: gamestate::ControlState{
+        speed: gamestate::Speed{
+            x: speed_x,
+            y: speed_y,
+        },
+        /*control_state: gamestate::ControlState{
             stick_x: stick_x,
             stick_y: stick_y,
             button_attack: button_attack,
@@ -237,9 +282,25 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
             button_jump: button_jump,
             button_jump_mini: button_jump_mini,
             button_invalid: button_invalid,
-        },
+        },*/
+        frame: frame,
+        end_frame: end_frame,
         is_cpu: is_cpu,
         is_dead: is_dead,
+        is_actionable: is_actionable,
+        /*fighter_information: gamestate::FighterInformation {
+            hit_point: FighterInformation::hit_point(fighter_info),
+            fighter_color: FighterInformation::fighter_color(fighter_info),
+            is_operation_cpu: FighterInformation::is_operation_cpu(fighter_info),
+            dead_count: FighterInformation::dead_count(fighter_info, entry_id_int),
+            stock_count: FighterInformation::stock_count(fighter_info),
+            suicide_count: FighterInformation::suicide_count(fighter_info, entry_id_int),
+            total_beat_count: FighterInformation::total_beat_count(fighter_info, entry_id_int),
+            is_last_dead_suicide: FighterInformation::is_last_dead_suicide(fighter_info),
+            is_on_rebirth: FighterInformation::is_on_rebirth(fighter_info),
+            fighter_category: FighterInformation::fighter_category(fighter_info),
+            gravity: FighterInformation::gravity(fighter_info),
+        }*/
         //charge: _charge,
     };
     let mut game_state = GAMESTATE.lock().unwrap();

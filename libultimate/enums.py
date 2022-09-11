@@ -117,8 +117,8 @@ class Button(Enum):
     B = 2
     X = 4
     Y = 8
-    L_STICK_BUTTON = 16
-    R_STICK_BUTTON = 32
+    MAIN_STICK_BUTTON = 16
+    C_STICK_BUTTON = 32
     L = 64
     R = 128
     ZL = 256
@@ -130,32 +130,38 @@ class Button(Enum):
     D_PAD_RIGHT = 16384
     D_PAD_DOWN = 32768
 
-class Action_Old(str, Enum):
-    #AIR_ESCAPE = "AIR_ESCAPE"
-    UP_TILT = "ATTACK_HI3"
-    UP_SMASH = "ATTACK_HI4"
-    DOWN_TILT = "ATTACK_LW3"
-    DOWN_SMASH = "ATTACK_LW4"
-    JAB = "ATTACK_N"
-    SIDE_TILT = "ATTACK_S3"
-    SIDE_SMASH = "ATTACK_S4"
-    GRAB = "CATCH"
-    GUARD = "COMMON_GUARD"      # TODO: Implement
-    DASH_ATTACK = "DASH_ATTACK"      # TODO: Implement
+class Action(str, Enum):
+    TILT_U = "TILT_U"
+    TILT_D = "TILT_D"
+    TILT_F = "TILT_F"
+    SMASH_U = "SMASH_U"
+    SMASH_D = "SMASH_D"
+    SMASH_F = "SMASH_F"
+    JAB = "JAB"
+    GRAB = "GRAB"
     DASH = "DASH"
-    SPOT_DODGE = "ESCAPE"
-    BACK_ROLL = "ESCAPE_B"
-    FORWARD_ROLL = "ESCAPE_F"
+    AIR_DODGE = "AIR_DODGE"
+    SPOT_DODGE = "SPOT_DODGE"
+    ROLL_B = "ROLL_B"
+    ROLL_F = "ROLL_F"
     JUMP = "JUMP"
-    #JUMP_BUTTON = "JUMP_BUTTON"
-    #SPECIAL_ANY = "SPECIAL_ANY"
-    UP_SPECIAL = "SPECIAL_HI"
-    LOW_SPECIAL = "SPECIAL_LW"
-    NEUTRAL_SPECIAL = "SPECIAL_N"
-    SIDE_SPECIAL = "SPECIAL_S"
+    SPECIAL_U = "SPECIAL_U"
+    SPECIAL_D = "SPECIAL_D"
+    SPECIAL_N = "SPECIAL_N"
+    SPECIAL_F = "SPECIAL_F"
     TURN = "TURN"
     TURN_DASH = "TURN_DASH"
     WALK = "WALK"
-    #WALL_JUMP_LEFT = "WALL_JUMP_LEFT"
-    #WALL_JUMP_RIGHT = "WALL_JUMP_RIGHT"
+    GUARD = "GUARD"
+    THROW_B = "THROW_B"
+    THROW_F = "THROW_F"
+    THROW_U = "THROW_U"
+    THROW_D = "THROW_D"
+    DASH_ATTACK = "DASH_ATTACK"
     NONE = "NONE"
+
+class SituationKind(Enum):
+    GROUND = 0
+    CRIFF = 1
+    AIR = 2
+    OUTFIELD = 5
