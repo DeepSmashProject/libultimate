@@ -248,8 +248,8 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     let end_frame = MotionModule::end_frame(module_accessor);
     let is_dead = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD;
     let is_actionable = is_actionable(module_accessor);
-    //let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
-    //let fighter_info = app::FighterManager::get_fighter_information(fighter_manager, entry_id);
+    let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
+    let fighter_info = FighterManager::get_fighter_information(fighter_manager, entry_id);
     let _charge = charge::get_charge(module_accessor, fighter_kind);
     let is_cpu = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == gamestate::FighterId::CPU as i32;
 
@@ -282,6 +282,19 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
         is_cpu: is_cpu,
         is_dead: is_dead,
         is_actionable: is_actionable,
+        fighter_information: gamestate::FighterInformation {
+            hit_point: FighterInformation::hit_point(fighter_info),
+            fighter_color: FighterInformation::fighter_color(fighter_info),
+            is_operation_cpu: FighterInformation::is_operation_cpu(fighter_info),
+            dead_count: FighterInformation::dead_count(fighter_info, entry_id_int),
+            stock_count: FighterInformation::stock_count(fighter_info),
+            suicide_count: FighterInformation::suicide_count(fighter_info, entry_id_int),
+            total_beat_count: FighterInformation::total_beat_count(fighter_info, entry_id_int),
+            is_last_dead_suicide: FighterInformation::is_last_dead_suicide(fighter_info),
+            is_on_rebirth: FighterInformation::is_on_rebirth(fighter_info),
+            fighter_category: FighterInformation::fighter_category(fighter_info),
+            gravity: FighterInformation::gravity(fighter_info),
+        }
         //charge: _charge,
     };
     let mut game_state = GAMESTATE.lock().unwrap();

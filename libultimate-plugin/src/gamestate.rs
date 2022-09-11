@@ -42,7 +42,23 @@ pub struct PlayerState{
     pub frame: f32,
     pub end_frame: f32,
     pub is_actionable: bool,
+    pub fighter_information: FighterInformation,
     //pub charge: ChargeState,
+}
+
+#[derive(Serialize, Clone, Copy)]
+pub struct FighterInformation{
+    pub hit_point: u64,
+    pub fighter_color: u64,
+    pub is_operation_cpu: bool,
+    pub dead_count: u64,
+    pub stock_count: u64,
+    pub suicide_count: u64,
+    pub total_beat_count: u64,
+    pub is_last_dead_suicide: bool,
+    pub is_on_rebirth: bool,
+    pub fighter_category: u64,
+    pub gravity: u64
 }
 
 #[derive(Serialize, Debug, Clone, Copy)]
