@@ -28,12 +28,16 @@ class Console():
         controller.set_console(self)
         self.controllers.append(controller)
 
-    def stream(self, hz=60):
+    def stream(self, hz=60, only_actionable=False):
         interval = 60/hz * (1/60)
         while True:
             try:
                 time.sleep(interval)
                 gamestate = self.api.read_state()
-                yield gamestate
+                if only_actionable:
+                    if gamestate.players[0].is_actionable:
+                        yield gamestate
+                else:
+                    yield gamestate
             except Exception as err:
                 self.logger.warning("couldn't read state: {}".format(err))
