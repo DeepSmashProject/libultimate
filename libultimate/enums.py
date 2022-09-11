@@ -159,3 +159,9 @@ class Action(str, Enum):
     THROW_D = "THROW_D"
     DASH_ATTACK = "DASH_ATTACK"
     NONE = "NONE"
+
+class SituationKind(Enum):
+    GROUND = 0
+    CRIFF = 1
+    AIR = 2
+    OUTFIELD = 5

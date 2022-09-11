@@ -208,6 +208,23 @@ unsafe fn get_command_flag(category: i32, module_accessor: &mut app::BattleObjec
     return Err(Error::new(ErrorKind::Other, "NO CMD"));
 }
 
+macro_rules! actionable_statuses {
+    () => {
+        vec![
+            FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR,
+            FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR,
+            FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON,
+            FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
+        ]
+    };
+}
+
+unsafe fn is_actionable(module_accessor: *mut app::BattleObjectModuleAccessor) -> bool {
+    actionable_statuses!().iter().any(|actionable_transition| {
+        WorkModule::is_enable_transition_term(module_accessor, **actionable_transition)
+    }) || CancelModule::is_enable_cancel(module_accessor)
+}
+
 unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
     let entry_id = app::FighterEntryID(entry_id_int);
@@ -229,7 +246,10 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     let situation_kind = StatusModule::situation_kind(module_accessor);
     let fighter_kind = app::utility::get_kind(module_accessor);
     let fighter_status_kind = StatusModule::status_kind(module_accessor);
-    let is_dead = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD;
+    let frame = MotionModule::frame(module_accessor);
+    let end_frame = MotionModule::end_frame(module_accessor);
+    let is_dead = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD || StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_STANDBY;
+    let is_actionable = is_actionable(module_accessor);
     //let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
     //let fighter_info = app::FighterManager::get_fighter_information(fighter_manager, entry_id);
     let _charge = charge::get_charge(module_accessor, fighter_kind);
@@ -259,8 +279,11 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
             button_jump_mini: button_jump_mini,
             button_invalid: button_invalid,
         },
+        frame: frame,
+        end_frame: end_frame,
         is_cpu: is_cpu,
         is_dead: is_dead,
+        is_actionable: is_actionable,
         //charge: _charge,
     };
     let mut game_state = GAMESTATE.lock().unwrap();

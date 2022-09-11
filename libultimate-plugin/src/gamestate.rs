@@ -39,6 +39,9 @@ pub struct PlayerState{
     pub control_state: ControlState,
     pub is_cpu: bool,
     pub is_dead: bool,
+    pub frame: f32,
+    pub end_frame: f32,
+    pub is_actionable: bool,
     //pub charge: ChargeState,
 }
 

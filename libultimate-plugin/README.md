@@ -6,7 +6,10 @@ https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/training/mash
 | ---------------- | --- | ------------------- |
 | WAIT             | 0   | no action           |
 | WALK             | 1   | walk                |
-| RUN              | 4   | run                 |
+| DASH             | 4   | dash                |
+| RUN_BRAKE?       | 5   | finish run          |
+| TURN             | 7   | turn                |
+| TURN_DASH        | 8   | turn dash           |
 | JUMP             | 11  | jump on ground      |
 | JUMP_AERIAL      | 12  | jump on aerial      |
 | CANNOT_ACTION    | 16  | cannot action       |
@@ -35,6 +38,7 @@ https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/training/mash
 | CLIFF_ESCAPE     | 122 | escape from cliff   |
 | CLIFF_JUMP1      | 124 | jump from cliff     |
 | CLIFF_JUMP2      | x   | jump2 from cliff    |
+| STANDBY          | 182 | on board after dead |
 | DEAD             | 470 | dead                |
 | SPECIAL_N        | 476 | special attack      |
 | SPECIAL_S        | 477 | side special attack |
