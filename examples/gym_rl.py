@@ -41,15 +41,14 @@ if __name__ == "__main__":
     with Console(ryujinx_path=RYUJINX_PATH) as console:
         controller_1p = Controller(player_id=0)
         console.add_controller(controller_1p)
-        env = UltimateEnv(console, controller_1p, hz=6, action_space=len(action_list))
-
-        for k in range(10):
-            done = False
-            obs = env.reset()
-            step = 0
-            while not done:
-                action = random.choice(action_list)
-                next_obs, reward, done, info = env.step(action)
-                print("episode: {}, step: {}, done: {}, reward: {}, action: {}".format(k, step, done, reward, action.name))
-                step += 1
-        print("finished!")
+        with UltimateEnv(console, controller_1p, hz=6, action_space=len(action_list)) as env:
+            for k in range(10):
+                done = False
+                obs = env.reset()
+                step = 0
+                while not done:
+                    action = random.choice(action_list)
+                    next_obs, reward, done, info = env.step(action)
+                    print("episode: {}, step: {}, done: {}, reward: {}, action: {}".format(k, step, done, reward, action.name))
+                    step += 1
+            print("finished!")
