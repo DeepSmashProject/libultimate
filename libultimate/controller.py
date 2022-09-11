@@ -102,7 +102,10 @@ class Controller:
         else: self.input([Button.ZL], main_stick=(-1, 0), hold=False)
 
     def jump(self, lr=None): # True = Right, False = Left
-        if lr == None: self.input([Button.X], hold=True)
+        if lr == None: 
+            self.input([Button.NONE], main_stick=(0, 0), hold=True)
+            time.sleep(0.05)
+            self.input([Button.X], hold=True)
         elif lr: 
             self.input([Button.NONE], main_stick=(0, 0), hold=True)
             time.sleep(0.05)
@@ -113,7 +116,10 @@ class Controller:
             self.input([Button.X], main_stick=(-1, 0), hold=True)
 
     def short_hop(self, lr=None):
-        if lr == None: self.input([Button.X, Button.Y], hold=True)
+        if lr == None: 
+            self.input([Button.NONE], main_stick=(0, 0), hold=True)
+            time.sleep(0.05)
+            self.input([Button.X, Button.Y], hold=True)
         elif lr: 
             self.input([Button.NONE], main_stick=(0, 0), hold=True)
             time.sleep(0.05)
@@ -128,8 +134,8 @@ class Controller:
         else: self.input([Button.NONE], main_stick=(-0.5, 0), hold=True)
 
     def dash(self, lr: bool): # True = Right, False = Left
-        if lr: self.input([Button.NONE], main_stick=(1, 0), hold=False)
-        else: self.input([Button.NONE], main_stick=(-1, 0), hold=False)
+        if lr: self.input([Button.NONE], main_stick=(1, 0), hold=True)
+        else: self.input([Button.NONE], main_stick=(-1, 0), hold=True)
 
     def taint(self, direction: Direction):
         if direction== Direction.UP: self.input([Button.D_PAD_UP], hold=True)
