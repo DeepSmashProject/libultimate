@@ -3,7 +3,7 @@ from enum import Enum
 import gym
 import time
 import threading
-from multiprocessing import Process
+from multiprocessing import Process, Pool
 
 class EnvAction(Enum):
     NONE = {"name": "NONE", "func": lambda cont: {}}
@@ -50,7 +50,7 @@ class UltimateEnv(gym.Env):
         #self.run()
 
     def __enter__(self):
-        self.proc = Process(target=self._stream_gamestate)
+        self.proc = Process(target=self._stream_gamestate, args=(self.set_gamestate))
         self.proc.start()
         time.sleep(1)
         return self
@@ -59,15 +59,18 @@ class UltimateEnv(gym.Env):
         self.proc.kill()
         time.sleep(1)
 
+    def set_gamestate(self, gamestate):
+        self.prev_gamestate = self.gamestate
+        self.gamestate = gamestate
+
     #def run(self):
     #    thread = threading.Thread(target=self._stream_gamestate)
     #    thread.start()
     #    time.sleep(1)
 
-    def _stream_gamestate(self):
+    def _stream_gamestate(self, callback):
         for gamestate in self.console.stream(hz=self.hz):
-            self.prev_gamestate = self.gamestate
-            self.gamestate = gamestate
+            callback(gamestate)
 
     def _gamestate_to_observation(self, gamestate):
         return gamestate
