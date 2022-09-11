@@ -38,6 +38,20 @@ class EnvAction(Enum):
     GUARD = {"name": "GUARD", "func": lambda cont: cont.guard()}
     GRAB = {"name": "GRAB", "func": lambda cont: cont.grab()}
 
+class StopableThread(threading.Thread):
+  def __init__(self, target):
+    super().__init__()
+    self.target = target
+    self.stop_event = threading.Event()
+
+  def kill(self):
+    self.stop_event.set()
+
+  def run(self):
+    while self.stop_event.is_set() == False:
+        self.target()
+        self.stop_event.wait()
+
 class UltimateEnv(gym.Env):
     def __init__(self, console: Console, controller: Controller, hz=60, action_space=int(len(EnvAction))):
         super().__init__()
@@ -47,30 +61,21 @@ class UltimateEnv(gym.Env):
         self.controller = controller
         self.gamestate = None
         self.prev_gamestate = None
-        #self.run()
 
     def __enter__(self):
-        self.proc = Process(target=self._stream_gamestate, args=(self.set_gamestate))
-        self.proc.start()
+        self.thread = threading.Thread(target=self._stream_gamestate)
+        self.thread.start()
         time.sleep(1)
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.proc.kill()
+        self.thread.kill()
         time.sleep(1)
-
-    def set_gamestate(self, gamestate):
-        self.prev_gamestate = self.gamestate
-        self.gamestate = gamestate
-
-    #def run(self):
-    #    thread = threading.Thread(target=self._stream_gamestate)
-    #    thread.start()
-    #    time.sleep(1)
 
     def _stream_gamestate(self, callback):
         for gamestate in self.console.stream(hz=self.hz):
-            callback(gamestate)
+            self.prev_gamestate = self.gamestate
+            self.gamestate = gamestate
 
     def _gamestate_to_observation(self, gamestate):
         return gamestate
