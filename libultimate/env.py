@@ -5,40 +5,40 @@ import time
 import threading
 
 class EnvAction(Enum):
-    NONE = 0
-    JAB = lambda cont: cont.jab()
-    TILT_U = lambda cont: cont.tilt(Direction.UP)
-    TILT_L = lambda cont: cont.tilt(Direction.LEFT)
-    TILT_D = lambda cont: cont.tilt(Direction.DOWN)
-    TILT_R = lambda cont: cont.tilt(Direction.RIGHT)
-    SMASH_U = lambda cont: cont.smash(Direction.UP)
-    SMASH_L = lambda cont: cont.smash(Direction.LEFT)
-    SMASH_D = lambda cont: cont.smash(Direction.DOWN)
-    SMASH_R = lambda cont: cont.smash(Direction.RIGHT)
-    SPECIAL_U = lambda cont: cont.special(Direction.UP)
-    SPECIAL_L = lambda cont: cont.special(Direction.LEFT)
-    SPECIAL_D = lambda cont: cont.special(Direction.DOWN)
-    SPECIAL_R = lambda cont: cont.special(Direction.RIGHT)
-    DASH_ATTACK_L = lambda cont: cont.dash_attack(lr=False)
-    DASH_ATTACK_R = lambda cont: cont.dash_attack(lr=True)
-    SPOT_DODGE = lambda cont: cont.spot_dodge()
-    ROLL_L = lambda cont: cont.roll(lr=False)
-    ROLL_R = lambda cont: cont.roll(lr=True)
-    JUMP = lambda cont: cont.jump()
-    JUMP_L = lambda cont: cont.jump(lr=False)
-    JUMP_R = lambda cont: cont.jump(lr=True)
-    SHORT_HOP = lambda cont: cont.short_hop()
-    SHORT_HOP_L = lambda cont: cont.short_hop(lr=False)
-    SHORT_HOP_R = lambda cont: cont.short_hop(lr=True)
-    WALK_L = lambda cont: cont.walk(lr=False)
-    WALK_R = lambda cont: cont.walk(lr=True)
-    DASH_L = lambda cont: cont.dash(lr=False)
-    DASH_R = lambda cont: cont.dash(lr=True)
-    GUARD = lambda cont: cont.guard()
-    GRAB = lambda cont: cont.grab()
+    NONE = {"name": "NONE", "func": lambda cont: {}}
+    JAB = {"name": "JAB", "func": lambda cont: cont.jab()}
+    TILT_U = {"name": "TILT_U", "func": lambda cont: cont.tilt(Direction.UP)}
+    TILT_L = {"name": "TILT_L", "func": lambda cont: cont.tilt(Direction.LEFT)}
+    TILT_D = {"name": "TILT_D", "func": lambda cont: cont.tilt(Direction.DOWN)}
+    TILT_R = {"name": "TILT_R", "func": lambda cont: cont.tilt(Direction.RIGHT)}
+    SMASH_U = {"name": "SMASH_U", "func": lambda cont: cont.smash(Direction.UP)}
+    SMASH_L = {"name": "SMASH_L", "func": lambda cont: cont.smash(Direction.LEFT)}
+    SMASH_D = {"name": "SMASH_D", "func": lambda cont: cont.smash(Direction.DOWN)}
+    SMASH_R = {"name": "SMASH_R", "func": lambda cont: cont.smash(Direction.RIGHT)}
+    SPECIAL_U = {"name": "SPECIAL_U", "func": lambda cont: cont.special(Direction.UP)}
+    SPECIAL_L = {"name": "SPECIAL_L", "func": lambda cont: cont.special(Direction.LEFT)}
+    SPECIAL_D = {"name": "SPECIAL_D", "func": lambda cont: cont.special(Direction.DOWN)}
+    SPECIAL_R = {"name": "SPECIAL_R", "func": lambda cont: cont.special(Direction.RIGHT)}
+    DASH_ATTACK_L = {"name": "DASH_ATTACK_L", "func": lambda cont: cont.dash_attack(lr=False)}
+    DASH_ATTACK_R = {"name": "DASH_ATTACK_R", "func": lambda cont: cont.dash_attack(lr=True)}
+    SPOT_DODGE = {"name": "SPOT_DODGE", "func": lambda cont: cont.spot_dodge()}
+    ROLL_L = {"name": "ROLL_L", "func": lambda cont: cont.roll(lr=False)}
+    ROLL_R = {"name": "ROLL_R", "func": lambda cont: cont.roll(lr=True)}
+    JUMP = {"name": "JUMP", "func": lambda cont: cont.jump()}
+    JUMP_L = {"name": "JUMP_L", "func": lambda cont: cont.jump(lr=False)}
+    JUMP_R = {"name": "JUMP_R", "func": lambda cont: cont.jump(lr=True)}
+    SHORT_HOP = {"name": "SHORT_HOP", "func": lambda cont: cont.short_hop()}
+    SHORT_HOP_L = {"name": "SHORT_HOP_L", "func": lambda cont: cont.short_hop(lr=False)}
+    SHORT_HOP_R = {"name": "SHORT_HOP_R", "func": lambda cont: cont.short_hop(lr=True)}
+    WALK_L = {"name": "WALK_L", "func": lambda cont: cont.walk(lr=False)}
+    WALK_R = {"name": "WALK_R", "func": lambda cont: cont.walk(lr=True)}
+    DASH_L = {"name": "DASH_L", "func": lambda cont: cont.dash(lr=False)}
+    DASH_R = {"name": "DASH_R", "func": lambda cont: cont.dash(lr=True)}
+    GUARD = {"name": "GUARD", "func": lambda cont: cont.guard()}
+    GRAB = {"name": "GRAB", "func": lambda cont: cont.grab()}
 
 class UltimateEnv(gym.Env):
-    def __init__(self, console: Console, controller: Controller, hz=60, action_space=int(len(Action))):
+    def __init__(self, console: Console, controller: Controller, hz=60, action_space=int(len(EnvAction))):
         super().__init__()
         self.hz = hz
         self.action_space = gym.spaces.Discrete(action_space) 
@@ -70,7 +70,7 @@ class UltimateEnv(gym.Env):
         return observation
 
     def step(self, action):
-        action.value(self.controller)
+        action.value["func"](self.controller)
         #self.controller.act(action)
         interval = 60/self.hz * (1/60)
         time.sleep(interval)
@@ -85,7 +85,7 @@ class UltimateEnv(gym.Env):
             print("GameState: {}".format(self.gamestate))
 
     def _done(self, gamestate, prev_gamestate):
-        return prev_gamestate.players[0].is_dead or prev_gamestate.players[1].is_dead
+        return (prev_gamestate.players[0].fighter_status_kind != 470 and gamestate.players[0].fighter_status_kind == 470) or (prev_gamestate.players[1].fighter_status_kind != 470 and gamestate.players[1].fighter_status_kind == 470)
 
     def _reward(self, done, gamestate, prev_gamestate):
         p1_diff_damage = gamestate.players[0].percent - prev_gamestate.players[0].percent

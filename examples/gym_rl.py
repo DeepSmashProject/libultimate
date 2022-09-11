@@ -50,6 +50,6 @@ if __name__ == "__main__":
             while not done:
                 action = random.choice(action_list)
                 next_obs, reward, done, info = env.step(action)
-                print("episode: {}, step: {}, done: {}, reward: {}, action: {}".format(k, step, done, reward, action["name"]))
+                print("episode: {}, step: {}, done: {}, reward: {}, action: {}".format(k, step, done, reward, action.name))
                 step += 1
         print("finished!")
