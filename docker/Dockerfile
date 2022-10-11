@@ -1,14 +1,16 @@
 FROM nvidia/cudagl:11.4.2-runtime-ubuntu20.04
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV USER root
+
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
 
 # (1) Install Xorg and NVIDIA driver inside the container
 # Almost same procesure as nvidia/driver https://gitlab.com/nvidia/driver/blob/master/ubuntu16.04/Dockerfile
 
 # (1-1) Install prerequisites
 RUN rm -f /etc/apt/sources.list.d/cuda.list \
-    && apt-get update && apt-get install -y --no-install-recommends \
+    && apt update && apt install -y --no-install-recommends \
     wget \
     && wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb \
     && dpkg -i cuda-keyring_1.0-1_all.deb \
@@ -112,11 +114,24 @@ ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
 ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
 
 ############ for Application ############
-# for pyautogui
-RUN apt -y install python3-tk python3-dev scrot vim
+# Add user
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+RUN apt update && apt install -y sudo
+
+ARG USERNAME=user
+ARG GROUPNAME=user
+ARG UID=1000
+ARG GID=1000
+ARG PASSWORD=user
+RUN groupadd -g $GID $GROUPNAME && \
+    useradd -m -s /bin/bash -u $UID -g $GID -G sudo $USERNAME && \
+    echo $USERNAME:$PASSWORD | chpasswd && \
+    echo "$USERNAME   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+USER $USERNAME
+WORKDIR /home/$USERNAME/
 #RUN apt install -y --no-install-recommends ubuntu-desktop && \
 #    apt install -y gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
-WORKDIR /workspace/libultimate
 COPY . .
 #RUN git clone https://github.com/DeepSmashProject/yuzulib.git
 RUN pip install -e .

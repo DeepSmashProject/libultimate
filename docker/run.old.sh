@@ -11,7 +11,7 @@ docker run --privileged -it --rm --gpus all \
   -e API_HOST=0.0.0.0 \
   -e API_FILE_PATH=/workspace/libultimate/run_server.py \
   -v "/home/ruirui_nis/workspace/DeepSmashProject:/workspace" \
-  -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/games:/workspace/games" \
-  -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/Firmware.14.1.2.zip:/workspace/firmware" \
-  -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/keys/prod.keys:/root/.config/Ryujinx/system/" \
-  --name libultimate deepsmash/libultimate
+  -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/games:/data/games" \
+  -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/firmware:/data/firmware" \
+  -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/keys:/data/keys" \
+  --name cudagl-test cudagl-test:latest

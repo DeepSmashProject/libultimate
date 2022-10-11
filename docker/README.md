@@ -13,15 +13,29 @@ bash run.sh
 
 ```
 # /install_ryujinx.sh
+cd /
 /home/guest/.local/share/Ryujinx/Ryujinx
 ```
 
 
 - move prod.keys
 to /root/.config/Ryujinx/system/
+```
+cp /data/keys/prod.keys /root/.config/Ryujinx/system/prod.keys
+```
 - install firmware
-  - select /home/root/firmware/Firmware.14.1.2.zip
+  - select /data/firmware/Firmware.14.1.2.zip
 - add game
-  - options -> game add -> select /workspace/games
+  - options -> game add -> select /data/games
 - title update
-  - select /workspace/games/DLC/13.0.1.nsp
+  - select /data/games/DLC/13.0.1.nsp
+
+# Errors
+
+ System.ComponentModel.Win32Exception (2): An error occurred trying to start process '/home/guest/.local/share/Ryujinx/Logs' with working directory '/'. No such file or directory
+/home/guest/.local/share/Ryujinx/Logs
+
+System.ComponentModel.Win32Exception (2): An error occurred trying to start process '/root/.config/Ryujinx' with working directory '/'. No such file or directory
+
+/root/.config/Ryujinx
+Win32Exception No such file or directory

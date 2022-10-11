@@ -6,10 +6,10 @@ trap 'kill $(jobs -p)' EXIT
 # 0. generate xorg.conf
 #BUS_ID=$(nvidia-xconfig --query-gpu-info | grep 'PCI BusID' | sed -r 's/\s*PCI BusID : PCI:(.*)/\1/')
 # This is for OpenGL 4.6.0
-nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
+sudo nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
 
 # 1. launch X server
-Xorg $DISPLAY &
+sudo Xorg $DISPLAY &
 sleep 1  # wait for the server gets ready
 # glxinfo | grep "OpenGL version"
 
