@@ -7,7 +7,7 @@ mesanoerror="N"
 gpuopt="1"
 console="N"
 alias="N"
-USER="guest"
+USER="user"
 #Define the functions
 install() {
     version=$(curl -s https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
