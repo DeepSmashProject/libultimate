@@ -39,7 +39,7 @@ RUN cd /tmp && \
 # Install XOrg
 # Run example:
 # $ sudo Xorg $DISPLAY
-RUN apt install -y xinit
+RUN apt install -y xinit libx11-dev
 
 ##################
 # Install X11VNC
