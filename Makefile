@@ -15,4 +15,4 @@ run:
 	-v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/games:/data/games" \
 	-v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/firmware:/data/firmware" \
 	-v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/keys:/data/keys" \
-	--name deepsmash/libultimate deepsmash/libultimate:latest
+	--name libultimate deepsmash/libultimate:latest
