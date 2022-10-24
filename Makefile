@@ -11,7 +11,7 @@ run:
 	-e API_PORT=6000 \
 	-e API_HOST=0.0.0.0 \
 	-e API_FILE_PATH=/workspace/libultimate/run_server.py \
-	-v "/home/ruirui_nis/workspace/DeepSmashProject:/workspace" \
+	-v ${PWD}:/workspace \
 	-v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/games:/data/games" \
 	-v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/firmware:/data/firmware" \
 	-v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/keys:/data/keys" \
