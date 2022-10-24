@@ -2,51 +2,23 @@ FROM nvidia/cudagl:11.4.2-runtime-ubuntu20.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
+##################
+# get keys for apt
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
 
-# (1) Install Xorg and NVIDIA driver inside the container
-# Almost same procesure as nvidia/driver https://gitlab.com/nvidia/driver/blob/master/ubuntu16.04/Dockerfile
-
+##################
 # (1-1) Install prerequisites
-RUN rm -f /etc/apt/sources.list.d/cuda.list \
-    && apt update && apt install -y --no-install-recommends \
-    wget \
-    && wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb \
-    && dpkg -i cuda-keyring_1.0-1_all.deb \
-    && rm -f cuda-keyring_1.0-1_all.deb
-RUN dpkg --add-architecture i386 && \
-    apt update && apt install -y --no-install-recommends \
-    apt-utils \
-    build-essential \
-    ca-certificates \
-    curl \
-    wget \
-    vim \
-    zip \
-    unzip \
-    git \
-    python \
-    kmod \
-    libc6:i386 \
-    pkg-config \
-    libelf-dev
+RUN apt update && apt install -y \
+    sudo curl wget git
 
-
-# (1-2) Install xorg server and xinit BEFORE INSTALLING NVIDIA DRIVER.
-# After this installation, command Xorg and xinit can be used in the container
-# if you need full ubuntu desktop environment, the line below should be added.
-# ubuntu-desktop \
-RUN apt install -y xinit
-
-# (1-3) Install NVIDIA drivers, including X graphic drivers
-# Same command as nvidia/driver, except --x-{prefix,module-path,library-path,sysconfig-path} are omitted in order to make use default path and enable X drivers.
-# Driver version must be equal to host's driver
-# Install the userspace components and copy the kernel module sources.
+##################
+# Install NVIDIA drivers, including X graphic drivers
+# sudo nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
 ENV DRIVER_VERSION=460.91.03
-ENV DRIVER_VERSION_PATH=460.91.03
+RUN apt install -y kmod pkg-config
 RUN cd /tmp && \
-    curl -fSsl -O https://us.download.nvidia.com/tesla/$DRIVER_VERSION_PATH/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run && \
+    curl -fSsl -O https://us.download.nvidia.com/tesla/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run && \
     sh NVIDIA-Linux-x86_64-$DRIVER_VERSION.run -x && \
     cd NVIDIA-Linux-x86_64-$DRIVER_VERSION && \
     ./nvidia-installer --silent \
@@ -63,82 +35,51 @@ RUN cd /tmp && \
     mv LICENSE mkprecompiled kernel /usr/src/nvidia-$DRIVER_VERSION && \
     sed '9,${/^\(kernel\|LICENSE\)/!d}' .manifest > /usr/src/nvidia-$DRIVER_VERSION/.manifest
 
-# (2) Configurate Xorg
-# (2-1) Install some necessary softwares
-#
-# pkg-config: nvidia-xconfig requires this package
-# mesa-utils: This package includes glxgears and glxinfo, which is useful for testing GLX drivers
-# x11vnc: Make connection between x11 server and VNC client.
-# x11-apps: xeyes can be used to make sure that X11 server is running.
-#
-# Note: x11vnc in ubuntu18.04 is useless beacuse of stack smashing bug. See below to manual compilation.
-RUN apt install -y --no-install-recommends \
-    mesa-utils \
-    x11-apps
+##################
+# Install XOrg
+# Run example:
+# $ sudo Xorg $DISPLAY
+RUN apt install -y xinit
 
-# solution for the `stack smashing detected` issue
-# https://github.com/LibVNC/x11vnc/issues/61
-RUN apt install -y --no-install-recommends \
-    automake autoconf libssl-dev xorg-dev libvncserver-dev && \
-    rm -rf /var/lib/apt/lists/* && \
-    git clone https://github.com/LibVNC/x11vnc.git && \
-    cd x11vnc && \
-    ./autogen.sh && \
-    make && \
-    cp src/x11vnc /usr/bin/x11vnc
+##################
+# Install X11VNC
+# Run example:
+# $ x11vnc -display $DISPLAY -passwd $VNCPASS -forever -rfbport 5900
+RUN apt install -y x11vnc
 
-# novnc
-# download websockify as well
-RUN wget https://github.com/novnc/noVNC/archive/v1.1.0.zip && \
-    unzip -q v1.1.0.zip && \
-    rm -rf v1.1.0.zip && \
-    git clone https://github.com/novnc/websockify /noVNC-1.1.0/utils/websockify
+##################
+# Install NoVNC
+# Run example:
+# $ /usr/bin/websockify -D --web=/usr/share/novnc/ $NOVNC_PORT localhost:5900
+RUN apt install -y novnc websockify 
 
-# Xorg segfault error
-# dbus-core: error connecting to system bus: org.freedesktop.DBus.Error.FileNotFound (Failed to connect to socket /var/run/dbus/system_bus_socket: No such file or directory)
-# related? https://github.com/Microsoft/WSL/issues/2016
-RUN apt install -y --no-install-recommends \
-    dbus-x11
-#libdbus-c++-1-0v5
+#########################
+# Install x11 apps
+# $ xeyes
+# $ glxgears
+RUN apt install -y mesa-utils x11-apps
 
-#ENV DISPLAY=:1
+##################
+# Install RyujinX
+# Run example:
+# $ /home/guest/.local/share/Ryujinx/Ryujinx
+# https://github.com/Ryujinx/release-channel-master/releases
+#COPY ./docker/install_ryujinx.sh /install_ryujinx.sh
+#RUN apt install -y \
+#    automake autoconf libssl-dev xorg-dev libvncserver-dev \
+#    sudo bash /install_ryujinx.sh
 
-######### Install and Build ryujinx #############
-COPY ./docker/install_ryujinx.sh /install_ryujinx.sh
-RUN apt update && apt install -y shared-mime-info desktop-file-utils sudo \
-    python3 python3-pip && \
-    sudo bash /install_ryujinx.sh
-
-############# for NVIDIA ##################
-ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
-ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
-
-############ for Application ############
-# Add user
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
-RUN apt update && apt install -y sudo
-
-ARG USERNAME=user
-ARG GROUPNAME=user
-ARG UID=1000
-ARG GID=1000
-ARG PASSWORD=user
-RUN groupadd -g $GID $GROUPNAME && \
-    useradd -m -s /bin/bash -u $UID -g $GID -G sudo $USERNAME && \
-    echo $USERNAME:$PASSWORD | chpasswd && \
-    echo "$USERNAME   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-USER $USERNAME
-WORKDIR /home/$USERNAME/
-#RUN apt install -y --no-install-recommends ubuntu-desktop && \
-#    apt install -y gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
-COPY . .
+##################
+# Install LibUltimate
+#COPY . .
 #RUN git clone https://github.com/DeepSmashProject/yuzulib.git
-RUN pip install -e .
+#RUN pip install -e .
 
+##################
+# Command
 COPY ./docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 CMD /entrypoint.sh
-# docker build -t yuzu_emu:latest . 
-# docker run -it --rm --name yuzu_emu -p 5901:5901 -p 6080:80 -v $PWD:/workspace yuzu_emu:latest
-# docker exec -it yuzu_emu bash
+
+# docker run --privileged -it --rm --gpus all   -p 8081:8081   -p 6000:6000   -p 6006:6006   -e RESOLUTION=1280x800   -e VNCPASS=pass   -e DISPLAY=:1   -e BUS_ID=13:0:0   -e NOVNC_PORT=8081   -e API_PORT=6000   -e API_HOST=0.0.0.0   -e API_FILE_PATH=/workspace/libultimate/run_server.py   -v "/home/ruirui_nis/workspace/DeepSmashProject:/workspace"   -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/games:/data/games"   -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/firmware:/data/firmware"   -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/keys:/data/keys"   --name cudagl-test cudagl-test:latest
+# System.ComponentModel.Win32Exception (2): An error occurred trying to start process '/root/.config/Ryujinx' with working directory '/'. No such file or directory
