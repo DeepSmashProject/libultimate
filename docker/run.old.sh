@@ -3,9 +3,7 @@ docker run --privileged -it --rm --gpus all \
   -p 6000:6000 \
   -p 6006:6006 \
   -e RESOLUTION=1280x800 \
-  -e VNCPASS=pass \
   -e DISPLAY=:1 \
-  -e BUS_ID=13:0:0 \
   -e NOVNC_PORT=8081 \
   -e API_PORT=6000 \
   -e API_HOST=0.0.0.0 \
