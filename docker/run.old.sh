@@ -1,5 +1,5 @@
 docker run --privileged -it --rm --gpus all \
-  -p 6080:6080 \
+  -p 8081:6080 \
   -e RESOLUTION=1280x800 \
   -e DISPLAY=:1 \
   -e NOVNC_PORT=8081 \
