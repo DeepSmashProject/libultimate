@@ -59,6 +59,10 @@ RUN apt install -y novnc websockify
 # $ glxgears
 RUN apt install -y mesa-utils x11-apps
 
+#########################
+# Install ubuntu desktop
+RUN apt update && apt install -y ubuntu-desktop init
+
 ##################
 # Install RyujinX
 # Run example:

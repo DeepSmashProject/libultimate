@@ -39,3 +39,9 @@ System.ComponentModel.Win32Exception (2): An error occurred trying to start proc
 
 /root/.config/Ryujinx
 Win32Exception No such file or directory
+
+
+# memo 
+https://own-search-and-study.xyz/2020/05/02/docker-container-ubuntu-desktop-rdp/
+
+https://kokensha.xyz/docker/access-headless-docker-linux-desktop-container-via-vnc/
