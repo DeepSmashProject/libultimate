@@ -3,6 +3,11 @@ FROM nvidia/cudagl:11.4.2-runtime-ubuntu20.04
 ENV container docker
 ENV DEBIAN_FRONTEND noninteractive
 
+##################
+# get keys for apt
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+
 # Install locale
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -86,11 +91,6 @@ RUN echo "welcome" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/p
 
 # switch back to root to start systemd
 USER root
-
-##################
-# get keys for apt
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
 
 ##################
 # Install NVIDIA drivers, including X graphic drivers
