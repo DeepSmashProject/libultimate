@@ -12,4 +12,4 @@ docker run --privileged -it --rm --gpus all \
   -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/games:/data/games" \
   -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/firmware:/data/firmware" \
   -v "/mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/keys:/data/keys" \
-  --name cudagl-test cudagl-test:latest
+  --name libultimate deepsmash/libultimate:latest
