@@ -96,7 +96,7 @@ USER root
 # Install NVIDIA drivers, including X graphic drivers
 # sudo nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
 ENV DRIVER_VERSION=460.91.03
-RUN apt install -y kmod pkg-config curl
+RUN apt install -y kmod pkg-config
 RUN cd /tmp && \
     curl -fSsl -O https://us.download.nvidia.com/tesla/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run && \
     sh NVIDIA-Linux-x86_64-$DRIVER_VERSION.run -x && \
