@@ -45,3 +45,22 @@ Win32Exception No such file or directory
 https://own-search-and-study.xyz/2020/05/02/docker-container-ubuntu-desktop-rdp/
 
 https://kokensha.xyz/docker/access-headless-docker-linux-desktop-container-via-vnc/
+# Docker 対応
+
+docker run -p 6080:80 -p 5900:5900 -v /dev/shm:/dev/shm dorowu/ubuntu-desktop-lxde-vnc
+ではRyujinxを起動でき、Logも表示できた
+
+Github: https://github.com/fcwu/docker-ubuntu-vnc-desktop
+
+```
+apt install -y libx11-dev libsdl2-dev firefox tar
+firefox -> downloa Ryujinx
+tar -xzvf xxx.tar.gz
+chmod a+x Ryujinx
+./Ryujinx
+```
+が必要
+
+### https://github.com/RavenKyu/docker-ubuntu-desktop-vnc
+
+これであれば、ubuntu desktopで実行できる。
