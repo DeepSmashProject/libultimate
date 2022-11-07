@@ -7,14 +7,17 @@ services:
       dockerfile: Dockerfile
     container_name: libultimate
     ports:
-      - 5901:5901
-      - 6080:6080
+      - 8081:6080
     tmpfs:
       - /run
       - /run/lock
       - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup
+      - /home/ruirui_nis/workspace/DeepSmashProject:/workspace
+      - /mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/games:/data/games
+      - /mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/firmware:/data/firmware
+      - /mnt/bigdata/00_students/ruirui_nis/DeepSmashProject/keys:/data/keys
     cap_add:
       - SYS_BOOT
       - SYS_ADMIN
