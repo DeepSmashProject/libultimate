@@ -95,6 +95,7 @@ USER root
 ##################
 # Install NVIDIA drivers, including X graphic drivers
 # sudo nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
+RUN apt update && apt install -y curl
 ENV DRIVER_VERSION=460.91.03
 RUN apt install -y kmod pkg-config
 RUN cd /tmp && \
