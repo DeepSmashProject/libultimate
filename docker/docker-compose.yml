@@ -16,8 +16,8 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup
       #- /home/ruirui_nis/workspace/DeepSmashProject:~/workspace
       - ${GAME_DIR}:/home/default/data/games
-      - ${FIRMWARE_PATH}:/home/default/data/firmware
-      - ${PRODKEYS_PATH}:/home/default/.config/Ryujinx/system/prod.keys
+      - ${FIRMWARE_DIR}:/home/default/data/firmware
+      - ${PRODKEYS_DIR}:/home/default/data/keys
     cap_add:
       - SYS_BOOT
       - SYS_ADMIN
