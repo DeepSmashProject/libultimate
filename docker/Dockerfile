@@ -70,6 +70,28 @@ COPY ./docker/novnc.service /etc/systemd/system/novnc.service
 RUN systemctl enable novnc
 EXPOSE 6080
 
+# Create unprivileged user
+# NOTE user hardcoded in tigervnc.service
+# NOTE alternative is to use libnss_switch and create user at runtime -> use entrypoint script
+ARG UID=1000
+ARG USER=default
+RUN useradd ${USER} -u ${UID} -U -d /home/${USER} -m -s /bin/bash
+RUN apt-get update && apt-get install -y sudo && apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    echo "${USER} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/${USER}" && \
+    chmod 440 "/etc/sudoers.d/${USER}"
+USER "${USER}"
+ENV USER="${USER}" \
+    HOME="/home/${USER}"
+WORKDIR "/home/${USER}"
+
+# Set up VNC
+RUN mkdir -p $HOME/.vnc
+COPY ./docker/xstartup $HOME/.vnc/xstartup
+RUN echo "welcome" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
+
+# switch back to root to start systemd
+USER root
+
 ##################
 # Install NVIDIA drivers, including X graphic drivers
 # sudo nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
@@ -108,37 +130,6 @@ ENV DRI_PRIME=1
 # Install Python3
 RUN apt-get install -y python3 python3-pip
 
-# Create unprivileged user
-# NOTE user hardcoded in tigervnc.service
-# NOTE alternative is to use libnss_switch and create user at runtime -> use entrypoint script
-RUN apt-get update && apt-get install -y sudo
-#ARG UID=1000
-#ARG USER=default
-#RUN useradd ${USER} -u ${UID} -U -d /home/${USER} -m -s /bin/bash
-#USER "${USER}"
-#ENV USER="${USER}" \
-#    HOME="/home/${USER}"
-#WORKDIR "/home/${USER}"
-
-ARG USERNAME=user
-ARG GROUPNAME=user
-ARG UID=1000
-ARG GID=1000
-ARG PASSWORD=user
-RUN groupadd -g $GID $GROUPNAME && \
-    useradd -m -s /bin/bash -u $UID -g $GID -G sudo $USERNAME && \
-    echo $USERNAME:$PASSWORD | chpasswd && \
-    echo "$USERNAME   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-USER $USERNAME
-WORKDIR /home/$USERNAME/
-ENV USER="${USERNAME}" \
-    HOME="/home/${USERNAME}"
-
-# Set up VNC
-RUN mkdir -p $HOME/.vnc
-COPY ./docker/xstartup $HOME/.vnc/xstartup
-RUN echo "welcome" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
-
 ######### Install and Build ryujinx #############
 RUN bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
 
@@ -150,9 +141,3 @@ RUN sudo -H pip install -e .
 
 COPY ./docker/entrypoint.sh $HOME/entrypoint.sh
 #RUN chmod +x /entrypoint.sh
-
-# switch back to root to start systemd
-USER root
-
-
-
