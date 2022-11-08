@@ -54,7 +54,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # NOTE logout will stop tigervnc service -> need to manually start (gdm for graphical login is not working)
-COPY tigervnc@.service /etc/systemd/system/tigervnc@.service
+COPY ./docker/tigervnc@.service /etc/systemd/system/tigervnc@.service
 RUN systemctl enable tigervnc@:1
 EXPOSE 5901
 
@@ -66,38 +66,16 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 RUN ln -s /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html
 # TODO specify options like ports as environment variables -> source variables in service via EnvironmentFile=/path/to/env
-COPY novnc.service /etc/systemd/system/novnc.service
+COPY ./docker/novnc.service /etc/systemd/system/novnc.service
 RUN systemctl enable novnc
 EXPOSE 6080
-
-# Create unprivileged user
-# NOTE user hardcoded in tigervnc.service
-# NOTE alternative is to use libnss_switch and create user at runtime -> use entrypoint script
-ARG UID=1000
-ARG USER=default
-RUN useradd ${USER} -u ${UID} -U -d /home/${USER} -m -s /bin/bash
-RUN apt-get update && apt-get install -y sudo && apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    echo "${USER} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/${USER}" && \
-    chmod 440 "/etc/sudoers.d/${USER}"
-USER "${USER}"
-ENV USER="${USER}" \
-    HOME="/home/${USER}"
-WORKDIR "/home/${USER}"
-
-# Set up VNC
-RUN mkdir -p $HOME/.vnc
-COPY xstartup $HOME/.vnc/xstartup
-RUN echo "welcome" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
-
-# switch back to root to start systemd
-USER root
 
 ##################
 # Install NVIDIA drivers, including X graphic drivers
 # sudo nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
-RUN apt update && apt install -y curl
+RUN apt-get update && apt-get install -y curl
 ENV DRIVER_VERSION=460.91.03
-RUN apt install -y kmod pkg-config
+RUN apt-get install -y kmod pkg-config
 RUN cd /tmp && \
     curl -fSsl -O https://us.download.nvidia.com/tesla/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run && \
     sh NVIDIA-Linux-x86_64-$DRIVER_VERSION.run -x && \
@@ -115,3 +93,66 @@ RUN cd /tmp && \
     mkdir -p /usr/src/nvidia-$DRIVER_VERSION && \
     mv LICENSE mkprecompiled kernel /usr/src/nvidia-$DRIVER_VERSION && \
     sed '9,${/^\(kernel\|LICENSE\)/!d}' .manifest > /usr/src/nvidia-$DRIVER_VERSION/.manifest
+
+############# for NVIDIA ##################
+ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
+ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
+
+# Ryujinx Dependecies
+RUN apt-get install -y libx11-dev libsdl2-dev 
+
+## for fixing Application: Unhandled exception caught:SPB. error
+ENV __GLX_VENDOR_LIBRARY_NAME=nvidia
+ENV DRI_PRIME=1
+
+# Install Python3
+RUN apt-get install -y python3 python3-pip
+
+# Create unprivileged user
+# NOTE user hardcoded in tigervnc.service
+# NOTE alternative is to use libnss_switch and create user at runtime -> use entrypoint script
+RUN apt-get update && apt-get install -y sudo
+#ARG UID=1000
+#ARG USER=default
+#RUN useradd ${USER} -u ${UID} -U -d /home/${USER} -m -s /bin/bash
+#USER "${USER}"
+#ENV USER="${USER}" \
+#    HOME="/home/${USER}"
+#WORKDIR "/home/${USER}"
+
+ARG USERNAME=user
+ARG GROUPNAME=user
+ARG UID=1000
+ARG GID=1000
+ARG PASSWORD=user
+RUN groupadd -g $GID $GROUPNAME && \
+    useradd -m -s /bin/bash -u $UID -g $GID -G sudo $USERNAME && \
+    echo $USERNAME:$PASSWORD | chpasswd && \
+    echo "$USERNAME   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+USER $USERNAME
+WORKDIR /home/$USERNAME/
+ENV USER="${USERNAME}" \
+    HOME="/home/${USERNAME}"
+
+# Set up VNC
+RUN mkdir -p $HOME/.vnc
+COPY ./docker/xstartup $HOME/.vnc/xstartup
+RUN echo "welcome" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
+
+######### Install and Build ryujinx #############
+RUN bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
+
+############ for Application ############
+WORKDIR $HOME/libultimate
+COPY . .
+#RUN git clone https://github.com/DeepSmashProject/yuzulib.git
+RUN sudo -H pip install -e .
+
+COPY ./docker/entrypoint.sh $HOME/entrypoint.sh
+#RUN chmod +x /entrypoint.sh
+
+# switch back to root to start systemd
+USER root
+
+
+

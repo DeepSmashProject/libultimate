@@ -64,3 +64,21 @@ chmod a+x Ryujinx
 ### https://github.com/RavenKyu/docker-ubuntu-desktop-vnc
 
 これであれば、ubuntu desktopで実行できる。
+
+
+### error
+settingでLogを全て出すようにしたら以下のエラーが発生していた
+
+```
+Application: Unhandled exception caught:SPB.
+Graphics.Exceptions.ContextException: CreateContext() failed.
+at SPB.Platform.GLX.GLXOpenGLContext.Initialize
+```
+
+https://github.com/Ryujinx/Ryujinx/issues/2220
+https://github.com/Ryujinx/Ryujinx/issues/2112
+
+```
+__GLX_VENDOR_LIBRARY_NAME=nvidia DRI_PRIME=1 ./Ryujinx
+```
+これにより2回に1回くらいできるようになった
