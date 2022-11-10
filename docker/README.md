@@ -68,6 +68,7 @@ chmod a+x Ryujinx
 
 ### error
 settingでLogを全て出すようにしたら以下のエラーが発生していた
+Memory Manage Mode = softwareにするとエラーが見れる
 
 ```
 Application: Unhandled exception caught:SPB.
@@ -82,3 +83,32 @@ https://github.com/Ryujinx/Ryujinx/issues/2112
 __GLX_VENDOR_LIBRARY_NAME=nvidia DRI_PRIME=1 ./Ryujinx
 ```
 これにより2回に1回くらいできるようになった
+(nvidia-xconfigしてnvidia-smiができるようになった状態で)
+
+
+```
+apt install libx11-dev libsdl2-dev
+```
+
+bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
+
+### 研究室サーバだとできない問題
+
+Vulkanを使用するといいっぽい。
+
+研究室サーバーはnvidia 460だからvulkanに対応してない？
+- settingでvulkanにするとllvmpipeのおそらく初期GPUっぽいものしかない
+- dellだとGeForceがでてくる
+- nvidia driver 470以降？
+
+
+DELLではvulkanでできたが、研究室サーバーだと以下のエラーが発生
+DELL PC
+```
+install ryujinx
+prodkey, firmware, game dirの設定
+nvidia-xconfigでnvidia-smiが使えるようにする
+memory modeをsoftwareにする
+graphicsをvulkanでGeForceにする
+起動(起動時環境変数はいらない)
+```
