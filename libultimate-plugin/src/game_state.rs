@@ -57,30 +57,7 @@ impl GameStateTrait for GameState {
 
 }
 
-/*#[derive(Serialize, Clone)]
-pub struct GameState {
-    pub players: Vec<PlayerState>,
-    pub projectiles: Vec<Projectile>,
-}
-
-impl Default for GameState {
-    fn default() -> Self {
-        Self {
-            players: Vec::new(),
-            projectiles: Vec::new(),
-        }
-    }
-}
-
-impl GameState {
-    pub fn save(&self){
-        let gs_text = serde_json::to_string(&self).expect("game_state serialize error.");
-        let file = OpenOptions::new().write(true).truncate(true).open("sd:/libultimate/game_state.json").expect("game_state.json file not found");
-        write!(&file, "{}", gs_text).expect("something went wrong reading the file");
-    }
-}*/
-
-#[derive(Serialize, Clone, Copy)]
+#[derive(Serialize)]
 pub struct PlayerState{
     pub id: usize,
     pub fighter_kind: i32,
@@ -101,7 +78,7 @@ pub struct PlayerState{
     //pub charge: ChargeState,
 }
 
-#[derive(Serialize, Clone, Copy)]
+#[derive(Serialize)]
 pub struct FighterInformation{
     pub hit_point: u64,
     pub fighter_color: u64,
@@ -116,13 +93,13 @@ pub struct FighterInformation{
     pub gravity: u64
 }
 
-#[derive(Serialize, Debug, Clone, Copy)]
+#[derive(Serialize, Debug)]
 pub enum FighterId {
     Player = 0,
     CPU = 1,
 }
 
-#[derive(Serialize, Clone, Copy)]
+#[derive(Serialize)]
 pub struct ControlState{
     pub stick_x: f32,
     pub stick_y: f32,
@@ -137,18 +114,18 @@ pub struct ControlState{
     pub button_invalid: bool,
 }
 
-#[derive(Serialize, Clone, Copy)]
+#[derive(Serialize)]
 pub struct Projectile{
 
 }
 
-#[derive(Serialize, Clone, Copy)]
+#[derive(Serialize)]
 pub struct Position{
     pub x: f32,
     pub y: f32,
 }
 
-#[derive(Serialize, Clone, Copy)]
+#[derive(Serialize)]
 pub struct Speed{
     pub x: f32,
     pub y: f32,
