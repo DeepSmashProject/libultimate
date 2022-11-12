@@ -9,33 +9,34 @@ use std::io::{Error, ErrorKind};
 use std::path::Path;
 use std::sync::Mutex;
 mod game_state;
-mod controlstate;
+mod controller;
 mod command;
 mod frame_counter;
 use crate::frame_counter::{FrameCounter, FrameCounterTrait};
 use crate::game_state::{GameState, GameStateTrait, PlayerState, Speed, Position, FighterId};
+use crate::controller::{ControllerManager, ControllerManagerTrait};
 use once_cell::sync::Lazy;
 use once_cell::sync::OnceCell;
 
 static GAME_STATE: Lazy<Mutex<GameState>> = Lazy::new(|| Mutex::new(GameState::new()));
-static CONTROLSTATE: Lazy<Mutex<controlstate::ControlState>> = Lazy::new(|| Mutex::new(controlstate::ControlState::default()));
+static CONTROLLER_MANAGER: Lazy<Mutex<ControllerManager>> = Lazy::new(|| Mutex::new(ControllerManager::new()));
 static FRAME_COUNTER: Lazy<Mutex<FrameCounter>> = Lazy::new(|| Mutex::new(FrameCounter::new()));
 static FRAME_COUNTER_ID: Lazy<Mutex<usize>> =  Lazy::new(|| Mutex::new(FRAME_COUNTER.lock().unwrap().register_counter()));
 static COMMAND: Lazy<Mutex<command::Command>> = Lazy::new(|| Mutex::new(command::Command::default()));
-static mut FIGHTER_MANAGER_ADDR: usize = 0;
+//static mut FIGHTER_MANAGER_ADDR: usize = 0;
 
 pub fn handle_get_npad_state(state: *mut NpadGcState, _controller_id: *const u32){
     unsafe {
-        match get_npad_state(state, _controller_id){
+        match CONTROLLER_MANAGER.lock().unwrap().operate(_controller_id as usize, state) {
             Ok(_) => {},
             Err(_) => {},
         };
     }
 }
 
-unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) -> Result<(), Error>{
-    let mut prev_control_state = CONTROLSTATE.lock().unwrap();
-    let control_state = match controlstate::ControlState::get(*_controller_id){
+/*unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) -> Result<(), Error>{
+    let mut prev_control_state = CONTROL_STATE.lock().unwrap();
+    let control_state = match ControlState::get(*_controller_id){
         Ok(cs) => cs,
         Err(_) => prev_control_state.clone(),
     };
@@ -66,7 +67,7 @@ unsafe fn get_npad_state(state: *mut NpadGcState, _controller_id: *const u32) ->
         }
     }
     return Ok(());
-}
+}*/
 
 #[skyline::hook(replace = ControlModule::get_command_flag_cat)]
 pub unsafe fn handle_get_command_flag_cat(
