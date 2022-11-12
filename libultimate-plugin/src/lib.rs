@@ -8,17 +8,19 @@ use std::fs::{OpenOptions};
 use std::io::{Error, ErrorKind};
 use std::path::Path;
 use std::sync::Mutex;
-mod gamestate;
+mod game_state;
 mod controlstate;
 mod command;
 mod frame_counter;
 use crate::frame_counter::{FrameCounter, FrameCounterTrait};
+use crate::game_state::{GameState, GameStateTrait, PlayerState, Speed, Position, FighterId};
 use once_cell::sync::Lazy;
 use once_cell::sync::OnceCell;
 
-static GAMESTATE: Lazy<Mutex<gamestate::GameState>> = Lazy::new(|| Mutex::new(gamestate::GameState::default()));
+static GAME_STATE: Lazy<Mutex<GameState>> = Lazy::new(|| Mutex::new(GameState::new()));
 static CONTROLSTATE: Lazy<Mutex<controlstate::ControlState>> = Lazy::new(|| Mutex::new(controlstate::ControlState::default()));
-static mut FRAME_COUNTER: usize = 0;
+static FRAME_COUNTER: Lazy<Mutex<FrameCounter>> = Lazy::new(|| Mutex::new(FrameCounter::new()));
+static FRAME_COUNTER_ID: Lazy<Mutex<usize>> =  Lazy::new(|| Mutex::new(FRAME_COUNTER.lock().unwrap().register_counter()));
 static COMMAND: Lazy<Mutex<command::Command>> = Lazy::new(|| Mutex::new(command::Command::default()));
 static mut FIGHTER_MANAGER_ADDR: usize = 0;
 
@@ -256,20 +258,20 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     //let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
     //let fighter_info = FighterManager::get_fighter_information(fighter_manager, entry_id);
     let _charge = charge::get_charge(module_accessor, fighter_kind);
-    let is_cpu = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == gamestate::FighterId::CPU as i32;
+    let is_cpu = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == FighterId::CPU as i32;
 
-    let player_state = gamestate::PlayerState {
-        id: entry_id_int,
+    let player_state = PlayerState {
+        id: entry_id_int as usize,
         fighter_kind: fighter_kind,
         fighter_status_kind: fighter_status_kind,
         situation_kind: situation_kind,
         lr: lr,
         percent: percent,
-        position: gamestate::Position{
+        position: Position{
             x: x,
             y: y,
         },
-        speed: gamestate::Speed{
+        speed: Speed{
             x: speed_x,
             y: speed_y,
         },
@@ -306,19 +308,8 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
         }*/
         //charge: _charge,
     };
-    let mut game_state = GAMESTATE.lock().unwrap();
-    let mut exist = false;
-    for (i, ps) in game_state.players.iter().enumerate() {
-        if ps.id == player_state.id {
-            game_state.players[i] = player_state;
-            exist = true;
-            break;
-        }
-    }
-    if !exist {
-        game_state.players.push(player_state);
-    }
-    gamestate::GameState::save(&game_state);
+    GAME_STATE.lock().unwrap().set_player_state(player_state).unwrap();
+    GAME_STATE.lock().unwrap().save().unwrap();
 }
 
 #[allow(improper_ctypes)]
@@ -359,12 +350,13 @@ fn create_data() {
     touch(&Path::new("sd:/libultimate/command.json")).expect("Error on creating command.json.");
 }
 
-pub fn init() {
+/*pub fn init() {
     unsafe {
         let mut frame_counter = FrameCounter::new();
         FRAME_COUNTER = frame_counter.register_counter();
+        let mut game_state = GameState::new();
     }
-}
+}*/
 
 #[skyline::main(name = "libultimate-plugin")]
 pub fn main() {

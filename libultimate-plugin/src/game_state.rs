@@ -1,9 +1,62 @@
 //use crate::charge::ChargeState;
-use std::io::{Write};
+use std::io::{Write, Error, ErrorKind};
 use serde::{Serialize};
 use std::fs::{OpenOptions};
 
-#[derive(Serialize, Clone)]
+pub trait GameStateTrait {
+    fn new() -> GameState;
+    fn get_player_state(&mut self, player_id: usize) -> Result<&PlayerState, Error>;
+    fn set_player_state(&mut self, player_state: PlayerState) -> Result<usize, Error>;
+    fn save(&mut self) -> Result<(), Error>;
+}
+
+#[derive(Serialize)]
+pub struct GameState{
+    pub players: Vec<PlayerState>,
+    pub projectiles: Vec<Projectile>,
+}
+
+impl GameStateTrait for GameState {
+    fn new() -> GameState {
+        GameState {
+            players: Vec::new(),
+            projectiles: Vec::new()
+        }
+    }
+
+    fn get_player_state(&mut self, player_id: usize) -> Result<&PlayerState, Error>{
+        for (i, player) in self.players.iter().enumerate() {
+            if player.id == player_id {
+                return Ok(player);
+            }
+        }
+        return Err(Error::new(ErrorKind::Other, "player state not found."));
+    }
+
+    fn set_player_state(&mut self, player_state: PlayerState) -> Result<usize, Error>{
+        for (i, player) in self.players.iter().enumerate() {
+            if player.id == player_state.id {
+                return Ok(i);
+            }
+        }
+        self.players.push(player_state);
+        return Ok(self.players.len() - 1);
+    }
+
+    fn save(&mut self) -> Result<(), Error>{
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open("sd:/libultimate/game_state.json")?;
+        let json = serde_json::to_string(&self)?;
+        file.write_all(json.as_bytes())?;
+        Ok(())
+    }
+
+}
+
+/*#[derive(Serialize, Clone)]
 pub struct GameState {
     pub players: Vec<PlayerState>,
     pub projectiles: Vec<Projectile>,
@@ -24,11 +77,11 @@ impl GameState {
         let file = OpenOptions::new().write(true).truncate(true).open("sd:/libultimate/game_state.json").expect("game_state.json file not found");
         write!(&file, "{}", gs_text).expect("something went wrong reading the file");
     }
-}
+}*/
 
 #[derive(Serialize, Clone, Copy)]
 pub struct PlayerState{
-    pub id: i32,
+    pub id: usize,
     pub fighter_kind: i32,
     pub fighter_status_kind: i32,
     pub situation_kind: i32,
