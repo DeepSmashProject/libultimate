@@ -50,7 +50,7 @@ class PlayerState(NamedTuple):
     end_frame: int
     is_cpu: bool
     is_dead: bool
-    is_actionable: bool
+    #is_actionable: bool
     #fighter_information: FighterInformation
 
 class Projectile(NamedTuple):
@@ -96,7 +96,7 @@ def toGameState(gs_json):
             end_frame=p["end_frame"],
             is_cpu=p["is_cpu"],
             is_dead=p["is_dead"],
-            is_actionable=p["is_actionable"],
+            #is_actionable=p["is_actionable"],
             #fighter_information=FighterInformation(
             #    hit_point=p["fighter_information"]["hit_point"],
             #    fighter_color=p["fighter_information"]["fighter_color"],
