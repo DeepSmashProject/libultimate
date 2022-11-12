@@ -92,3 +92,20 @@ impl FrameCounterTrait for FrameCounter {
     }
     
 }
+
+/*
+Example usage:
+let mut frame_counter = FrameCounter::new();
+    let index = frame_counter.register_counter();
+    println!("index: {}", index);
+    frame_counter.start_counting(index);
+    for i in 0..20 {
+        println!("frame_counter: {}", frame_counter.get_frame_count(index));
+        //println!("should_delay: {}", frame_counter.should_delay(5, index));
+        if !frame_counter.should_delay(5, index) {
+            println!("do!");
+        }
+        frame_counter.tick();
+    }
+    println!("frame_count: {}", frame_counter.get_frame_count(index));
+*/
