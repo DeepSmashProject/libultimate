@@ -231,12 +231,7 @@ unsafe fn is_actionable(module_accessor: *mut app::BattleObjectModuleAccessor) -
 unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
     let entry_id = app::FighterEntryID(entry_id_int);
-    let x = PostureModule::pos_x(module_accessor);
-    let y = PostureModule::pos_y(module_accessor);
-    let lr = PostureModule::lr(module_accessor); //left or right
-    let speed_x = KineticModule::get_sum_speed_x(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let speed_y = KineticModule::get_sum_speed_y(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let button_attack = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
+    /*let button_attack = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
     let button_special = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL);
     let button_smash = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SMASH);
     let button_guard = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD);
@@ -246,34 +241,25 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
     let button_jump_mini = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP_MINI);
     let button_invalid = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_INVALID);
     let stick_x = ControlModule::get_stick_x(module_accessor);
-    let stick_y = ControlModule::get_stick_y(module_accessor);
-    let percent = DamageModule::damage(module_accessor, 0);
-    let situation_kind = StatusModule::situation_kind(module_accessor);
-    let fighter_kind = app::utility::get_kind(module_accessor);
-    let fighter_status_kind = StatusModule::status_kind(module_accessor);
-    let frame = MotionModule::frame(module_accessor);
-    let end_frame = MotionModule::end_frame(module_accessor);
-    let is_dead = StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD;
-    let is_actionable = is_actionable(module_accessor);
+    let stick_y = ControlModule::get_stick_y(module_accessor);*/
     //let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
     //let fighter_info = FighterManager::get_fighter_information(fighter_manager, entry_id);
-    let _charge = charge::get_charge(module_accessor, fighter_kind);
-    let is_cpu = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == FighterId::CPU as i32;
+    //let _charge = charge::get_charge(module_accessor, fighter_kind);
 
     let player_state = PlayerState {
         id: entry_id_int as usize,
-        fighter_kind: fighter_kind,
-        fighter_status_kind: fighter_status_kind,
-        situation_kind: situation_kind,
-        lr: lr,
-        percent: percent,
+        fighter_kind: app::utility::get_kind(module_accessor),
+        fighter_status_kind: StatusModule::status_kind(module_accessor),
+        situation_kind: StatusModule::situation_kind(module_accessor),
+        lr: PostureModule::lr(module_accessor),
+        percent: DamageModule::damage(module_accessor, 0),
         position: Position{
-            x: x,
-            y: y,
+            x: PostureModule::pos_x(module_accessor),
+            y: PostureModule::pos_y(module_accessor),
         },
         speed: Speed{
-            x: speed_x,
-            y: speed_y,
+            x: KineticModule::get_sum_speed_x(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN),
+            y: KineticModule::get_sum_speed_y(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN),
         },
         /*control_state: gamestate::ControlState{
             stick_x: stick_x,
@@ -288,11 +274,11 @@ unsafe fn save_gamestate(module_accessor: &mut app::BattleObjectModuleAccessor){
             button_jump_mini: button_jump_mini,
             button_invalid: button_invalid,
         },*/
-        frame: frame,
-        end_frame: end_frame,
-        is_cpu: is_cpu,
-        is_dead: is_dead,
-        is_actionable: is_actionable,
+        frame: MotionModule::frame(module_accessor),
+        end_frame: MotionModule::end_frame(module_accessor),
+        is_cpu:  WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == FighterId::CPU as i32,
+        is_dead: StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD,
+        is_actionable: is_actionable(module_accessor),
         /*fighter_information: gamestate::FighterInformation {
             hit_point: FighterInformation::hit_point(fighter_info),
             fighter_color: FighterInformation::fighter_color(fighter_info),
@@ -349,14 +335,6 @@ fn create_data() {
     touch(&Path::new("sd:/libultimate/config.json")).expect("Error on creating config.json.");
     touch(&Path::new("sd:/libultimate/command.json")).expect("Error on creating command.json.");
 }
-
-/*pub fn init() {
-    unsafe {
-        let mut frame_counter = FrameCounter::new();
-        FRAME_COUNTER = frame_counter.register_counter();
-        let mut game_state = GameState::new();
-    }
-}*/
 
 #[skyline::main(name = "libultimate-plugin")]
 pub fn main() {
