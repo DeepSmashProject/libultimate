@@ -9,7 +9,7 @@ class Speed(NamedTuple):
     x: float = 0
     y: float = 0
 
-class ControlState(NamedTuple):
+class ControllerState(NamedTuple):
     stick_x: float
     stick_y: float
     button_attack: bool
@@ -45,7 +45,7 @@ class PlayerState(NamedTuple):
     position: Position
     speed: Speed
     #charge: float
-    #control_state: ControlState
+    controller_state: ControllerState
     frame: int
     end_frame: int
     is_cpu: bool
@@ -79,19 +79,19 @@ def toGameState(gs_json):
                 y=p["speed"]["y"],
             ),
             #charge=p["charge"],
-            #control_state=ControlState(
-            #    stick_x=p["control_state"]["stick_x"],
-            #    stick_y=p["control_state"]["stick_y"],
-            #    button_attack=p["control_state"]["button_attack"],
-            #    button_special=p["control_state"]["button_special"],
-            #    button_smash=p["control_state"]["button_smash"],
-            #    button_guard=p["control_state"]["button_guard"],
-            #    button_guard_hold=p["control_state"]["button_guard_hold"],
-            #    button_catch=p["control_state"]["button_catch"],
-            #    button_jump=p["control_state"]["button_jump"],
-            #    button_jump_mini=p["control_state"]["button_jump_mini"],
-            #    button_invalid=p["control_state"]["button_invalid"]
-            #),
+            controller_state=ControllerState(
+                stick_x=p["controller_state"]["stick_x"],
+                stick_y=p["controller_state"]["stick_y"],
+                button_attack=p["controller_state"]["button_attack"],
+                button_special=p["controller_state"]["button_special"],
+                button_smash=p["controller_state"]["button_smash"],
+                button_guard=p["controller_state"]["button_guard"],
+                button_guard_hold=p["controller_state"]["button_guard_hold"],
+                button_catch=p["controller_state"]["button_catch"],
+                button_jump=p["controller_state"]["button_jump"],
+                button_jump_mini=p["controller_state"]["button_jump_mini"],
+                button_invalid=p["controller_state"]["button_invalid"]
+            ),
             frame=p["frame"],
             end_frame=p["end_frame"],
             is_cpu=p["is_cpu"],
