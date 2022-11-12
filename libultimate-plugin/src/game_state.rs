@@ -36,6 +36,7 @@ impl GameStateTrait for GameState {
     fn set_player_state(&mut self, player_state: PlayerState) -> Result<usize, Error>{
         for (i, player) in self.players.iter().enumerate() {
             if player.id == player_state.id {
+                self.players[i] = player_state;
                 return Ok(i);
             }
         }
