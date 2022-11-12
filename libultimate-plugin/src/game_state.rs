@@ -50,21 +50,6 @@ impl GameStateTrait for GameState {
         unsafe {
             let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
             let entry_id = app::FighterEntryID(entry_id_int);
-            /*let button_attack = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
-            let button_special = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL);
-            let button_smash = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SMASH);
-            let button_guard = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD);
-            let button_guard_hold = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD_HOLD);
-            let button_catch = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH);
-            let button_jump = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP);
-            let button_jump_mini = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP_MINI);
-            let button_invalid = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_INVALID);
-            let stick_x = ControlModule::get_stick_x(module_accessor);
-            let stick_y = ControlModule::get_stick_y(module_accessor);*/
-            //let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
-            //let fighter_info = FighterManager::get_fighter_information(fighter_manager, entry_id);
-            //let _charge = charge::get_charge(module_accessor, fighter_kind);
-        
             let player_state = PlayerState {
                 id: entry_id_int as usize,
                 fighter_kind: app::utility::get_kind(module_accessor),
@@ -80,19 +65,19 @@ impl GameStateTrait for GameState {
                     x: KineticModule::get_sum_speed_x(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN),
                     y: KineticModule::get_sum_speed_y(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN),
                 },
-                /*control_state: gamestate::ControlState{
-                    stick_x: stick_x,
-                    stick_y: stick_y,
-                    button_attack: button_attack,
-                    button_special: button_special,
-                    button_smash: button_smash,
-                    button_guard: button_guard,
-                    button_guard_hold: button_guard_hold,
-                    button_catch: button_catch,
-                    button_jump: button_jump,
-                    button_jump_mini: button_jump_mini,
-                    button_invalid: button_invalid,
-                },*/
+                controller_state: ControllerState{
+                    stick_x: ControlModule::get_stick_x(module_accessor),
+                    stick_y: ControlModule::get_stick_y(module_accessor),
+                    button_attack: ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK),
+                    button_special: ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL),
+                    button_smash: ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SMASH),
+                    button_guard: ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD),
+                    button_guard_hold: ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD_HOLD),
+                    button_catch: ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH),
+                    button_jump: ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP),
+                    button_jump_mini: ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP_MINI),
+                    button_invalid: ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_INVALID),
+                },
                 frame: MotionModule::frame(module_accessor),
                 end_frame: MotionModule::end_frame(module_accessor),
                 is_cpu:  WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == FighterId::CPU as i32,
@@ -137,7 +122,7 @@ pub struct PlayerState{
     //pub stock: i32,
     pub speed: Speed,
     pub position: Position,
-    //pub control_state: ControlState,
+    pub controller_state: ControllerState,
     pub is_cpu: bool,
     pub is_dead: bool,
     pub frame: f32,
@@ -169,7 +154,7 @@ pub enum FighterId {
 }
 
 #[derive(Serialize)]
-pub struct ControlState{
+pub struct ControllerState{
     pub stick_x: f32,
     pub stick_y: f32,
     pub button_attack: bool,
