@@ -11,11 +11,14 @@ use std::sync::Mutex;
 mod gamestate;
 mod controlstate;
 mod command;
+mod frame_counter;
+use crate::frame_counter::{FrameCounter, FrameCounterTrait};
 use once_cell::sync::Lazy;
 use once_cell::sync::OnceCell;
 
 static GAMESTATE: Lazy<Mutex<gamestate::GameState>> = Lazy::new(|| Mutex::new(gamestate::GameState::default()));
 static CONTROLSTATE: Lazy<Mutex<controlstate::ControlState>> = Lazy::new(|| Mutex::new(controlstate::ControlState::default()));
+static mut FRAME_COUNTER: usize = 0;
 static COMMAND: Lazy<Mutex<command::Command>> = Lazy::new(|| Mutex::new(command::Command::default()));
 static mut FIGHTER_MANAGER_ADDR: usize = 0;
 
@@ -354,6 +357,13 @@ fn create_data() {
     touch(&Path::new("sd:/libultimate/game_state.json")).expect("Error on creating game_state.json.");
     touch(&Path::new("sd:/libultimate/config.json")).expect("Error on creating config.json.");
     touch(&Path::new("sd:/libultimate/command.json")).expect("Error on creating command.json.");
+}
+
+pub fn init() {
+    unsafe {
+        let mut frame_counter = FrameCounter::new();
+        FRAME_COUNTER = frame_counter.register_counter();
+    }
 }
 
 #[skyline::main(name = "libultimate-plugin")]
