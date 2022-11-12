@@ -2,12 +2,14 @@
 use std::io::{Write, Error, ErrorKind};
 use serde::{Serialize};
 use std::fs::{OpenOptions};
+use smash::app::{self, lua_bind::*, BattleObjectModuleAccessor};
+use smash::lib::lua_const::*;
 
 pub trait GameStateTrait {
     fn new() -> GameState;
     fn get_player_state(&mut self, player_id: usize) -> Result<&PlayerState, Error>;
     fn set_player_state(&mut self, player_state: PlayerState) -> Result<usize, Error>;
-    fn save(&mut self) -> Result<(), Error>;
+    fn save(&mut self, module_accessor: &mut app::BattleObjectModuleAccessor) -> Result<(), Error>;
 }
 
 #[derive(Serialize)]
@@ -44,17 +46,84 @@ impl GameStateTrait for GameState {
         return Ok(self.players.len() - 1);
     }
 
-    fn save(&mut self) -> Result<(), Error>{
-        let mut file = OpenOptions::new()
-            .write(true)
-            .create(true)
-            .truncate(true)
-            .open("sd:/libultimate/game_state.json")?;
-        let json = serde_json::to_string(&self)?;
-        file.write_all(json.as_bytes())?;
-        Ok(())
+    fn save(&mut self, module_accessor: &mut app::BattleObjectModuleAccessor) -> Result<(), Error>{
+        unsafe {
+            let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
+            let entry_id = app::FighterEntryID(entry_id_int);
+            /*let button_attack = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
+            let button_special = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL);
+            let button_smash = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SMASH);
+            let button_guard = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD);
+            let button_guard_hold = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_GUARD_HOLD);
+            let button_catch = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CATCH);
+            let button_jump = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP);
+            let button_jump_mini = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_JUMP_MINI);
+            let button_invalid = ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_INVALID);
+            let stick_x = ControlModule::get_stick_x(module_accessor);
+            let stick_y = ControlModule::get_stick_y(module_accessor);*/
+            //let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
+            //let fighter_info = FighterManager::get_fighter_information(fighter_manager, entry_id);
+            //let _charge = charge::get_charge(module_accessor, fighter_kind);
+        
+            let player_state = PlayerState {
+                id: entry_id_int as usize,
+                fighter_kind: app::utility::get_kind(module_accessor),
+                fighter_status_kind: StatusModule::status_kind(module_accessor),
+                situation_kind: StatusModule::situation_kind(module_accessor),
+                lr: PostureModule::lr(module_accessor),
+                percent: DamageModule::damage(module_accessor, 0),
+                position: Position{
+                    x: PostureModule::pos_x(module_accessor),
+                    y: PostureModule::pos_y(module_accessor),
+                },
+                speed: Speed{
+                    x: KineticModule::get_sum_speed_x(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN),
+                    y: KineticModule::get_sum_speed_y(module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN),
+                },
+                /*control_state: gamestate::ControlState{
+                    stick_x: stick_x,
+                    stick_y: stick_y,
+                    button_attack: button_attack,
+                    button_special: button_special,
+                    button_smash: button_smash,
+                    button_guard: button_guard,
+                    button_guard_hold: button_guard_hold,
+                    button_catch: button_catch,
+                    button_jump: button_jump,
+                    button_jump_mini: button_jump_mini,
+                    button_invalid: button_invalid,
+                },*/
+                frame: MotionModule::frame(module_accessor),
+                end_frame: MotionModule::end_frame(module_accessor),
+                is_cpu:  WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == FighterId::CPU as i32,
+                is_dead: StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_DEAD,
+                //is_actionable: is_actionable(module_accessor),
+                /*fighter_information: gamestate::FighterInformation {
+                    hit_point: FighterInformation::hit_point(fighter_info),
+                    fighter_color: FighterInformation::fighter_color(fighter_info),
+                    is_operation_cpu: FighterInformation::is_operation_cpu(fighter_info),
+                    dead_count: FighterInformation::dead_count(fighter_info, entry_id_int),
+                    stock_count: FighterInformation::stock_count(fighter_info),
+                    suicide_count: FighterInformation::suicide_count(fighter_info, entry_id_int),
+                    total_beat_count: FighterInformation::total_beat_count(fighter_info, entry_id_int),
+                    is_last_dead_suicide: FighterInformation::is_last_dead_suicide(fighter_info),
+                    is_on_rebirth: FighterInformation::is_on_rebirth(fighter_info),
+                    fighter_category: FighterInformation::fighter_category(fighter_info),
+                    gravity: FighterInformation::gravity(fighter_info),
+                }*/
+                //charge: _charge,
+            };
+            self.set_player_state(player_state).unwrap();
+            let mut file = OpenOptions::new()
+                .write(true)
+                .create(true)
+                .truncate(true)
+                .open("sd:/libultimate/game_state.json")?;
+            let json = serde_json::to_string(&self)?;
+            file.write_all(json.as_bytes())?;
+            Ok(())
+        }
     }
-
 }
 
 #[derive(Serialize)]
@@ -73,7 +142,7 @@ pub struct PlayerState{
     pub is_dead: bool,
     pub frame: f32,
     pub end_frame: f32,
-    pub is_actionable: bool,
+    //pub is_actionable: bool,
     //pub fighter_information: FighterInformation,
     //pub charge: ChargeState,
 }
