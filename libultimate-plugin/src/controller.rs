@@ -42,21 +42,21 @@ impl ControllerState {
 }
 
 pub trait ControllerTrait {
-    fn new() -> Controller;
+    fn new(controller_id: usize) -> Controller;
     fn operate(&mut self, state: *mut NpadGcState) -> Result<(), Error>;
     fn get_state(&mut self) -> ControllerState;
     fn read_input(&mut self) -> Result<ControllerState, Error>;
 }
 
 pub struct Controller{
-    pub id: String,
+    pub id: usize,
     pub state: ControllerState,
 }
 
 impl ControllerTrait for Controller {
-    fn new() -> Controller {
+    fn new(controller_id: usize) -> Controller {
         Controller {
-            id: "".to_string(),
+            id: controller_id,
             state: ControllerState::new(),
         }
     }
@@ -105,6 +105,7 @@ impl ControllerTrait for Controller {
 pub trait ControllerManagerTrait {
     fn new() -> ControllerManager;
     fn get_controller(&mut self, id: usize) -> Result<&mut Controller, Error>;
+    fn exist_controller(&mut self, id: usize) -> bool;
     fn operate(&mut self, id: usize, state: *mut NpadGcState) -> Result<(), Error>;
 }
 
@@ -127,9 +128,24 @@ impl ControllerManagerTrait for ControllerManager {
         }
     }
 
+    fn exist_controller(&mut self, id: usize) -> bool{
+        for controller in self.controllers.iter() {
+            if controller.id == id {
+                return true;
+            }
+        }
+        return false;
+    }
+
     fn operate(&mut self, id: usize, state: *mut NpadGcState) -> Result<(), Error>{
-        let controller = self.get_controller(id)?;
-        controller.operate(state)?;
+        if self.exist_controller(id) {
+            let controller = self.get_controller(id)?;
+            controller.operate(state)?;
+        }else{
+            let mut controller = Controller::new(id);
+            controller.operate(state)?;
+            self.controllers.push(controller);
+        }
         return Ok(());
     }
 }
