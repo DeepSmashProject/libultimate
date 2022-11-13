@@ -46,7 +46,7 @@ class Console():
                 gamestate = self.api.read_state()
                 frame_hz_num = gamestate.frame_count // hz
                 if current_frame_hz_num != frame_hz_num:
-                    current_frame_hz_num == frame_hz_num
+                    current_frame_hz_num = frame_hz_num
                     yield gamestate
             except Exception as err:
                 self.logger.warning("couldn't read state: {}".format(err))

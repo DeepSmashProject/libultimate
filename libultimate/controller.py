@@ -2,22 +2,9 @@ import string
 import time
 from .enums import Button, Direction, Action
 from .console import Console
+from .schemas import ControlState
 from typing import List, NamedTuple, Tuple
 import uuid
-
-class ControlState(NamedTuple):
-    id: str
-    player_id: int
-    update_count: str
-    buttons: int
-    l_stick_x: int
-    l_stick_y: int
-    r_stick_x: int
-    r_stick_y: int
-    flags: int
-    l_trigger: int
-    r_trigger: int
-    hold: bool
 
 class Controller:
     def __init__(self, player_id: int):
@@ -28,20 +15,20 @@ class Controller:
 
     def input(self, buttons: List[Button], main_stick = (0, 0), c_stick = (0, 0), hold = False):
         buttons_total = int(sum([btn.value for btn in buttons]))
-        control_state: ControlState = {
-            "id": str(uuid.uuid4()),
-            "player_id": int(self.player_id),
-            "update_count": int(0),
-            "buttons": buttons_total,
-            "l_stick_x": int(main_stick[0] * 32768), # Min: 0, Max: 0x7FFF
-            "l_stick_y": int(main_stick[1] * 32768), # Min: 0, Max: -0x7FFF
-            "r_stick_x": int(c_stick[0] * 32768), # Min: 0, Max: 0x7FFF
-            "r_stick_y": int(c_stick[1] * 32768), # Min: 0, Max: 0x7FFF
-            "flags": int(0),
-            "l_trigger": int(0),
-            "r_trigger": int(0),
-            "hold": hold,
-        }
+        control_state = ControlState(
+            id=str(uuid.uuid4()),
+            player_id=int(self.player_id),
+            update_count=int(0),
+            buttons=buttons_total,
+            l_stick_x=int(main_stick[0] * 32768), # Min: 0, Max: 0x7FFF
+            l_stick_y=int(main_stick[1] * 32768), # Min: 0, Max: -0x7FFF
+            r_stick_x=int(c_stick[0] * 32768), # Min: 0, Max: 0x7FFF
+            r_stick_y=int(c_stick[1] * 32768), # Min: 0, Max: 0x7FFF
+            flags=int(0),
+            l_trigger=int(0),
+            r_trigger=int(0),
+            hold=hold,
+        )
         self.console.api.send_control_state(self.player_id, control_state)
 
     def jab(self):

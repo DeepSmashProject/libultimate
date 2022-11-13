@@ -1,6 +1,21 @@
-from typing import NamedTuple, List
-from .enums import Fighter
 from pydantic import BaseModel
+from typing import List
+from .enums import Fighter
+
+class ControlState(BaseModel):
+    id: str
+    player_id: int
+    update_count: str
+    buttons: int
+    l_stick_x: int
+    l_stick_y: int
+    r_stick_x: int
+    r_stick_y: int
+    flags: int
+    l_trigger: int
+    r_trigger: int
+    hold: bool
+
 
 class Position(BaseModel):
     x: float
