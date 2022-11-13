@@ -108,6 +108,7 @@ impl GameStateTrait for GameState {
             self.set_player_state(player_state).unwrap();
 
             FRAME_COUNTER.lock().unwrap().tick();
+            FRAME_COUNTER.lock().unwrap().should_delay(60);
             self.frame_count = FRAME_COUNTER.lock().unwrap().get_frame_count();
             let mut file = OpenOptions::new()
                 .write(true)
