@@ -1,9 +1,8 @@
-import string
 import time
 from .enums import Button, Direction, Action
 from .console import Console
 from .schemas import ControlState
-from typing import List, NamedTuple, Tuple
+from typing import List, NamedTuple
 import uuid
 
 class Controller:
