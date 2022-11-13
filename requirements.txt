@@ -1,1 +1,5 @@
 pynput
+uvicorn
+fastapi
+pydantic
+gym

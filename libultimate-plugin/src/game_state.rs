@@ -4,6 +4,11 @@ use serde::{Serialize};
 use std::fs::{OpenOptions};
 use smash::app::{self, lua_bind::*, BattleObjectModuleAccessor};
 use smash::lib::lua_const::*;
+use once_cell::sync::{Lazy, OnceCell};
+use std::sync::Mutex;
+use crate::frame_counter::{FrameCounter, FrameCounterTrait};
+static FRAME_COUNTER: Lazy<Mutex<FrameCounter>> = Lazy::new(|| Mutex::new(FrameCounter::new()));
+static FRAME_COUNTER_ID: Lazy<Mutex<usize>> =  Lazy::new(|| Mutex::new(FRAME_COUNTER.lock().unwrap().register_counter()));
 
 pub trait GameStateTrait {
     fn new() -> GameState;
@@ -14,13 +19,16 @@ pub trait GameStateTrait {
 
 #[derive(Serialize)]
 pub struct GameState{
+    pub frame_count: u32,  // frame count: 0~60 -> 0~60 -> 0~60 -> ...
     pub players: Vec<PlayerState>,
     pub projectiles: Vec<Projectile>,
 }
 
 impl GameStateTrait for GameState {
     fn new() -> GameState {
+        FRAME_COUNTER.lock().unwrap().start_counting(*FRAME_COUNTER_ID.lock().unwrap());
         GameState {
+            frame_count: 0,
             players: Vec::new(),
             projectiles: Vec::new()
         }
@@ -99,6 +107,9 @@ impl GameStateTrait for GameState {
                 //charge: _charge,
             };
             self.set_player_state(player_state).unwrap();
+
+            FRAME_COUNTER.lock().unwrap().tick();
+            self.frame_count = FRAME_COUNTER.lock().unwrap().get_frame_count(*FRAME_COUNTER_ID.lock().unwrap());
             let mut file = OpenOptions::new()
                 .write(true)
                 .create(true)
