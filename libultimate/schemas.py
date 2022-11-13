@@ -5,7 +5,7 @@ from .enums import Fighter
 class ControlState(BaseModel):
     id: str
     player_id: int
-    update_count: str
+    update_count: int
     buttons: int
     l_stick_x: int
     l_stick_y: int
