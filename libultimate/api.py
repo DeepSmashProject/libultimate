@@ -35,7 +35,7 @@ class API():
         control_state_ok_path = os.path.join(self.ryujinx_path, 'sdcard/libultimate/control_state_{}.ok.json'.format(player_id))
         if not os.path.isfile(control_state_ok_path):
             with open(control_state_path, 'w') as f:
-                json.dump(control_state.json(), f)
+                json.dump(control_state.dict(), f)
             # create ok file
             with open(control_state_ok_path, 'w') as f:
                 pass
