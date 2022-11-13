@@ -32,17 +32,22 @@ async def add_controller(data: AddControllerRequest):
     controller = Controller(player_id=data.player_id)
     app.console.add_controller(controller)
 
+class StickInput(BaseModel):
+    stick_x: float
+    stick_y: float
+
 class OperateControllerRequest(BaseModel):
     player_id: int
     buttons: List[Button]
-    main_stick: Tuple[float, float]
-    c_stick: Tuple[float, float]
+    main_stick: StickInput
+    c_stick: StickInput
     hold: bool
 
 @app.post("/operate")
 async def operate(data: OperateControllerRequest):
     controller = app.console.get_controller(data.player_id)
-    controller.input(data.buttons, data.main_stick, data.c_stick, data.hold)
+    buttons = [Button(bt_value) for bt_value in data.buttons]
+    controller.input(buttons, (data.main_stick.stick_x, data.main_stick.stick_y), (data.c_stick.stick_x, data.c_stick.stick_y), data.hold)
 
 @app.get("/stream/game_state")
 async def stream_game_state():
