@@ -49,7 +49,7 @@ async def stream_game_state():
     def generate():
         try:
             for gamestate in app.console.stream(fps=app.config.fps):
-                yield json.dumps(gamestate)
+                yield json.dumps(gamestate.json())
         except Exception as err:
             print('error', err)
             return JSONResponse(status_code=500, content={"message": "Error: {}".format(err)})
