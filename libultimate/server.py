@@ -7,6 +7,10 @@ from pydantic import BaseModel
 import uvicorn
 import time
 import json
+from .console import Console
+from .controller import Controller
+from .enums import Button
+from typing import List, Tuple
 
 app = FastAPI(
     title="libultimate",
@@ -20,25 +24,40 @@ app.add_middleware(
     allow_headers=["*"]     
 )
 
-@app.post("/operate_controller")
-async def operate_controller():
-    pass
+class AddControllerRequest(BaseModel):
+    player_id: int
+
+@app.post("/controller")
+async def add_controller(data: AddControllerRequest):
+    controller = Controller(player_id=data.player_id)
+    app.console.add_controller(controller)
+
+class OperateControllerRequest(BaseModel):
+    player_id: int
+    buttons: List[Button]
+    main_stick: Tuple[float, float]
+    c_stick: Tuple[float, float]
+    hold: bool
+
+@app.post("/operate")
+async def operate(data: OperateControllerRequest):
+    controller = app.console.get_controller(data.player_id)
+    controller.input(data.buttons, data.main_stick, data.c_stick, data.hold)
 
 @app.get("/stream/game_state")
 async def stream_game_state():
-    fps = 1
     def generate():
         try:
-            while True:
-                time.sleep(1/fps)
-                yield json.dumps({"test": "test"})
-        except GeneratorExit:
-            print('closed')
+            for gamestate in app.console.stream(fps=5):
+                yield json.dumps(gamestate)
         except Exception as err:
             print('error', err)
             return JSONResponse(status_code=500, content={"message": "Error: {}".format(err)})
     return StreamingResponse(generate(), media_type="application/json")
 
+class UltimateServer:
+    def __init__(self, console):
+        app.console = console
 
-def run_server(address, port, log_level="info"):
-    uvicorn.run(app, host=address, port=port, log_level=log_level)
+    def run(self, address, port, log_level="info"):
+        uvicorn.run(app, host=address, port=port, log_level=log_level)
