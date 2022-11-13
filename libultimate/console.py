@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .api import API
 
 class Console():
-    def __init__(self, ryujinx_path, level=logging.WARNING):
+    def __init__(self, ryujinx_path, level=logging.ERROR):
         logging.basicConfig(format='%(asctime)s - [%(levelname)s] - %(message)s', level=level)
         self.logger = logging.getLogger(__name__)
         self.ryujinx_path = ryujinx_path
@@ -29,11 +29,14 @@ class Console():
         self.controllers.append(controller)
 
     def stream(self, hz=60):
-        interval = 60/hz * (1/60)
+        current_frame_hz_num = 0
         while True:
             try:
-                time.sleep(interval)
+                time.sleep(0.01)
                 gamestate = self.api.read_state()
-                yield gamestate
+                frame_hz_num = gamestate.frame_count // hz
+                if current_frame_hz_num != frame_hz_num:
+                    current_frame_hz_num == frame_hz_num
+                    yield gamestate
             except Exception as err:
                 self.logger.warning("couldn't read state: {}".format(err))
