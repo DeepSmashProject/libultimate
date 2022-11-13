@@ -11,8 +11,8 @@ use std::sync::Mutex;
 mod game_state;
 mod controller;
 mod command;
-mod frame_counter;
-use crate::frame_counter::{FrameCounter, FrameCounterTrait};
+mod counter;
+use crate::counter::{Counter, CounterTrait};
 use crate::game_state::{GameState, GameStateTrait, PlayerState, Speed, Position, FighterId};
 use crate::controller::{ControllerManager, ControllerManagerTrait};
 use once_cell::sync::Lazy;
@@ -20,8 +20,6 @@ use once_cell::sync::OnceCell;
 
 static GAME_STATE: Lazy<Mutex<GameState>> = Lazy::new(|| Mutex::new(GameState::new()));
 static CONTROLLER_MANAGER: Lazy<Mutex<ControllerManager>> = Lazy::new(|| Mutex::new(ControllerManager::new()));
-static FRAME_COUNTER: Lazy<Mutex<FrameCounter>> = Lazy::new(|| Mutex::new(FrameCounter::new()));
-static FRAME_COUNTER_ID: Lazy<Mutex<usize>> =  Lazy::new(|| Mutex::new(FRAME_COUNTER.lock().unwrap().register_counter()));
 static COMMAND: Lazy<Mutex<command::Command>> = Lazy::new(|| Mutex::new(command::Command::default()));
 //static mut FIGHTER_MANAGER_ADDR: usize = 0;
 

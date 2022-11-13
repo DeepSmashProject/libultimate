@@ -6,9 +6,8 @@ use smash::app::{self, lua_bind::*, BattleObjectModuleAccessor};
 use smash::lib::lua_const::*;
 use once_cell::sync::{Lazy, OnceCell};
 use std::sync::Mutex;
-use crate::frame_counter::{FrameCounter, FrameCounterTrait};
-static FRAME_COUNTER: Lazy<Mutex<FrameCounter>> = Lazy::new(|| Mutex::new(FrameCounter::new()));
-static FRAME_COUNTER_ID: Lazy<Mutex<usize>> =  Lazy::new(|| Mutex::new(FRAME_COUNTER.lock().unwrap().register_counter()));
+use crate::counter::{Counter, CounterTrait};
+static FRAME_COUNTER: Lazy<Mutex<Counter>> = Lazy::new(|| Mutex::new(Counter::new()));
 
 pub trait GameStateTrait {
     fn new() -> GameState;
@@ -26,7 +25,7 @@ pub struct GameState{
 
 impl GameStateTrait for GameState {
     fn new() -> GameState {
-        FRAME_COUNTER.lock().unwrap().start_counting(*FRAME_COUNTER_ID.lock().unwrap());
+        FRAME_COUNTER.lock().unwrap().start_counting();
         GameState {
             frame_count: 0,
             players: Vec::new(),
@@ -109,7 +108,7 @@ impl GameStateTrait for GameState {
             self.set_player_state(player_state).unwrap();
 
             FRAME_COUNTER.lock().unwrap().tick();
-            self.frame_count = FRAME_COUNTER.lock().unwrap().get_frame_count(*FRAME_COUNTER_ID.lock().unwrap());
+            self.frame_count = FRAME_COUNTER.lock().unwrap().get_frame_count();
             let mut file = OpenOptions::new()
                 .write(true)
                 .create(true)
