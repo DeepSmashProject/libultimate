@@ -29,7 +29,7 @@ class AddControllerRequest(BaseModel):
 async def add_controller(data: AddControllerRequest):
     controller = Controller(player_id=data.player_id)
     app.console.add_controller(controller)
-    return JSONResponse(status_code=status.HTTP_200_OK)
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"status": "ok"})
 
 class StickInput(BaseModel):
     stick_x: float
@@ -48,7 +48,7 @@ async def send_controller_input(data: OperateControllerRequest):
     if controller:
         buttons = [Button(bt_value) for bt_value in data.buttons]
         controller.input(buttons, (data.main_stick.stick_x, data.main_stick.stick_y), (data.c_stick.stick_x, data.c_stick.stick_y), data.hold)
-        return JSONResponse(status_code=status.HTTP_200_OK)
+        return JSONResponse(status_code=status.HTTP_200_OK, content={"status": "ok"})
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Controller not found")
 
