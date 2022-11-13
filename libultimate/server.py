@@ -48,16 +48,20 @@ async def operate(data: OperateControllerRequest):
 async def stream_game_state():
     def generate():
         try:
-            for gamestate in app.console.stream(fps=5):
+            for gamestate in app.console.stream(fps=app.config.fps):
                 yield json.dumps(gamestate)
         except Exception as err:
             print('error', err)
             return JSONResponse(status_code=500, content={"message": "Error: {}".format(err)})
     return StreamingResponse(generate(), media_type="application/json")
 
+class UltimateServerConfig(BaseModel):
+    fps: int
+
 class UltimateServer:
-    def __init__(self, console):
+    def __init__(self, console, config: UltimateServerConfig):
         app.console = console
+        app.config = config
 
     def run(self, address, port, log_level="info"):
         uvicorn.run(app, host=address, port=port, log_level=log_level)
