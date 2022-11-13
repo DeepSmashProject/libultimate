@@ -57,6 +57,7 @@ class Projectile(NamedTuple):
     position: Position
 
 class GameState(NamedTuple):
+    frame_count: int
     players: List[PlayerState]
     projectiles: List[Projectile]
 
@@ -112,6 +113,7 @@ def toGameState(gs_json):
             #)
         ))
     return GameState(
+        frame_count=gs_json["frame_count"],
         players=players,
         projectiles=[]
     )
