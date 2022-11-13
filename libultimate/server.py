@@ -25,7 +25,7 @@ app.add_middleware(
 class AddControllerRequest(BaseModel):
     player_id: int
 
-@app.post("/controller")
+@app.post("/controller/add")
 async def add_controller(data: AddControllerRequest):
     controller = Controller(player_id=data.player_id)
     app.console.add_controller(controller)
@@ -42,8 +42,8 @@ class OperateControllerRequest(BaseModel):
     c_stick: StickInput
     hold: bool
 
-@app.post("/operate")
-async def operate(data: OperateControllerRequest):
+@app.post("/controller/input")
+async def send_controller_input(data: OperateControllerRequest):
     controller = app.console.get_controller(data.player_id)
     if controller:
         buttons = [Button(bt_value) for bt_value in data.buttons]
