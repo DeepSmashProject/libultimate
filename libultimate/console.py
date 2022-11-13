@@ -18,6 +18,9 @@ class Console():
         return self
         
     def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+
+    def close(self):
         self.logger.info('[libultimate] Cleaning up...')
         time.sleep(0.1)
         for controller in self.controllers:
@@ -28,7 +31,14 @@ class Console():
         controller.set_console(self)
         self.controllers.append(controller)
 
-    def stream(self, hz=60):
+    def get_controller(self, player_id):
+        for controller in self.controllers:
+            if controller.player_id == player_id:
+                return controller
+        return None
+
+    def stream(self, fps=1):
+        hz = 60/fps
         current_frame_hz_num = 0
         while True:
             try:
