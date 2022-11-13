@@ -1,6 +1,4 @@
-from fastapi import FastAPI, Request, status
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, status, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -31,6 +29,7 @@ class AddControllerRequest(BaseModel):
 async def add_controller(data: AddControllerRequest):
     controller = Controller(player_id=data.player_id)
     app.console.add_controller(controller)
+    return JSONResponse(status_code=status.HTTP_200_OK)
 
 class StickInput(BaseModel):
     stick_x: float
@@ -46,8 +45,12 @@ class OperateControllerRequest(BaseModel):
 @app.post("/operate")
 async def operate(data: OperateControllerRequest):
     controller = app.console.get_controller(data.player_id)
-    buttons = [Button(bt_value) for bt_value in data.buttons]
-    controller.input(buttons, (data.main_stick.stick_x, data.main_stick.stick_y), (data.c_stick.stick_x, data.c_stick.stick_y), data.hold)
+    if controller:
+        buttons = [Button(bt_value) for bt_value in data.buttons]
+        controller.input(buttons, (data.main_stick.stick_x, data.main_stick.stick_y), (data.c_stick.stick_x, data.c_stick.stick_y), data.hold)
+        return JSONResponse(status_code=status.HTTP_200_OK)
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Controller not found")
 
 @app.get("/stream/game_state")
 async def stream_game_state():
