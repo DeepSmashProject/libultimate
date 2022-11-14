@@ -91,7 +91,7 @@ COPY ./docker/xstartup $HOME/.vnc/xstartup
 RUN echo ${VNC_PASSWORD} | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
 
 ######### Install and Build ryujinx #############
-RUN apt-get update && apt-get install -y curl
+RUN sudo apt-get update && sudo apt-get install -y curl
 RUN option=1 noconfirm=1 bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
 
 # switch back to root to start systemd
