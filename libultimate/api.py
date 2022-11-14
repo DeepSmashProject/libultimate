@@ -8,11 +8,18 @@ from .schemas import ControlState, GameState
 class API():
     def __init__(self, ryujinx_path: str):
         self.ryujinx_path = ryujinx_path
-        self.game_state_path = os.path.join(ryujinx_path, 'sdcard/libultimate/game_state.json')
         self.logger = logging.getLogger(__name__)
+        # create libultimate folder
+        self.create_root_dir()
+
+    def create_root_dir(self):
+        libultimate_path = os.path.join(self.ryujinx_path, 'sdcard/libultimate')
+        if not os.path.isdir(libultimate_path):
+            os.mkdir(libultimate_path)
 
     def read_state(self):
-        with open(self.game_state_path, 'r') as f:
+        game_state_path = os.path.join(self.ryujinx_path, 'sdcard/libultimate/game_state.json')
+        with open(game_state_path, 'r') as f:
             text = f.read()
             gs_json = json.loads(text)
             game_state: GameState = GameState.parse_obj(gs_json)
