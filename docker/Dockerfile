@@ -34,7 +34,6 @@ RUN apt-get update && apt-get install -y \
 RUN systemctl disable systemd-resolved
 VOLUME ["/sys/fs/cgroup"]
 STOPSIGNAL SIGRTMIN+3
-CMD [ "/sbin/init" ]
 
 # Install GNOME
 # NOTE if you want plain gnome, use: apt-get install -y --no-install-recommends gnome-session gnome-terminal and remove the modification of /etc/gdm3/custom.conf
@@ -141,4 +140,5 @@ COPY . .
 RUN sudo -H pip install -e .
 
 COPY ./docker/entrypoint.sh $HOME/entrypoint.sh
-#RUN chmod +x /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
