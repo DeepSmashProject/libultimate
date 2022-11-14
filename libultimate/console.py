@@ -10,7 +10,6 @@ class Console():
     def __init__(self, ryujinx_path, level=logging.ERROR):
         logging.basicConfig(format='%(asctime)s - [%(levelname)s] - %(message)s', level=level)
         self.logger = logging.getLogger(__name__)
-        self.ryujinx_path = ryujinx_path
         self.api = API(ryujinx_path)
         self.controllers = []
 
