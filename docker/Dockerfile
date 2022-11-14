@@ -91,6 +91,7 @@ COPY ./docker/xstartup $HOME/.vnc/xstartup
 RUN echo ${VNC_PASSWORD} | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
 
 ######### Install and Build ryujinx #############
+RUN apt-get update && apt-get install -y curl
 RUN option=1 noconfirm=1 bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
 
 # switch back to root to start systemd
@@ -100,7 +101,6 @@ USER root
 # Install NVIDIA drivers, including X graphic drivers
 # sudo nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
 ARG NVIDIA_DRIVER_VERSION
-RUN apt-get update && apt-get install -y curl
 RUN apt-get install -y kmod pkg-config
 RUN cd /tmp && \
     curl -fSsl -O https://us.download.nvidia.com/tesla/$NVIDIA_DRIVER_VERSION/NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run && \
