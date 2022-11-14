@@ -1,5 +1,7 @@
 FROM nvidia/cudagl:11.4.2-runtime-ubuntu20.04
 
+ARG NVIDIA_DRIVER_VERSION
+ARG VNC_PASSWORD
 ENV container docker
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -87,7 +89,7 @@ WORKDIR "/home/${USER}"
 # Set up VNC
 RUN mkdir -p $HOME/.vnc
 COPY ./docker/xstartup $HOME/.vnc/xstartup
-RUN echo "welcome" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
+RUN echo ${VNC_PASSWORD} | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
 
 # switch back to root to start systemd
 USER root
@@ -96,12 +98,11 @@ USER root
 # Install NVIDIA drivers, including X graphic drivers
 # sudo nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
 RUN apt-get update && apt-get install -y curl
-ENV DRIVER_VERSION=460.91.03
 RUN apt-get install -y kmod pkg-config
 RUN cd /tmp && \
-    curl -fSsl -O https://us.download.nvidia.com/tesla/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run && \
-    sh NVIDIA-Linux-x86_64-$DRIVER_VERSION.run -x && \
-    cd NVIDIA-Linux-x86_64-$DRIVER_VERSION && \
+    curl -fSsl -O https://us.download.nvidia.com/tesla/$NVIDIA_DRIVER_VERSION/NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run && \
+    sh NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run -x && \
+    cd NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION && \
     ./nvidia-installer --silent \
     --no-kernel-module \
     --install-compat32-libs \
@@ -112,9 +113,9 @@ RUN cd /tmp && \
     --no-check-for-alternate-installs \
     --no-libglx-indirect \
     --no-install-libglvnd && \
-    mkdir -p /usr/src/nvidia-$DRIVER_VERSION && \
-    mv LICENSE mkprecompiled kernel /usr/src/nvidia-$DRIVER_VERSION && \
-    sed '9,${/^\(kernel\|LICENSE\)/!d}' .manifest > /usr/src/nvidia-$DRIVER_VERSION/.manifest
+    mkdir -p /usr/src/nvidia-$NVIDIA_DRIVER_VERSION && \
+    mv LICENSE mkprecompiled kernel /usr/src/nvidia-$NVIDIA_DRIVER_VERSION && \
+    sed '9,${/^\(kernel\|LICENSE\)/!d}' .manifest > /usr/src/nvidia-$NVIDIA_DRIVER_VERSION/.manifest
 
 ############# for NVIDIA ##################
 ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
