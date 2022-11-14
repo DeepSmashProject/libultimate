@@ -131,7 +131,7 @@ ENV DRI_PRIME=1
 RUN apt-get install -y python3 python3-pip
 
 ######### Install and Build ryujinx #############
-RUN bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
+RUN option=1 noconfirm=1 bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
 
 ############ for Application ############
 WORKDIR $HOME/libultimate
