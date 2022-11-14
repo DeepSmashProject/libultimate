@@ -1,7 +1,5 @@
 FROM nvidia/cudagl:11.4.2-runtime-ubuntu20.04
 
-ARG NVIDIA_DRIVER_VERSION
-ARG VNC_PASSWORD
 ENV container docker
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -34,6 +32,7 @@ RUN apt-get update && apt-get install -y \
 RUN systemctl disable systemd-resolved
 VOLUME ["/sys/fs/cgroup"]
 STOPSIGNAL SIGRTMIN+3
+CMD [ "/sbin/init" ]
 
 # Install GNOME
 # NOTE if you want plain gnome, use: apt-get install -y --no-install-recommends gnome-session gnome-terminal and remove the modification of /etc/gdm3/custom.conf
@@ -86,9 +85,13 @@ ENV USER="${USER}" \
 WORKDIR "/home/${USER}"
 
 # Set up VNC
+ARG VNC_PASSWORD
 RUN mkdir -p $HOME/.vnc
 COPY ./docker/xstartup $HOME/.vnc/xstartup
 RUN echo ${VNC_PASSWORD} | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
+
+######### Install and Build ryujinx #############
+RUN option=1 noconfirm=1 bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
 
 # switch back to root to start systemd
 USER root
@@ -96,6 +99,7 @@ USER root
 ##################
 # Install NVIDIA drivers, including X graphic drivers
 # sudo nvidia-xconfig -a --virtual=$RESOLUTION --allow-empty-initial-configuration --enable-all-gpus --busid $BUS_ID
+ARG NVIDIA_DRIVER_VERSION
 RUN apt-get update && apt-get install -y curl
 RUN apt-get install -y kmod pkg-config
 RUN cd /tmp && \
@@ -130,9 +134,6 @@ ENV DRI_PRIME=1
 # Install Python3
 RUN apt-get install -y python3 python3-pip
 
-######### Install and Build ryujinx #############
-RUN option=1 noconfirm=1 bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
-
 ############ for Application ############
 WORKDIR $HOME/libultimate
 COPY . .
@@ -140,5 +141,5 @@ COPY . .
 RUN sudo -H pip install -e .
 
 COPY ./docker/entrypoint.sh $HOME/entrypoint.sh
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+#RUN chmod +x /entrypoint.sh
+#CMD ["/entrypoint.sh"]
