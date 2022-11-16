@@ -103,6 +103,12 @@ Vulkanを使用するといいっぽい。
 
 
 DELLではvulkanでできたが、研究室サーバーだと以下のエラーが発生
+
+```
+Unhandled exception caught: System.IndexOutOfRangeException: Index was outside the bounds of the array.
+at Ryujinx.Graphics.Vulkan.Window.CreateSwapChain() in 
+```
+
 DELL PC
 ```
 install ryujinx
@@ -112,3 +118,65 @@ memory modeをsoftwareにする
 graphicsをvulkanでGeForceにする
 起動(起動時環境変数はいらない)
 ```
+
+System -> Enable FS Integrity Checksをオフにすると以下のエラーが発生した
+```
+[xcb] Unknown sequence number while processing queue
+XinitThreads has not been called
+```
+
+
+### 研究室サーバーでもたまにできた
+ただ、画面が変化しない状態
+```
+__GLX_VENDOR_LIBRARY_NAME=nvidia DRI_PRIME=1 ./Ryujinx
+```
+
+Settings:
+```
+Enable VSync: True
+Enable PPTC: True
+Enable Guest Internet Access: True
+Enable FS Integrity Checks: True
+Expand DRAM: True
+Ignore Missing Services: True
+
+Memory Manager: Software
+
+Graphics Backend: OpenGL
+Enable ShaderCache: False
+Enable Texuture Recompression: False
+```
+
+### おそらくOpenGLVersionの違い
+- DellのPCはホストでOpenGL4系を使用していた。
+  - libultimateコンテナ内ではOpenGL3系になっていた
+  - これが、開けなかった原因？
+- 研究室のサーバーはホストでOpenGLバージョンを確認できなかった。
+  - 
+- Yuzuのときはコンテナ内でもOpenGL 4系を使用できたはず？
+  - YuzuがXOrg系のエラーで起動しない
+  - エラー：The directory "/usr/share/fonts/X11/100dpi" does not exist.
+    - sudo apt-get install xfonts-base
+
+
+CommitID: 22593ad63f4c68d6af17c5f99afc45357215a299
+
+- prime-runを行うとOpenGL 4.6となった！！
+https://askubuntu.com/questions/1364762/prime-run-command-not-found
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+export __VK_LAYER_NV_optimus=NVIDIA_only
+
+```
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only glxinfo | grep "OpenGL version"
+```
+
+
+### XServerが起動していないためNvidiaのGPU Screenを使えていない
+
+```
+[2400788.252] (EE) NVIDIA(GPU-0): Failed to acquire modesetting permission.
+[2400788.252] (EE) NVIDIA(0): Failing initialization of X screen
+```
+Xorgのこのエラーを治したい

@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: libultimate
     ports:
-      - 8081:6080
+      - ${NOVNC_PORT}:6080
     tmpfs:
       - /run
       - /run/lock
