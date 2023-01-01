@@ -131,6 +131,11 @@ RUN apt-get install -y libx11-dev libsdl2-dev
 ENV __GLX_VENDOR_LIBRARY_NAME=nvidia
 ENV DRI_PRIME=1
 
+## for glxinfo openGL version
+ENV __NV_PRIME_RENDER_OFFLOAD=1
+ENV __VK_LAYER_NV_optimus=NVIDIA_only
+RUN apt-get install -y mesa-utils
+
 # Install Python3
 RUN apt-get install -y python3 python3-pip
 
