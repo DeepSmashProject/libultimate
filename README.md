@@ -67,7 +67,7 @@ if __name__ == "__main__":
         controller_1p = Controller(player_id=0) # player_id: 0 ~ 7
         console.add_controller(controller_1p)
 
-        for gamestate in console.stream(hz=5):
+        for gamestate in console.stream(fps=5):
             print("gamestate: ", gamestate)
             controller_1p.input(Button.A)
 
@@ -264,3 +264,13 @@ Reference: https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/tr
 | CLIFF    | 1   | on cliff    |
 | AIR      | 2   | on air      |
 | OUTFIELD | 5   | on outfield |
+
+# Use Docker
+
+Edit docker/.env
+```
+make build
+make run 
+make exec
+make remove
+```

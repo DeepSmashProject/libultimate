@@ -113,3 +113,4 @@ develop.txt
 #develop.py
 
 .DS_Store
+.env

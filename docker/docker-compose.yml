@@ -1,0 +1,23 @@
+version: '3.5'
+services:
+  ubuntu-20.04-desktop:
+    image: deepsmash/libultimate:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: libultimate
+    ports:
+      - ${NOVNC_PORT}:6080
+    tmpfs:
+      - /run
+      - /run/lock
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      #- /home/ruirui_nis/workspace/DeepSmashProject:~/workspace
+      - ${GAME_DIR}:/home/default/data/games
+      - ${FIRMWARE_DIR}:/home/default/data/firmware
+      - ${PRODKEYS_DIR}:/home/default/data/keys
+    cap_add:
+      - SYS_BOOT
+      - SYS_ADMIN

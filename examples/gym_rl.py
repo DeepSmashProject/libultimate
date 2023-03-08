@@ -1,49 +1,54 @@
 import os
 import random
-from libultimate import Console, UltimateController, Action, UltimateEnv
+from libultimate import Console, Controller, EnvAction, UltimateEnv
 
 action_list = [
-    Action.AIR_ESCAPE,
-    Action.ATTACK_HI3,
-    Action.ATTACK_HI4,
-    Action.ATTACK_LW3,
-    Action.ATTACK_LW4,
-    Action.ATTACK_N,
-    Action.ATTACK_S3,
-    Action.ATTACK_S4,
-    Action.CATCH,
-    Action.DASH,
-    Action.ESCAPE,
-    Action.ESCAPE_B,
-    Action.ESCAPE_F,
-    Action.JUMP,
-    Action.JUMP_BUTTON,
-    Action.SPECIAL_ANY,
-    Action.SPECIAL_HI,
-    Action.SPECIAL_LW,
-    Action.SPECIAL_N,
-    Action.SPECIAL_S,
-    Action.TURN,
-    Action.TURN_DASH,
-    Action.WALK,
-    Action.WALL_JUMP_LEFT,
-    Action.WALL_JUMP_RIGHT,
-    Action.NONE,
+    EnvAction.NONE,
+    EnvAction.JAB,
+    EnvAction.TILT_U,
+    EnvAction.TILT_L,
+    EnvAction.TILT_D,
+    EnvAction.TILT_R,
+    EnvAction.SMASH_U,
+    EnvAction.SMASH_L,
+    EnvAction.SMASH_D,
+    EnvAction.SMASH_R,
+    EnvAction.SPECIAL_U,
+    EnvAction.SPECIAL_L,
+    EnvAction.SPECIAL_D,
+    EnvAction.SPECIAL_R,
+    EnvAction.DASH_ATTACK_L,
+    EnvAction.DASH_ATTACK_R,
+    EnvAction.SPOT_DODGE,
+    EnvAction.ROLL_L,
+    EnvAction.ROLL_R,
+    EnvAction.JUMP,
+    EnvAction.JUMP_L,
+    EnvAction.JUMP_R,
+    EnvAction.SHORT_HOP,
+    EnvAction.SHORT_HOP_L,
+    EnvAction.SHORT_HOP_R,
+    EnvAction.WALK_L,
+    EnvAction.WALK_R,
+    EnvAction.DASH_L,
+    EnvAction.DASH_R,
+    EnvAction.GUARD,
+    EnvAction.GRAB,
 ]
 
 if __name__ == "__main__":
-    RYUJINX_PATH = "/path/to/Ryujinx" # ex: /home/username/.config/Ryujinx
-    console = Console(ryujinx_path=RYUJINX_PATH)
-    controller = UltimateController(console)
-    env = UltimateEnv(console, controller, hz=6, action_list=action_list)
-
-    for k in range(10):
-        done = False
-        obs = env.reset()
-        step = 0
-        while not done:
-            action = random.choice(action_list)
-            next_obs, reward, done, info = env.step(action)
-            print("episode: {}, step: {}, done: {}, reward: {}, action: {}".format(k, step, done, reward, action["name"]))
-            step += 1
-    print("finished!")
+    RYUJINX_PATH = "~/.config/Ryujinx" # ex: /home/username/.config/Ryujinx
+    with Console(ryujinx_path=RYUJINX_PATH) as console:
+        controller_1p = Controller(player_id=0)
+        console.add_controller(controller_1p)
+        with UltimateEnv(console, controller_1p, hz=6, action_space=len(action_list)) as env:
+            for k in range(10):
+                done = False
+                obs = env.reset()
+                step = 0
+                while not done:
+                    action = random.choice(action_list)
+                    next_obs, reward, done, info = env.step(action)
+                    print("episode: {}, step: {}, done: {}, reward: {}, action: {}".format(k, step, done, reward, action.name))
+                    step += 1
+            print("finished!")
