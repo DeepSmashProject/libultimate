@@ -264,3 +264,13 @@ Reference: https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/tr
 | CLIFF    | 1   | on cliff    |
 | AIR      | 2   | on air      |
 | OUTFIELD | 5   | on outfield |
+
+# Use Docker
+
+Edit docker/.env
+```
+make build
+make run 
+make exec
+make remove
+```

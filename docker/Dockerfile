@@ -139,12 +139,17 @@ RUN apt-get install -y mesa-utils
 # Install Python3
 RUN apt-get install -y python3 python3-pip
 
+# Install Cargo Skyline
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN . "$HOME/.cargo/env" && cargo install cargo-skyline
+
 ############ for Application ############
+RUN curl -L https://github.com/DeepSmashProject/libultimate/releases/download/${LIB_ULTIMATE_VERSION}/release.zip > $HOME/data/release.zip
+RUN unzip $HOME/data/release.zip -d $HOME/data && rm $HOME/data/release.zip
+
+WORKDIR $HOME
+RUN git clone https://github.com/DeepSmashProject/libultimate.git -b ${LIB_ULTIMATE_VERSION} --depth 1 
 WORKDIR $HOME/libultimate
-COPY . .
-#RUN git clone https://github.com/DeepSmashProject/yuzulib.git
 RUN sudo -H pip install -e .
 
 COPY ./docker/entrypoint.sh $HOME/entrypoint.sh
-#RUN chmod +x /entrypoint.sh
-#CMD ["/entrypoint.sh"]

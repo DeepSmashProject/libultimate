@@ -1,4 +1,28 @@
 
+# Install cargo-skyline
+
+https://github.com/jam1garner/cargo-skyline
+https://github.com/ultimate-research/skyline-smash
+https://github.com/ultimate-research/skyline-rs-template
+
+
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+Permissionエラーが出る場合
+cp /tmp/tmp.xxxx/rustup-init /home/default
+cd /home/default
+./rustup-init
+```
+
+```
+cargo install cargo-skyline
+```
+
+```
+cargo skyline listen
+```
+
 # Fighter Status
 https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/training/mash.rs
 
