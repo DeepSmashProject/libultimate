@@ -15,9 +15,9 @@ dependencies = [
 
 [[package]]
 name = "itoa"
-version = "1.0.3"
+version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c8af84674fe1f223a982c933a0ee1086ac4d4052aa0fb8060c12c6ad838e754"
+checksum = "453ad9f582a441959e5f0d088b02ce04cfe8d51a8eaf077f12ac6d3e94164ca6"
 
 [[package]]
 name = "lazy_static"
@@ -27,8 +27,20 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc-nnsdk"
-version = "0.0.1"
-source = "git+https://github.com/ultimate-research/libc-nnsdk.git#98c11e074317f2b45b6387840ff3c391275f4ad5"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6823e4bff6dee10a75dfee95afe1c5a7f93a1b99a20013663e0cb04b3a64f867"
+
+[[package]]
+name = "libc-nnsdk"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "99102e4669e461772fcdfeb04ce9dec03c5fade700a3c12b1a4c2a27d97e9b68"
+
+[[package]]
+name = "libc-nnsdk"
+version = "0.3.0"
+source = "git+https://github.com/ultimate-research/libc-nnsdk.git#0b7e17c656c23ad3fa2369bfa2ae182675fec4a1"
 
 [[package]]
 name = "libultimate-plugin"
@@ -49,62 +61,71 @@ checksum = "ee9675fd198b39d86a7d5d20c59ae9639a3b4157f28ebd6cc09b9f1397ab118a"
 
 [[package]]
 name = "nnsdk"
-version = "0.1.0"
-source = "git+https://github.com/ultimate-research/nnsdk-rs.git#c9b66a3423d86ead992370ed598edb434564dd6d"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "df4385052e8e8252e9a6b87282f74e94fca6ab074cdc1415d4ad5c4cc3920fe3"
 dependencies = [
- "libc-nnsdk",
+ "libc-nnsdk 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "nnsdk"
+version = "0.3.0"
+source = "git+https://github.com/ultimate-research/nnsdk-rs.git#99cf632f97647baef39c71edabd8d8fd778ce73f"
+dependencies = [
+ "libc-nnsdk 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "once_cell"
-version = "1.13.0"
+version = "1.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18a6dbe30758c9f83eb00cbea4ac95966305f5a7772f3f42ebfc7fc7eddbd8e1"
+checksum = "b7e5500299e16ebb147ae15a00a942af264cf3688f47923b8fc2cd5858f23ad3"
 
 [[package]]
 name = "paste"
-version = "1.0.8"
+version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9423e2b32f7a043629287a536f21951e8c6a82482d0acb1eeebfc90bc2225b22"
+checksum = "9f746c4065a8fa3fe23974dd82f15431cc8d40779821001404d10d2e79ca7d79"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.43"
+version = "1.0.51"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a2ca2c61bc9f3d74d2886294ab7b9853abd9c1ad903a3ac7815c58989bb7bab"
+checksum = "5d727cae5b39d21da60fa540906919ad737832fe0b1c165da3a34d6548c849d6"
 dependencies = [
  "unicode-ident",
 ]
 
 [[package]]
 name = "quote"
-version = "1.0.21"
+version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbe448f377a7d6961e30f5955f9b8d106c3f5e449d493ee1b125c1d43c2b5179"
+checksum = "8856d8364d252a14d474036ea1358d63c9e6965c8e5c1885c18f73d70bff9c7b"
 dependencies = [
  "proc-macro2",
 ]
 
 [[package]]
 name = "ryu"
-version = "1.0.11"
+version = "1.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4501abdff3ae82a1c1b477a17252eb69cee9e66eb915c1abaa4f44d873df9f09"
+checksum = "f91339c0467de62360649f8d3e185ca8de4224ff281f66000de5eb2a77a79041"
 
 [[package]]
 name = "serde"
-version = "1.0.143"
+version = "1.0.153"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "53e8e5d5b70924f74ff5c6d64d9a5acd91422117c60f48c4e07855238a254553"
+checksum = "3a382c72b4ba118526e187430bb4963cd6d55051ebf13d9b25574d379cc98d20"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.143"
+version = "1.0.153"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d3d8e8de557aee63c26b85b947f5e59b690d0454c753f3adeb5cd7835ab88391"
+checksum = "1ef476a5790f0f6decbc66726b6e5d63680ed518283e64c7df415989d880954f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -113,9 +134,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.83"
+version = "1.0.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "38dd04e3c8279e75b31ef29dbdceebfe5ad89f4d0937213c53f7d49d01b3d5a7"
+checksum = "1c533a59c9d8a93a09c6ab31f0fd5e5f4dd1b8fc9434804029839884765d04ea"
 dependencies = [
  "itoa",
  "ryu",
@@ -124,18 +145,18 @@ dependencies = [
 
 [[package]]
 name = "skyline"
-version = "0.1.0"
-source = "git+https://github.com/ultimate-research/skyline-rs.git#12920d76ac3f014a3f879595e5b35a895ce2fb10"
+version = "0.2.1"
+source = "git+https://github.com/ultimate-research/skyline-rs.git#9bc51b01ff7d10026f683b2e382e5010fa8d5b7a"
 dependencies = [
- "libc-nnsdk",
- "nnsdk",
+ "libc-nnsdk 0.2.0",
+ "nnsdk 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "skyline_macro",
 ]
 
 [[package]]
 name = "skyline_macro"
-version = "0.1.0"
-source = "git+https://github.com/ultimate-research/skyline-rs.git#12920d76ac3f014a3f879595e5b35a895ce2fb10"
+version = "0.2.0"
+source = "git+https://github.com/ultimate-research/skyline-rs.git#9bc51b01ff7d10026f683b2e382e5010fa8d5b7a"
 dependencies = [
  "lazy_static",
  "proc-macro2",
@@ -146,21 +167,21 @@ dependencies = [
 [[package]]
 name = "skyline_smash"
 version = "0.1.0"
-source = "git+https://github.com/ultimate-research/skyline-smash.git#6e151b023b41c4efd5986b6b2182c2f50d8af275"
+source = "git+https://github.com/ultimate-research/skyline-smash.git#edaab345ea0565a6ea277ec66a060a974354abe4"
 dependencies = [
  "compile-time-lua-bind-hash",
  "lazy_static",
- "libc-nnsdk",
- "nnsdk",
+ "libc-nnsdk 0.3.0 (git+https://github.com/ultimate-research/libc-nnsdk.git)",
+ "nnsdk 0.3.0 (git+https://github.com/ultimate-research/nnsdk-rs.git)",
  "paste",
  "skyline",
 ]
 
 [[package]]
 name = "syn"
-version = "1.0.99"
+version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "58dbef6ec655055e20b86b15a8cc6d439cca19b667537ac6a1369572d151ab13"
+checksum = "72b64191b275b66ffe2469e8af2c1cfe3bafa67b529ead792a6d0160888b4237"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -169,6 +190,6 @@ dependencies = [
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.3"
+version = "1.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4f5b37a154999a8f3f98cc23a628d850e154479cd94decf3414696e12e31aaf"
+checksum = "e5464a87b239f13a63a501f2701565754bae92d243d4bb7eb12f6d57d2269bf4"

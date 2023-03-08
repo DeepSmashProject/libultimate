@@ -1,0 +1,4 @@
+
+v1.2.0
+- Dockerfileで使用するpluginとlibultimateのバージョンを合わせるようにする
+- .github_actionsでtagブランチでrelease作成

@@ -17,6 +17,8 @@ cd /
 /home/guest/.local/share/Ryujinx/Ryujinx
 ```
 
+select OpenGL
+
 
 - move prod.keys
 to /root/.config/Ryujinx/system/
@@ -185,3 +187,40 @@ name of display: :1
 [2400788.252] (EE) NVIDIA(0): Failing initialization of X screen
 ```
 Xorgのこのエラーを治したい
+
+
+### 2023/03追記
+
+```
+__GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep "OpenGL version"
+```
+のみでOpenGL versionが4系となった
+```
+__GLX_VENDOR_LIBRARY_NAME=nvidia /home/default/.local/share/Ryujinx/Ryujinx
+```
+
+- Valkanの場合
+```
+GUI.RenderLoop Application System.IndexOutOfRangeException
+```
+- OpenGLの場合
+```
+SPB.Graphics.Exception.ContextException: MakeCurrent() failed.
+```
+
+2. __VK_LAYER_NV_optimus=NVIDIA_onlyを加える
+```
+__GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only /home/default/.local/share/Ryujinx/Ryujinx
+```
+
+OpenGLで初めて起動できた。ゲームも正常に動く
+- ただ最初の一回のみで、次以降はFPSは回っているが、画面が開かなかった
+- その後、__VK_LAYER_NV_optimus=NVIDIA_onlyなしでも一度動いた
+
+Settings:
+- System:  Memory Manager Mode: Software
+
+Vulkan Quadro,nvidiaの場合変わらず同じエラーが発生した。
+```
+GUI.RenderLoop Application System.IndexOutOfRangeException
+```
