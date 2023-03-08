@@ -57,12 +57,16 @@ Tools->InstallFirmware->Install from Zipを選択し、$HOME/data/firmware/xxx.z
 Options->Settings->General->Addから$Home/data/games/SSBU(nspのあるフォルダ)を選択する
 
 7. Settingsを変更する
-最速にするには
+Settings->System->Memory Manager ModeをSoftwareにしてください。
+これを設定しないとエラーで落ちる可能性があります。
+
+そのほか、オプションとして速度を向上にするには
 - Logging->Log出力をなくす
 - System -> MemoryManagerMode -> Host Uncheckedにする
 - Graphics -> Resolution Scaleで低画質にする
 - System -> Enable xxxのチェックを外す？？
    - Enable VSyncを外すと60fpsの制限がなくなりframeが早くなる
+   - PPTCとFS Integrity Checksは外しておくとエラーが出ないかも
 などを試してください。
 
 8. ゲームを起動する
@@ -71,12 +75,12 @@ Options->Settings->General->Addから$Home/data/games/SSBU(nspのあるフォル
 
 9. DLCを導入する
 libparam-hook.nroが13.0.1対応なので13.0.1にアップデートしないといけない
-Ryujinxのゲームタイトルを右クリックし、Manage DLC->v13.0.1のnspを選択する
+Ryujinxのゲームタイトルを右クリックし、Manage Title Update->v13.0.1のnspを選択する
 
 10. pluginを導入する
-release/contentsを$HOME/.config/Ryujinx/mods/contentsに入れる
+$HOME/data/release/contentsを$HOME/.config/Ryujinx/mods/contentsに入れる
 ```
-cp -r release/contents/01006A800016E000 $HOME/.config/Ryujinx/mods/contents
+cp -r $HOME/data/release/contents/01006A800016E000 $HOME/.config/Ryujinx/mods/contents
 ```
 
 11. (option) skyline listenでpluginのログをチェックする

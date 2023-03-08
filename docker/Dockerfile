@@ -144,10 +144,13 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 RUN . "$HOME/.cargo/env" && cargo install cargo-skyline
 
 ############ for Application ############
-RUN curl -L https://github.com/DeepSmashProject/libultimate/releases/download/${LIB_ULTIMATE_VERSION}/release.zip > $HOME/data/release.zip
-RUN unzip $HOME/data/release.zip -d $HOME/data && rm $HOME/data/release.zip
+ARG LIB_ULTIMATE_VERSION
+RUN mkdir $HOME/data && \
+    curl -L https://github.com/DeepSmashProject/libultimate/releases/download/${LIB_ULTIMATE_VERSION}/release.zip > $HOME/data/release.zip && \
+    unzip $HOME/data/release.zip -d $HOME/data && rm $HOME/data/release.zip
 
 WORKDIR $HOME
+RUN apt-get install -y git
 RUN git clone https://github.com/DeepSmashProject/libultimate.git -b ${LIB_ULTIMATE_VERSION} --depth 1 
 WORKDIR $HOME/libultimate
 RUN sudo -H pip install -e .
