@@ -1,6 +1,6 @@
 # libultimate
 
-Open API written in Python 3 for making your own Smash Bros Ultimate AI that works with RyujinX
+Open API written in Python 3 for making your own Smash Bros Ultimate AI that works with Ryujinx or Yuzu
 
 ### Demo
 https://user-images.githubusercontent.com/43264434/188854277-5facc0c9-8c50-412e-853a-112a45fef26f.mp4
@@ -14,46 +14,84 @@ https://user-images.githubusercontent.com/43264434/188854277-5facc0c9-8c50-412e-
 
 ```
 git clone https://github.com/DeepSmashProject/libultimate.git
-```
-
-### Python Library
-```
-cd libultimate/libultimate
+cd libultimate
 pip3 install -e .
 ```
 
-### Skyline Library
+# Get Started
+## 1. make sure the game is ready to run
+1. install prod.keys
+   - For Yuzu: From File -> Open yuzu folder
+Copy prod.keys from $HOME/.local/share/yuzu/keys
+   - For Ryujinx: Copy prod.keys to $HOME/.config/Ryujinx/system/prod.keys
+
+2. install firmware
+   - For Yuzu: Copy the files extracted from firmware.zip to $HOME/.local/share/yuzu/nand/system/Contents/registered
+   - For Ryujinx: Tools->InstallFirmware->Install from Zip and select firmware-xxx.zip
+
+3. set up your game
+   - For Yuzu: Go to Add New Game Directory and select your game directory.
+   - For Ryujinx: Go to Options->Settings->General->Add and select the SSBU folder (the folder with nsp)
+
+## 2. install Skyline Plugin
+1. install DLC
+libparam-hook.nro is compatible with 13.0.1, so you need to update it to 13.0.1.
+Right click on the Ryujinx game title and select Manage Title Update->nsp for v13.0.1.
+
+2. install the plugin
+
+Download the plugin
+````
+curl -L https://github.com/DeepSmashProject/libultimate/releases/download/${LIB_ULTIMATE_VERSION}/release.zip
 ```
-cd libultimate/libultimate-plugin
-cargo install cargo-skyline
-cargo skyline build
+
+- For Yuzu: Extract the above release.zip and put release/contents/01006A800016E000 into $HOME/.local/share/yuzu/sdmc/atmosphere/contents
+- For Ryujinx: put release/contents/01006A800016E000 into $HOME/.config/Ryujinx/mods/contents
+
+Restart the game and if it works correctly, you are good to go.
+After entering the competitive mode, look at sdcard/libultimate/game_state.json and if the data is in there, it is working.
+
+## 3. install libultimate and run examples
+1. install libultimate
+
+````
+git clone https://github.com/DeepSmashProject/libultimate.git -b {LIB_ULTIMATE_VERSION}
+cd libultimate
+pip3 install -e .
 ```
-liblibultimate_plugin.nro will be created in  './target/aargh64-skyline-switch/debug'
+LIB_ULTIMATE_VERSION must match the version of the plugin at the time of download. 2.
 
-### Ryujinx
-Download Ryujinx from https://ryujinx.org/
+2. run examples
 
-### SSBU Roms
-SSBU Roms and prod.keys is need.
-Please extract rom file by yourself
+````
+cd examples
+````
 
-## Setup Instructions
-Linux/OSX/Windows
-1. Add prod.keys and SSBU Roms in Ryujinx
-   - Reference: https://www.youtube.com/watch?v=CPKpgUDexzg&ab_channel=ShandellExplains
-   - Please check to be able to run emulator and play ssbu.
-2. Add libultimate plugin
-   - Click "File" -> "Open Ryujinx Folder" on emulator.
-   - Move plugin folder to "/mods/"
-   - Required other nros
-     - libnro_hook.nro: https://github.com/ultimate-research/nro-hook-plugin/releases/download/v0.3.0/libnro_hook.nro
-     - libparam_hook.nro: https://github.com/ultimate-research/params-hook-plugin/releases/download/v0.1.1/libparam_hook.nro
-     - libnn_hid_hook.nro: https://github.com/jugeeya/nn-hid-hook/releases/download/beta/libnn_hid_hook.nro
-3. Run Emulator
-   - Move to training mode.
-   - If you want to check the plugin runnning status, you can see plugin logs by "cargo skyline listen" 
-4. Run Example
-   - Run "python3 examples/basic.py"
+Change SDCARD_PATH in basic.py.
+- In case of Yuzu: ~/.local/share/yuzu/sdmc
+- For Ryujinx: path like ~/.config/Ryujinx/sdcard.
+```` import os
+import os
+from libultimate import Console, Controller, Button
+
+if __name__ == "__main__":
+    SDCARD_PATH = "~/YOUR_SDCARD_PATH" # ex: if Ryujinx: ~/.config/Ryujinx, if Yuzu: ~/.local/share/yuzu/sdmc
+    with Console(sdcard_path=SDCARD_PATH) as console:
+        controller_1p = Controller(player_id=0)
+        console.add_controller(controller_1p)
+
+        for gamestate in console.stream(fps=5):
+            print("gamestate: ", gamestate)
+            controller_1p.input([Button.A])
+
+````
+
+Run basic.py.
+```
+python3 basic.py
+```
+
+Translated with www.DeepL.com/Translator (free version)
 
 ## Example
 

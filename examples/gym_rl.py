@@ -37,8 +37,8 @@ action_list = [
 ]
 
 if __name__ == "__main__":
-    RYUJINX_PATH = "~/.config/Ryujinx" # ex: /home/username/.config/Ryujinx
-    with Console(ryujinx_path=RYUJINX_PATH) as console:
+    SDCARD_PATH = "~/YOUR_SDCARD_PATH" # ex: if Ryujinx: ~/.config/Ryujinx, if Yuzu: ~/.local/share/yuzu/sdmc
+    with Console(sdcard_path=SDCARD_PATH) as console:
         controller_1p = Controller(player_id=0)
         console.add_controller(controller_1p)
         with UltimateEnv(console, controller_1p, hz=6, action_space=len(action_list)) as env:

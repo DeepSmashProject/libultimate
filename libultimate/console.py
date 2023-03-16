@@ -7,10 +7,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .api import API
 
 class Console():
-    def __init__(self, ryujinx_path, level=logging.ERROR):
+    def __init__(self, sdcard_path, level=logging.ERROR):
         logging.basicConfig(format='%(asctime)s - [%(levelname)s] - %(message)s', level=level)
         self.logger = logging.getLogger(__name__)
-        self.api = API(ryujinx_path)
+        self.api = API(sdcard_path)
         self.controllers = []
 
     def __enter__(self):
