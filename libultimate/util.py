@@ -3,9 +3,7 @@ from mss import mss
 
 def capture():
     with mss() as sct:
-        monitor = sct.monitors[1]
+        monitor = sct.monitors[0]
         img = sct.grab(monitor)
-        frame = np.array(img)
-        frame = np.array(frame)[:, :, :3] # bgra2bgr
-        frame = frame[:,:,::-1].tolist()  # bgr2rgb
+        frame = np.array(img)[:, :, :3].astype(np.uint8) # rgba2rgb
         return frame
