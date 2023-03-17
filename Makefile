@@ -8,4 +8,4 @@ exec:
 remove:
 	docker-compose -f docker/docker-compose.yml --env-file ./docker/.env down
 skyline-build:
-	cd libultimate-plugin && cargo skyline build && cp target/aarch64-skyline-switch/release/liblibultimate_plugin.nro ../release/contents/01006A800016E000/romfs/skyline/plugins/
+	cd plugin && cargo skyline build && cp target/aarch64-skyline-switch/release/liblibultimate_plugin.nro ../release/contents/01006A800016E000/romfs/skyline/plugins/

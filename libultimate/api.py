@@ -5,11 +5,13 @@ import logging
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .schemas import ControlState, GameState
 from pathlib import Path
+from .util import capture
 
 class API():
-    def __init__(self, sdcard_path: str):
+    def __init__(self, sdcard_path: str, include_image=False):
         self.libultimate_path = Path(sdcard_path).joinpath('libultimate').expanduser()
         self.logger = logging.getLogger(__name__)
+        self.include_image = include_image
         # create libultimate folder
         self.create_root_dir()
 
@@ -23,6 +25,8 @@ class API():
             text = f.read()
             gs_json = json.loads(text)
             game_state: GameState = GameState.parse_obj(gs_json)
+            if self.include_image:
+                game_state.image = capture()
             return game_state
 
     def send_command(self, player_id: int, command):

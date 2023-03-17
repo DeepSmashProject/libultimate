@@ -3,3 +3,5 @@ uvicorn
 fastapi
 pydantic
 gym
+mss
+numpy
