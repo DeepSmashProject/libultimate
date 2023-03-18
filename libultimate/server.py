@@ -3,12 +3,11 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
-import time
 import json
-from .console import Console
 from .controller import Controller
 from .enums import Button
-from typing import List, Tuple
+from typing import List
+from .util import encode_image
 
 app = FastAPI(
     title="libultimate",
@@ -57,9 +56,9 @@ async def stream_game_state():
     def generate():
         try:
             for gamestate in app.console.stream(fps=app.config.fps):
+                gamestate.image = encode_image(gamestate.image)
                 yield json.dumps(gamestate.json())
         except Exception as err:
-            print('error', err)
             return JSONResponse(status_code=500, content={"message": "Error: {}".format(err)})
     return StreamingResponse(generate(), media_type="application/json")
 
