@@ -8,6 +8,7 @@ services:
     container_name: libultimate
     ports:
       - ${NOVNC_PORT}:6080
+      - 8008:8008 # port for api
     tmpfs:
       - /run
       - /run/lock

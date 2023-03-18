@@ -6,4 +6,5 @@ from .schemas import GameState, Position, PlayerState, Projectile
 from .mode import Mode
 from .env import UltimateEnv, EnvAction
 from .server import UltimateServer, UltimateServerConfig
+from .client import UltimateClient
 from .util import decode_image

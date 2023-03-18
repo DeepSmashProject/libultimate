@@ -5,4 +5,4 @@ if __name__ == "__main__":
     with Console(sdcard_path=SDCARD_PATH) as console:
         config = UltimateServerConfig(fps=5)
         server = UltimateServer(console, config)
-        server.run(address="0.0.0.0", port=8000)
+        server.run(address="0.0.0.0", port=8008)
