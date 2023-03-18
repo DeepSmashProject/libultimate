@@ -94,8 +94,6 @@ impl ControllerTrait for Controller {
             control_state = serde_json::from_reader(reader)?;
             // remove ok.json
             fs::remove_file(&control_state_ok_path).unwrap();
-        }else{
-            return Err(Error::new(ErrorKind::Other, "control_state.json does not exist"));
         }
         return Ok(control_state);
     }
