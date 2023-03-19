@@ -18,13 +18,13 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      #- name: Install cargo-skyline
-      #  run: cargo install cargo-skyline
+      - name: Install cargo-skyline
+        run: cargo install cargo-skyline
       - name: Build Rust Project
         run: |
           cd ./plugin
-          cargo install cargo-skyline
-          cargo skyline build --release
+          cargo skyline --version
+          cargo --version
           cd ..
       - name: Copy release file
         run: |
