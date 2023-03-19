@@ -1,0 +1,49 @@
+name: Create Release on Tag Push
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set env
+        run: echo "COMMIT_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+      - name: Install cargo-skyline
+        run: cargo install cargo-skyline
+      - name: Build Rust Project
+        run: |
+          cd ./plugin
+          cargo skyline build --release
+          cd ..
+      - name: Copy release file
+        run: |
+          cp ./plugin/target/aarch64-skyline-switch/release/liblibultimate_plugin.nro ./release/contents/01006A800016E000/romfs/skyline/plugins/libultimate_plugin.nro
+          zip -r ${{ env.COMMIT_TAG }}.zip release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.COMMIT_TAG }}.zip
+          asset_name: file.zip
+          asset_content_type: application/zip
