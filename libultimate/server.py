@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status, HTTPException
+from fastapi import FastAPI, status, HTTPException, Query
 from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -6,7 +6,7 @@ import uvicorn
 import json
 from .controller import Controller
 from .enums import Button
-from typing import List
+from typing import List, Optional, Tuple
 from .util import encode_image
 
 app = FastAPI(
@@ -52,23 +52,24 @@ async def send_controller_input(data: OperateControllerRequest):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Controller not found")
 
 @app.get("/stream/game_state")
-async def stream_game_state():
+async def stream_game_state(
+    fps: Optional[int] = Query(default=10, ge=2, le=60, description="Frames per second"),
+    include_image: Optional[bool] = Query(default=False, description="Include image in response"),
+    image_size: Optional[Tuple[int,int]] = Query(default=None, description="Resize image to this size"),
+):
     def generate():
         try:
-            for gamestate in app.console.stream(fps=app.config.fps):
-                gamestate.image = encode_image(gamestate.image)
+            for gamestate in app.console.stream(fps=fps, include_image=include_image, image_size=image_size):
+                if gamestate.image:
+                    gamestate.image = encode_image(gamestate.image)
                 yield json.dumps(gamestate.json())
         except Exception as err:
             return JSONResponse(status_code=500, content={"message": "Error: {}".format(err)})
     return StreamingResponse(generate(), media_type="application/json")
 
-class UltimateServerConfig(BaseModel):
-    fps: int
-
 class UltimateServer:
-    def __init__(self, console, config: UltimateServerConfig):
+    def __init__(self, console):
         app.console = console
-        app.config = config
 
     def run(self, address, port, log_level="info"):
         uvicorn.run(app, host=address, port=port, log_level=log_level)
