@@ -156,7 +156,7 @@ RUN apt-get update && apt-get install -y \
     python3 python3-pip \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* && \
-    git clone https://github.com/DeepSmashProject/libultimate.git -b 1.2.0 && \
+    git clone https://github.com/DeepSmashProject/libultimate.git -b ${LIB_ULTIMATE_VERSION} && \
     cd libultimate && pip3 install -e .
 
 # Install cargo skyline
