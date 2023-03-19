@@ -7,6 +7,6 @@ if __name__ == "__main__":
         controller_1p = Controller(player_id=0)
         console.add_controller(controller_1p)
 
-        for gamestate in console.stream(fps=5):
+        for gamestate in console.stream(fps=5, include_image=True, image_size=(256, 256)):
             print("gamestate: ", gamestate)
             controller_1p.input([Button.A])

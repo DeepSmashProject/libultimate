@@ -3,3 +3,6 @@ uvicorn
 fastapi
 pydantic
 gym
+mss
+numpy
+opencv-python

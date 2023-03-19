@@ -2,6 +2,8 @@ import os
 import sys
 import time
 import logging
+from .util import capture
+import cv2
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .api import API
@@ -36,13 +38,18 @@ class Console():
                 return controller
         return None
 
-    def stream(self, fps=1):
+    def stream(self, fps=1, include_image=False, image_size=None):
         hz = 60/fps
         current_frame_hz_num = 0
         while True:
             try:
                 time.sleep(0.01)
                 gamestate = self.api.read_state()
+                if include_image:
+                    image = capture()
+                    if image_size:
+                        image = cv2.resize(image, image_size)
+                    gamestate.image = image
                 frame_hz_num = gamestate.frame_count // hz
                 if current_frame_hz_num != frame_hz_num:
                     current_frame_hz_num = frame_hz_num
