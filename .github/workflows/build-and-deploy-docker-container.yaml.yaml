@@ -28,4 +28,4 @@ jobs:
           context: .
           dockerfile: ./docker/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ env.COMMIT_TAG }}
+          tags: ghcr.io/deepsmash/libultimate:${{ env.COMMIT_TAG }}
