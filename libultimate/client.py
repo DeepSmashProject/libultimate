@@ -3,6 +3,7 @@ from .enums import Button
 from .schemas import GameState
 import requests
 import json
+from .util import decode_image
 
 class UltimateClient:
     def __init__(self, server_address: str):
@@ -36,7 +37,7 @@ class UltimateClient:
             try:
                 endpoint = "/stream/game_state?fps={}&include_image={}".format(fps, include_image)
                 if image_size:
-                    endpoint += "&image_size={}".format(image_size)
+                    endpoint += "&image_size={}x{}".format(image_size[0], image_size[1])
                 res = self._get(endpoint, stream=True)
                 json_str = ""
                 for chunk in res.iter_content(chunk_size=1024):
@@ -48,7 +49,10 @@ class UltimateClient:
                                 try:
                                     result = json.loads(json_str)
                                     json_str = ""
-                                    yield GameState.parse_obj(json.loads(result))
+                                    gamestate = GameState.parse_obj(json.loads(result))
+                                    if gamestate.image is not None:
+                                        gamestate.image = decode_image(gamestate.image, image_size)
+                                    yield gamestate
                                 except Exception as err:
                                     pass
             except Exception as err:

@@ -55,12 +55,13 @@ async def send_controller_input(data: OperateControllerRequest):
 async def stream_game_state(
     fps: Optional[int] = Query(default=10, ge=2, le=60, description="Frames per second"),
     include_image: Optional[bool] = Query(default=False, description="Include image in response"),
-    image_size: Optional[Tuple[int,int]] = Query(default=None, description="Resize image to this size"),
+    image_size: Optional[str] = Query(default=None, description="Resize image to this size (e.g. 640x480)"),
 ):
     def generate():
         try:
-            for gamestate in app.console.stream(fps=fps, include_image=include_image, image_size=image_size):
-                if gamestate.image:
+            image_size_tuple = (int(image_size.split("x")[0]), int(image_size.split("x")[1])) if image_size else None
+            for gamestate in app.console.stream(fps=fps, include_image=include_image, image_size=image_size_tuple):
+                if gamestate.image is not None:
                     gamestate.image = encode_image(gamestate.image)
                 yield json.dumps(gamestate.json())
         except Exception as err:

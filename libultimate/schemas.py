@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Any
 from .enums import Fighter
 
 class ControlState(BaseModel):
@@ -76,4 +76,4 @@ class GameState(BaseModel):
     frame_count: int
     players: List[PlayerState]
     projectiles: List[Projectile]
-    image: Optional[List[List[List[int]]]]
+    image: Optional[Any]
