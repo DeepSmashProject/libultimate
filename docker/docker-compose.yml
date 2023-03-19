@@ -8,15 +8,16 @@ services:
     container_name: libultimate
     ports:
       - ${NOVNC_PORT}:6080
+      - 8008:8008 # port for api
     tmpfs:
       - /run
       - /run/lock
       - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup
-      - ${GAME_DIR}:/home/default/data/games
-      - ${FIRMWARE_DIR}:/home/default/data/firmware
-      - ${PRODKEYS_DIR}:/home/default/data/keys
+      - ${GAME_DIR}:/root/data/games
+      - ${FIRMWARE_DIR}:/root/data/firmware
+      - ${PRODKEYS_DIR}:/root/data/keys
     cap_add:
       - SYS_BOOT
       - SYS_ADMIN

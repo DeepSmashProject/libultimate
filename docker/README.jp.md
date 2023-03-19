@@ -86,7 +86,7 @@ Configure->GPU->OpenGL [GLSL]に変更する
 
 7. DLCを導入する
 libparam-hook.nroが13.0.1対応なので13.0.1にアップデートしないといけない
-Ryujinxのゲームタイトルを右クリックし、Manage Title Update->v13.0.1のnspを選択する
+File->Install Files to Nand->v13.0.1のnspを選択する
 
 ## 8. pluginを導入する
 $HOME/data/release/contentsを$HOME/.local/share/yuzu/sdmc/atmosphere/contentsに入れる

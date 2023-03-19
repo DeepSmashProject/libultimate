@@ -12,7 +12,7 @@ class Controller:
     def set_console(self, console: Console):
         self.console = console
 
-    def input(self, buttons: List[Button], main_stick = (0, 0), c_stick = (0, 0), hold = False):
+    def input(self, buttons: List[Button]=[], main_stick = (0, 0), c_stick = (0, 0), hold = False):
         buttons_total = int(sum([btn.value for btn in buttons]))
         control_state = ControlState(
             id=str(uuid.uuid4()),
