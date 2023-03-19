@@ -8,6 +8,7 @@ on:
 jobs:
   create_release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -17,8 +18,8 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - name: Install cargo-skyline
-        run: cargo install cargo-skyline
+      #- name: Install cargo-skyline
+      #  run: cargo install cargo-skyline
       - name: Build Rust Project
         run: cargo skyline build --release
       - name: Copy release file
