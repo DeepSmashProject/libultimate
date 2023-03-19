@@ -27,7 +27,7 @@ jobs:
       - name: Copy release file
         run: |
           cp ./plugin/target/aarch64-skyline-switch/release/liblibultimate_plugin.nro ./release/contents/01006A800016E000/romfs/skyline/plugins/libultimate_plugin.nro
-          zip -r ${{ env.COMMIT_TAG }}.zip release
+          zip -r release.zip release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -44,6 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.COMMIT_TAG }}.zip
+          asset_path: release.zip
           asset_name: file.zip
           asset_content_type: application/zip
