@@ -5,3 +5,4 @@ pydantic
 gym
 mss
 numpy
+opencv-python
