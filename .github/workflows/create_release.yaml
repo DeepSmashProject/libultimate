@@ -16,7 +16,7 @@ jobs:
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
-          profile: minimal
+          toolchain: stable
       - name: Install cargo-skyline
         run: cargo install cargo-skyline
       - name: Build Rust Project
