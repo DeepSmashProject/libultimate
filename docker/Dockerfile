@@ -1,4 +1,4 @@
-FROM nvidia/vulkan:1.3-470
+FROM nvidia/cudagl:11.3.0-devel-ubuntu20.04
 
 ENV DEBIAN_FRONTEND noninteractive
 USER root
@@ -47,7 +47,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 RUN cd /tmp \
-    && curl -fSsl -O https://us.download.nvidia.com/tesla/$NVIDIA_DRIVER_VERSION/NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run \
+    && curl -fSsl -O https://us.download.nvidia.com/XFree86/Linux-x86_64/$NVIDIA_DRIVER_VERSION/NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run \
     && sh NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run -x \
     && cd NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION \
     && ./nvidia-installer --silent \
