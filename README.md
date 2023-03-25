@@ -13,6 +13,16 @@ https://user-images.githubusercontent.com/43264434/188854277-5facc0c9-8c50-412e-
 ## Install
 
 ```
+# main
+pip install git+https://github.com/DeepSmashProject/libultimate.git
+
+# version 1.2.1
+pip install git+https://github.com/DeepSmashProject/libultimate.git@1.2.1
+```
+
+or
+
+```
 git clone https://github.com/DeepSmashProject/libultimate.git
 cd libultimate
 pip3 install -e .
