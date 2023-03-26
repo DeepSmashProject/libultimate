@@ -42,14 +42,12 @@ ARG NVIDIA_DRIVER_VERSION
 RUN apt-get update && apt-get install -y \
     kmod \
     pkg-config \
-    && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 RUN cd /tmp \
     && curl -fSsl -O https://us.download.nvidia.com/XFree86/Linux-x86_64/$NVIDIA_DRIVER_VERSION/NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run \
     && sh NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run -x \
     && cd NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION \
     && ./nvidia-installer --silent \
-    --no-kernel-module \
     --install-compat32-libs \
     --no-nouveau-check \
     --no-nvidia-modprobe \
@@ -75,17 +73,11 @@ RUN apt-get update && \
 COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD [ "/usr/bin/supervisord" ]
 
-# Install GNOME
 RUN apt-get update && apt-get install -y \
-    ubuntu-desktop \
-    fcitx-config-gtk \
-    gnome-tweak-tool \
-    gnome-usage \
-    && rm -rf /var/lib/apt/lists/* \
-    && sed -i 's/\[daemon\]/[daemon]\nInitialSetupEnable=false/' /etc/gdm3/custom.conf
+    xfce4 xfce4-terminal \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install TigerVNC server
-#COPY ./docker/tigervnc@.service /etc/systemd/system/tigervnc@.service
 RUN apt-get update && apt-get install -y \
     tigervnc-common \
     tigervnc-scraping-server \
@@ -102,7 +94,6 @@ RUN mkdir -p $HOME/.vnc \
     && echo ${VNC_PASSWORD} | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
 
 # Install noVNC
-#COPY ./docker/novnc.service /etc/systemd/system/novnc.service
 RUN apt-get update && apt-get install -y \
     net-tools \
     novnc \
@@ -149,10 +140,10 @@ RUN apt-get update && apt-get install -y \
     cd libultimate && pip3 install -e .
 
 # Install cargo skyline
-ENV PATH="$HOME/.cargo/bin:$PATH"
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* && \ 
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
-    . "$HOME/.cargo/env" && cargo install cargo-skyline
+#ENV PATH="$HOME/.cargo/bin:$PATH"
+#RUN apt-get update && apt-get install -y \
+#    build-essential \
+#    && apt-get clean -y \
+#    && rm -rf /var/lib/apt/lists/* && \ 
+#    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+#    . "$HOME/.cargo/env" && cargo install cargo-skyline
