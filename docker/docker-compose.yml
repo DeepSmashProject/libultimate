@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: libultimate
+    runtime: nvidia
     ports:
       - ${NOVNC_PORT}:6080
       - 8008:8008 # port for api

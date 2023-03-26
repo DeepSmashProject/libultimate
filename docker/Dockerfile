@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     locales && \
     echo "$LANG UTF-8" >> /etc/locale.gen && \
     locale-gen && \
-    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Timezone
@@ -35,7 +34,6 @@ RUN dpkg --add-architecture i386 && \
     unzip \
     git \
     mesa-utils \
-    && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install NVIDIA drivers, including X graphic drivers
@@ -70,17 +68,12 @@ ENV DRI_PRIME=1
 ENV __NV_PRIME_RENDER_OFFLOAD=1
 ENV __VK_LAYER_NV_optimus=NVIDIA_only
 
-# Install systemd
-RUN apt-get update && apt-get install -y \
-    dbus dbus-x11 systemd \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*\
-    && dpkg-divert --local --rename --add /sbin/udevadm\
-    && ln -s /bin/true /sbin/udevadm \
-    && systemctl disable systemd-resolved
-VOLUME ["/sys/fs/cgroup"]
-STOPSIGNAL SIGRTMIN+3
-CMD [ "/sbin/init" ]
+# Install supervisord
+RUN apt-get update && \
+    apt-get install -y supervisor && \
+    rm -rf /var/lib/apt/lists/*
+COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+CMD [ "/usr/bin/supervisord" ]
 
 # Install GNOME
 RUN apt-get update && apt-get install -y \
@@ -88,22 +81,20 @@ RUN apt-get update && apt-get install -y \
     fcitx-config-gtk \
     gnome-tweak-tool \
     gnome-usage \
-    && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i 's/\[daemon\]/[daemon]\nInitialSetupEnable=false/' /etc/gdm3/custom.conf
 
 # Install TigerVNC server
-COPY ./docker/tigervnc@.service /etc/systemd/system/tigervnc@.service
+#COPY ./docker/tigervnc@.service /etc/systemd/system/tigervnc@.service
 RUN apt-get update && apt-get install -y \
     tigervnc-common \
     tigervnc-scraping-server \
     tigervnc-standalone-server \
     tigervnc-xorg-extension \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* \
-    && systemctl enable tigervnc@:1
+    && rm -rf /var/lib/apt/lists/*
 EXPOSE 5901
 ENV DISPLAY=:1
+
 # Set up VNC
 COPY ./docker/xstartup $HOME/.vnc/xstartup
 ARG VNC_PASSWORD
@@ -111,14 +102,12 @@ RUN mkdir -p $HOME/.vnc \
     && echo ${VNC_PASSWORD} | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
 
 # Install noVNC
-COPY ./docker/novnc.service /etc/systemd/system/novnc.service
+#COPY ./docker/novnc.service /etc/systemd/system/novnc.service
 RUN apt-get update && apt-get install -y \
     net-tools \
     novnc \
-    && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
-    && ln -s /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html \
-    && systemctl enable novnc
+    && ln -s /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html
 EXPOSE 6080
 
 RUN echo "export __GLX_VENDOR_LIBRARY_NAME=nvidia" >> ~/.bashrc && \
@@ -129,7 +118,7 @@ RUN echo "export __GLX_VENDOR_LIBRARY_NAME=nvidia" >> ~/.bashrc && \
     echo "export NVIDIA_DRIVER_CAPABILITIES=all" >> ~/.bashrc
 
 # Install Ryujinx
-RUN option=1 noconfirm=1 USER=$USER bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
+#RUN option=1 noconfirm=1 USER=$USER bash -c "$(curl -s https://raw.githubusercontent.com/edisionnano/Pine-jinx/main/pinejinx.sh)"
 
 # Install Yuzu
 #RUN wget https://github.com/yuzu-emu/yuzu-mainline/releases/download/mainline-0-1364/yuzu-mainline-20230308-9e9548d12.AppImage \
