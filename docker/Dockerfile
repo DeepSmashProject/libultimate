@@ -48,6 +48,7 @@ RUN cd /tmp \
     && sh NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION.run -x \
     && cd NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION \
     && ./nvidia-installer --silent \
+    --no-kernel-module \
     --install-compat32-libs \
     --no-nouveau-check \
     --no-nvidia-modprobe \
