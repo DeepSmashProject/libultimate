@@ -76,7 +76,7 @@ CMD [ "/usr/bin/supervisord" ]
 
 # Install Xfce desktop environment
 RUN apt-get update && apt-get install -y \
-    xfce4 xfce4-terminal \
+    xfce4 xfce4-terminal xterm \
     && rm -rf /var/lib/apt/lists/*
 
 # Install TigerVNC server
@@ -124,6 +124,9 @@ RUN echo "export __GLX_VENDOR_LIBRARY_NAME=nvidia" >> ~/.bashrc && \
 #    && ./yuzu-20211216-fddc180bd.AppImage --appimage-extract \
 #    && chmod a+x squashfs-root/AppRun && mkdir yuzu-mainline && mv squashfs-root/* yuzu-mainline
 
+RUN apt-get update && apt-get install -y \
+    xdg-utils \
+    && rm -rf /var/lib/apt/lists/*
 RUN wget https://github.com/yuzu-emu/yuzu-mainline/releases/download/mainline-0-1000/yuzu-20220429-31acffa26.AppImage \
     && chmod a+x yuzu-20220429-31acffa26.AppImage \
     && ./yuzu-20220429-31acffa26.AppImage --appimage-extract \
@@ -136,7 +139,6 @@ RUN mkdir $HOME/data && \
     unzip $HOME/data/release.zip -d $HOME/data && rm $HOME/data/release.zip
 RUN apt-get update && apt-get install -y \
     python3 python3-pip \
-    && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* && \
     git clone https://github.com/DeepSmashProject/libultimate.git -b ${LIB_ULTIMATE_VERSION} && \
     cd libultimate && pip3 install -e .
@@ -145,7 +147,6 @@ RUN apt-get update && apt-get install -y \
 #ENV PATH="$HOME/.cargo/bin:$PATH"
 #RUN apt-get update && apt-get install -y \
 #    build-essential \
-#    && apt-get clean -y \
 #    && rm -rf /var/lib/apt/lists/* && \ 
 #    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
 #    . "$HOME/.cargo/env" && cargo install cargo-skyline
