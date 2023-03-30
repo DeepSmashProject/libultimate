@@ -212,3 +212,9 @@ Change SERVER_ADDRESS to http://[EC2_PUBLIC_IP]:8008 on client.py.
 cd libultimate/examples
 python3 client.py
 ```
+
+redirect 80 to 8080
+```
+sudo iptables -t nat -L
+sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
+```
