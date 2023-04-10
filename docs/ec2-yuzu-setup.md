@@ -55,7 +55,7 @@ sudo apt-get install -y xfce4 xfce4-terminal xterm
 select 'dgm3' on installation.
 
 ```
-mkdir -p $HOME/.vnc/xstartup
+mkdir -p $HOME/.vnc
 vim ~/.vnc/xstartup
 ```
 
@@ -130,7 +130,7 @@ cd efs-utils
 sudo apt-get -y install ./build/amazon-efs-utils*deb
 
 sudo mkdir /mnt/efs
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-0689ee6e6c86cf10f.efs.ap-northeast-1.amazonaws.com:/ /mnt/efs
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-xxxxxxxxxxxx.efs.ap-northeast-1.amazonaws.com:/ /mnt/efs
 ```
 
 ## 9. Download Game Files
