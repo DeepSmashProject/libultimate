@@ -1,4 +1,5 @@
-from libultimate import Button, UltimateClient
+from .enums import Button
+from .client import UltimateClient
 from enum import Enum
 import gym
 import time

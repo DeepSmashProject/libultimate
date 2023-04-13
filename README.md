@@ -264,63 +264,70 @@ controller_1p.taint(Direction.RIGHT)
 ## Fighter Status
 Reference: https://github.com/jugeeya/UltimateTrainingModpack/blob/master/src/training/mash.rs
 
-| Status               | Num | Description                  |
-| -------------------- | --- | ---------------------------- |
-| WAIT                 | 0   | no action                    |
-| WALK                 | 1   | walk                         |
-| DASH_START           | 3   | dash start                   |
-| DASH                 | 4   | dash                         |
-| DASH_END             | 5   | dash end                     |
-| TURN                 | 7   | turn                         |
-| TURN_DASH            | 8   | turn dash                    |
-| JUMP                 | 11  | jump on ground               |
-| JUMP_AERIAL          | 12  | jump on aerial               |
-| CANNOT_ACTION        | 16  | cannot action                |
-| CROUCH               | 18  | crouch                       |
-| LANDING              | 22  | landign from jump            |
-| LANDING_SHORT        | 23  | landign from short jump      |
-| GUARD_START          | 27  | guard start                  |
-| GUARD                | 28  | guard                        |
-| GUARD_END            | 27  | guard end                    |
-| ESCAPE_B             | 31  | spot dodge                   |
-| ESCAPE_F             | 33  | roll dodge                   |
-| ESCAPE_AIR_SLIDE     | 34  | air slide dodge              |
-| ATTACK               | 39  | neutral attack               |
-| ATTACK_DASH          | 41  | dash attack                  |
-| ATTACK_AIR           | 54  | attack on air                |
-| ATTACK_S3            | 42  | side attack                  |
-| ATTACK_HI3           | 43  | up attack                    |
-| ATTACK_LW3           | 44  | down attack                  |
-| ATTACK_S4            | 47  | side smash attack            |
-| ATTACK_LW4           | 50  | down smash attack            |
-| ATTACK_HI4           | 53  | up smash attack              |
-| GRAB                 | 55  | grab                         |
-| GRAB_ATTACK          | 61  | grab attack                  |
-| GRAB_WAIT            | 60  | grab wait                    |
-| GRAB_CUT             | 62  | grab cut                     |
-| GRAB_TURN            | 64  | throw from grab              |
-| GRABED               | 66  | grabed                       |
-| GRABED_ATTACKED      | 67  | damaged attack from grabed   |
-| GRABED_CUT           | 68  | escaped from grabed          |
-| GRABED_THROWED       | 70  | throwed from grabed          |
-| DAMAGED_NOT_FLY      | 71  | recieved weak damage         |
-| DAMAGED_STANDING_FLY | 72  | recieved standing fly damage |
-| DAMAGED_FALL_FLY     | 73  | recieved fall fly damage     |
-| DOWN_START           | 80  | down start                   |
-| DOWN                 | 83  | down                         |
-| DOWN_GETUP           | 87  | getup from down              |
-| CLIFF_CATCH          | 119 | catch cliff                  |
-| CLIFF_ATTACK         | 120 | attack from cliff            |
-| CLIFF_CLIMB          | 121 | climb from cliff             |
-| CLIFF_ESCAPE         | 122 | escape from cliff            |
-| CLIFF_JUMP1          | 124 | jump from cliff              |
-| CLIFF_JUMP2          | x   | jump2 from cliff             |
-| CLIFF_STEGGER        | 127 | stegger on edge of cliff     |
-| DEAD                 | 470 | dead                         |
-| SPECIAL_N            | 476 | special attack               |
-| SPECIAL_S            | 477 | side special attack          |
-| SPECIAL_HI           | 478 | up special attack            |
-| SPECIAL_LW           | 481 | down special attack          |
+| Status                       | Num | Description                  |
+| ---------------------------- | --- | ---------------------------- |
+| WAIT                         | 0   | no action                    |
+| WALK                         | 1   | walk                         |
+| DASH_START                   | 3   | dash start                   |
+| DASH                         | 4   | dash                         |
+| DASH_END                     | 5   | dash end                     |
+| TURN                         | 7   | turn                         |
+| TURN_DASH                    | 8   | turn dash                    |
+| JUMP                         | 11  | jump on ground               |
+| JUMP_AERIAL                  | 12  | jump on aerial               |
+| CANNOT_ACTION                | 16  | cannot action                |
+| CROUCH                       | 18  | crouch                       |
+| LANDING                      | 22  | landign from jump            |
+| LANDING_SHORT                | 23  | landign from short jump      |
+| GUARD_START                  | 27  | guard start                  |
+| GUARD                        | 28  | guard                        |
+| GUARD_END                    | 29  | guard end                    |
+| ESCAPE_N                     | 31  | spot dodge                   |
+| ESCAPE_F                     | 32  | roll dodge to forward        |
+| ESCAPE_B                     | 33  | roll dodge to back           |
+| ESCAPE_AIR                   | 34  | air dodge                    |
+| ATTACK                       | 39  | neutral attack               |
+| ATTACK_DASH                  | 41  | dash attack                  |
+| ATTACK_S3                    | 42  | side attack                  |
+| ATTACK_HI3                   | 43  | up attack                    |
+| ATTACK_LW3                   | 44  | down attack                  |
+| ATTACK_SIDE_SMASH_KEEP_START | 45  | side smash keep first        |
+| ATTACK_SIDE_SMASH_KEEP       | 46  | side smash keep during       |
+| ATTACK_S4                    | 47  | side smash attack            |
+| ATTACK_DOWN_SMASH_KEEP_START | 48  | down smash keep first        |
+| ATTACK_DOWN_SMASH_KEEP       | 49  | down smash keep during       |
+| ATTACK_LW4                   | 50  | down smash attack            |
+| ATTACK_UP_SMASH_KEEP_START   | 51  | up smash keep first          |
+| ATTACK_UP_SMASH_KEEP         | 52  | up smash keep during         |
+| ATTACK_HI4                   | 53  | up smash attack              |
+| ATTACK_AIR                   | 54  | attack on air                |
+| GRAB                         | 55  | grab                         |
+| GRAB_WAIT                    | 60  | grab wait                    |
+| GRAB_ATTACK                  | 61  | grab attack                  |
+| GRAB_CUT                     | 62  | grab cut                     |
+| GRAB_TURN                    | 64  | throw from grab              |
+| GRABBED                      | 66  | grabbed                      |
+| GRABBED_ATTACKED             | 67  | damaged attack from grabbed  |
+| GRABBED_CUT                  | 68  | escaped from grabbed         |
+| GRABBED_THROWED              | 70  | throwed from grabbed         |
+| DAMAGED_NOT_FLY              | 71  | recieved weak damage         |
+| DAMAGED_STANDING_FLY         | 72  | recieved standing fly damage |
+| DAMAGED_FALL_FLY             | 73  | recieved fall fly damage     |
+| DOWN_START                   | 80  | down start                   |
+| DOWN                         | 83  | down                         |
+| DOWN_GETUP                   | 87  | getup from down              |
+| CLIFF_CATCH                  | 119 | catch cliff                  |
+| CLIFF_ATTACK                 | 120 | attack from cliff            |
+| CLIFF_CLIMB                  | 121 | climb from cliff             |
+| CLIFF_ESCAPE                 | 122 | escape from cliff            |
+| CLIFF_JUMP1                  | 124 | jump from cliff              |
+| CLIFF_JUMP2                  | x   | jump2 from cliff             |
+| CLIFF_STEGGER                | 127 | stegger on edge of cliff     |
+| DEAD                         | 470 | dead                         |
+| SPECIAL_N                    | 476 | special attack               |
+| SPECIAL_S                    | 477 | side special attack          |
+| SPECIAL_HI                   | 478 | up special attack            |
+| SPECIAL_LW                   | 481 | down special attack          |
 
 ## Situation Status
 

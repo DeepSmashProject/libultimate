@@ -77,13 +77,26 @@ sudo apt-get install tigervnc-standalone-server tigervnc-xorg-extension tigervnc
 
 Run VNC server.
 ```
-/usr/bin/vncserver :1 -geometry 1366x768 -depth 24
+/usr/bin/vncserver :1 -geometry 1366x768 -depth 24 -localhost no
 ```
 
 (Option): If you want to kill vnc server, run below command.
 ```
 /usr/bin/vncserver -kill :1
 ```
+
+### option: vnc connection from client
+1. Add Inbound Rule on EC2 Security Group
+- Type: Custom TCP
+- Port: 5901
+- Source: 0.0.0.0/0 or Your device ip
+
+2. Open vnc terminal on client pc.
+
+```
+vnc://EC2_PUBLIC_IP]:5901
+```
+You can view desktop after entering your password.
 
 ## 6. Install and Run noVNC
 ```
@@ -122,8 +135,7 @@ Move to AWS EFS Console.
 on EC2 terminal.
 
 ```
-sudo apt-get install -y nfs-common
-sudo apt-get -y install git binutils
+sudo apt-get install -y nfs-common git binutils
 git clone https://github.com/aws/efs-utils
 cd efs-utils
 ./build-deb.sh
@@ -213,8 +225,14 @@ cd libultimate/examples
 python3 client.py
 ```
 
-redirect 80 to 8080
+redirect 80 to 8008
 ```
 sudo iptables -t nat -L
-sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
+sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8008
+```
+
+if delete
+```
+sudo iptables -t nat -v -L -n --line-number
+sudo iptables -t nat -D PREROUTING {rule-number-here}
 ```
